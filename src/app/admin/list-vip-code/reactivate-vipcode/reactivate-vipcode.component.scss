@@ -1,0 +1,63 @@
+@import '../../../../styles.scss';
+
+  .small-toolbar {
+    height: 50px;
+    font-size: 16px;
+  }
+.reactivate-vip-content {
+  padding: 20px;
+  padding-bottom: 6px;
+  min-width: 500px;
+  max-width: 500px;
+  @include media-breakpoint-down(xs){
+    min-width: 285px;     
+  }
+  .title {
+    margin-bottom: 20px;
+    .reactivate_title{
+      font-family: Roboto_Regular;
+      font-size: 16px;
+    }
+  }
+
+  .button-row {
+    width: auto;
+    display: flex;
+    margin-top: 30px;
+
+    .btn-right {
+      margin-left: auto;
+    }
+
+    .cancel-button {
+      border: 0px;
+      // margin-right: 10px;
+      background: white;
+
+      cursor: pointer;
+    }
+  }
+
+
+  .calendar-input-wrapper {
+    display: flex;
+    border: 1px solid #ccc;
+    height: 40px;
+    align-items: center;
+    overflow: hidden;
+    flex: 1;
+    // margin: 10px 0 10px 10px;
+    .calendar-input {
+        border: none;
+        margin: 0;
+        font-size: 15px;
+        height: 40px;
+    }
+    .clear-icon {
+        color: #757575;
+        cursor: pointer;
+        font-size: 18px;
+        margin-top: auto;
+    }
+}
+}

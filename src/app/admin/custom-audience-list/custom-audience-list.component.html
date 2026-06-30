@@ -1,0 +1,86 @@
+<div class="main_container">
+  <div class="wrapper">
+    <mat-card class="container-card">
+      <mat-card-header>
+        <mat-toolbar class="toolbar">
+          <mat-toolbar-row>
+            <span class="title"><span class="">{{'showing_all_audiences' | translate}}</span></span>
+            <span class="spacer"></span>
+            <button class="add-audience addEntity" *ngIf="audiencePermission?.add"
+              matTooltip="{{'add_new_audience' | translate}}" matTooltipPosition="below"
+              (click)="presentAudiencePopup(null,translate.instant('create_audience'),'createAudience')" mat-fab>
+              <mat-icon>add</mat-icon>
+            </button>
+          </mat-toolbar-row>
+        </mat-toolbar>
+      </mat-card-header>
+      <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+      <mat-card-content>
+        <div class="no_messages" *ngIf="!audienceDataSource?.data?.length">
+          <p>{{is_loading ? ('please_wait' | translate) : ('no_audience_found' | translate)}}</p>
+        </div>
+        <table mat-table [dataSource]="audienceDataSource" matSort matSortActive="audience_name"
+         matSortDirection="asc" matSortDisableClear (matSortChange)="sortData($event)" aria-describedby="" *ngIf="audienceDataSource?.data?.length">
+          <ng-container matColumnDef="serial">
+            <th mat-header-cell *matHeaderCellDef style="min-width: 60px;width: 100px;height: 46px;padding-left: 34px;">
+              {{'no' | translate}}.</th>
+            <td mat-cell *matCellDef="let audience = index">
+              {{audience + 1}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="audience_name" >
+            <th mat-header-cell *matHeaderCellDef style="width: 300px;" mat-sort-header>
+              {{'audience_name' | translate}}</th>
+            <td mat-cell *matCellDef="let audience">
+              {{audience.audience_name}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="player_count">
+            <th mat-header-cell *matHeaderCellDef style="max-width:100px;" mat-sort-header>
+              {{'players' | translate}}</th>
+            <td mat-cell *matCellDef="let audience">
+              <app-numbers [value]="audience.player_count"></app-numbers>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="game_count">
+            <th mat-header-cell *matHeaderCellDef style="max-width:100px;">
+              {{'games' | translate}}</th>
+            <td mat-cell *matCellDef="let audience">
+              <app-numbers [value]="audience.slg_count + audience.mlg_count"></app-numbers>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="contest_count">
+            <th mat-header-cell *matHeaderCellDef style="max-width:100px;">
+              {{'contests' | translate}}</th>
+            <td mat-cell *matCellDef="let audience">
+              <app-numbers [value]="audience.contest_count"></app-numbers>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef style="text-align: right;width: 100px;">
+              {{'delete' | translate}}
+            </th>
+            <td mat-cell *matCellDef="let audience" (click)="$event.stopPropagation();">
+              <img src="/assets/img/icon/delete-category-icon.png" alt="" class="delete-icon"
+                (click)="confirmDeletion(audience)"
+                *ngIf="audiencePermission && audiencePermission.delete">
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns sticky: true" class="header"></tr>
+          <tr mat-row *matRowDef="let audience; columns: displayedColumns;"
+            (click)="presentAudiencePopup(audience, translate.instant('edit_audience'), 'editAudience')" [ngClass]="{'selected-row-styling': (selection && selection.selected.indexOf(audience)-1),
+            'notHandCursor' : audiencePermission && !audiencePermission.edit}">
+          </tr>
+        </table>
+      </mat-card-content>
+      <mat-card-actions>
+        <mat-paginator #paginator [length]="totalAudience" [pageSize]="noOfItemsPerPage"
+          [pageSizeOptions]="pageSizeOptions" (page)="getAudienceOverPagination($event)">
+        </mat-paginator>
+      </mat-card-actions>
+
+    </mat-card>
+  </div>
+</div>
+

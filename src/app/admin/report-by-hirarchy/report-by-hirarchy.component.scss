@@ -1,0 +1,228 @@
+@import "../../../styles.scss";
+
+.wrapper {
+  // padding: 20px 10px 0;
+  height: $header_height;
+  max-height: $header_height;
+  position: relative;
+
+  .container-card {
+    // margin: 0 40px; // padding: 0px;
+    // height: $header_height;
+    height: calc(100vh - 215px);
+    max-height: $header_height;
+    padding: 0;
+    border-radius: 0;
+
+    // @include media-breakpoint-down(xs) {
+    //     margin: 0;
+    // }
+
+    .title {
+      margin-left: 14px;
+
+      font: {
+        family: Roboto_Regular;
+        size: $text_size_med;
+      }
+
+      .name {
+        font: {
+          family: Roboto_Medium;
+          size: $default_font_size;
+        }
+
+        color: $textMidGrey;
+      }
+
+      span {
+        color: $textColor;
+      }
+    }
+
+    .filter-chip {
+      // margin-left: 16px;
+      width: 100%;
+    }
+
+    .spacer {
+      flex: 1;
+    }
+
+    .toolbar {
+      background-color: $secondary_bg_color;
+      border-bottom: 1px solid $mat_border_color; // padding: 5px 20px;
+      font-size: $text_size_med;
+      width: 100%;
+    }
+
+    .masterCardTable {
+      width: 100%;
+      background: #eee;
+      height: calc(100vh - 213px);
+      overflow: auto;
+      margin: 0;
+      border-top: 1px solid $mat_border_color;
+      border-bottom: 1px solid $mat_border_color;
+      font-family: Roboto_Regular;
+      font-size: $text_size_med;
+      
+      table {
+        .apply-hover{
+          &:hover{
+            cursor: pointer;
+          }
+        }
+        tr {
+          @include media-breakpoint-down(sm) {
+            // display: block;
+            display: table-row;
+            // flex-direction: column;
+            // flex: 1;
+            // width: auto;
+            // border-bottom: 1px solid $mat_border_color;
+            // height: auto;
+            padding: 10px 0;
+            font-family: Roboto_Regular;
+          }
+          cursor: default;
+          &:first-child {
+            background-color: $brand_color;
+            pointer-events: none;
+            td p {
+              color: white;
+              // font-family: Roboto_Bold;
+            }
+            td {
+              color: white;
+              // font-family: Roboto_Bold;
+            }
+          }
+        }
+
+        // th {
+        //     @include media-breakpoint-down(sm) {
+        //         display: block !important;
+        //     }
+        // }
+
+        // thead {
+        //     @include media-breakpoint-down(sm) {
+        //         display: block !important;
+        //     }
+        // }
+      }
+
+      .profile-pic {
+        height: 40px;
+        width: 40px;
+        object-fit: contain;
+        border-radius: 50%;
+      }
+
+      .no_messages {
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        padding-top: 20px;
+
+        font: {
+          family: Roboto_Regular;
+          size: $default_font_size;
+        }
+
+        @extend .center-align;
+      }
+
+      .headerHeight {
+        height: 40px !important;
+      }
+
+      // ::ng-deep .mat-sort-header-container{
+      //     justify-content: center;
+      // }
+      th,
+      td {
+        // min-width: 150px;
+        font-size: 12px;
+        text-align: left;
+
+        &:first-child {
+          padding-left: 20px;
+        }
+      }
+
+      .text-content-style {
+        text-align: left;
+      }
+
+      .number-content-style {
+        text-align: right;
+      }
+
+      .small-content {
+        max-width: 35px;
+      }
+
+      .medium-content {
+        max-width: 50px;
+      }
+
+      .long-content {
+        max-width: 150px;
+      }
+
+      .hyphen-styling {
+        margin-left: 40px;
+      }
+    }
+
+    .mat-card-actions {
+      margin: 0;
+      padding: 0;
+
+      .mat-paginator {
+        width: 95%;
+        margin: 0 auto;
+
+        .mat-paginator-page-size {
+          flex: 1;
+        }
+      }
+    }
+
+    // .masterCardTableactions {
+    //     margin: 0;
+    //     padding: 0;
+    //     // position: absolute;
+    //     // width: 100%;
+    //     // bottom: 0;
+    //     // border-top: 1px solid #eae9e9;
+    //     // height: 25%;
+    //     // ::ng-deep .mat-select {
+    //     //     max-width: 40px;
+    //     // }
+    //     .mat-paginator {
+    //         width: 95%;
+    //         margin: 0 auto;
+    //         // ::ng-deep .mat-paginator-container {
+    //         //     align-items: inherit;
+    //         // }
+    //         .mat-paginator-page-size {
+    //             flex: 1;
+    //         }
+    //         // ::ng-deep .mat-paginator-page-size-label {
+    //         //     @include media-breakpoint-down(md) {
+    //         //         display: none;
+    //         //     }
+    //         // }
+    //         // ::ng-deep .mat-paginator-range-label {
+    //         //     @include media-breakpoint-down(md) {
+    //         //         margin: 0;
+    //         //     }
+    //         // }
+    //     }
+    // }
+  }
+}

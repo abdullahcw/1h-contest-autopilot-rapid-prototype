@@ -1,0 +1,70 @@
+<div class="action_icons">
+    <img src="assets/img/qr_code/white_download.png" (click)="saveAsImage()">
+    <mat-icon style="color: white;" (click)="close()">close</mat-icon>
+</div>
+<div class="qrcode-container">
+    <div class="qrcode-wrapper">
+
+        <mat-card class="main-card">            
+            <div class="qrcode-details">                
+                <div class="qrcodeImage" #parent>
+                    <img class="qrCodeBg" src="/assets/img/qr_code/qr_Code_bg.png"/>                    
+                    <div class="codeNameWrapper" *ngIf="qrData.companyLogo">
+                        <div class="companyLogoParent">
+                            <img class="companyLogo" [src]="qrData.companyLogo"/>
+                            <img class="companyLogobg" src="/assets/img/qr_code/clientLogoBg.png"/>
+                        </div>
+                    </div>
+                    <div class="hWrapper">
+                        <img  src="/assets/img/qr_code/qr_code_1huddleLogo.png"/>
+                    </div>
+                    <div class="qrCodeWrapper" >
+                        <img class="qrBackground" src="/assets/img/qr_code/rectangleQr.png"/>
+                        <qrcode  class="qrCodeComponent" [qrdata]="dataToDisplay" 
+                        [width]="300"
+                        [errorCorrectionLevel]="'M'"   
+                        [cssClass]="'center'"
+                        [elementType]="'canvas'"
+                        [colorDark]="'#000000ff'"
+                        [colorLight]="'#ffffffff'"                  
+                        [margin]="2"                                          
+                        ></qrcode>
+                        <img class="logo_img" src="/assets/img/qr_code/qr_1H_logo.png" />
+                    </div>
+                    <div class="appStore">
+                        <img  src="/assets/img/qr_code/appStore.png"/>
+                    </div>
+                    <div class="howToPlayTitle">
+                        <span>{{'howToPlay' |  translate}}</span>                        
+                    </div>
+                    <div class="stepper">
+                        <span class="first"><span class="hashValue">#</span>1
+                        <img class="arrowImg" src="/assets/img/qr_code/arrow.png" />
+                        </span>   
+                        <span class="second"><span class="hashValue">#</span>2
+                        <img class="arrowImg" style="left: 75px;" src="/assets/img/qr_code/arrow.png" /></span>                        
+                        <span><span class="hashValue">#</span>3</span>                        
+                    </div>
+                    <div class="stepperContent" *ngIf="qrData?.isFromCompany">
+                        <div class="content"><div >Go to your App Store or Play Store and download 1Huddle.</div>   </div>
+                        <div class="content"><div>Once installed, open the app and verify using your phone number.</div> </div>                       
+                        <div class="content "><div>Scan the QR code or input the company ID below to connect your company account and then enter your email / password.</div> 
+                        <div class="contentWithText"><span class="contentTextitle">{{qrData.slug}}</span></div></div> 
+                    </div>
+                    <div class="stepperContent" *ngIf="!qrData?.isFromCompany">
+                        <div class="content"><div>Go to your App Store or Play Store and download 1Huddle.</div>  </div> 
+                        <div class="content"><div>Once installed, open the app and verify using your phone number.</div>  </div>
+                        <div class="content"><div>Scan the QR code or input the VIP Code provided below and then complete registration.</div> 
+                        <div class="contentWithText" ><span class="contentTextitle">{{qrData.slug}}</span></div>
+                    </div>
+                    </div>
+
+                    <div class="tagLine">
+                        <span>EVERYBODY PLAYS GAMES. <span class="spanBold">FEW CHANGE THEM</span></span>
+                    </div>
+                </div>
+                
+            </div>
+        </mat-card>
+    </div>
+</div>

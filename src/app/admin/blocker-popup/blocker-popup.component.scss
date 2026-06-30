@@ -1,0 +1,34 @@
+@import '../../../styles.scss';
+
+.wrapper {
+    width: 500px;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    @include media-breakpoint-down(xs) {
+        width: 300px;
+      }
+}
+
+.centerDiv {
+    width: 463px;
+    height: 150px;
+    background-color: white;
+    border-radius: 16px;
+    text-align: center;
+    position: relative;
+    @include media-breakpoint-down(xs) {
+        width: 300px;
+      }
+}
+.title{
+    font-size: 19px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Roboto_Regular;
+
+}

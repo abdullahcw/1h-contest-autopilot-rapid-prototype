@@ -1,0 +1,185 @@
+<div class="main_container">
+  <div class="wrapper">
+    <mat-card class="container-card">
+      <mat-card-header>
+        <mat-toolbar class="toolbar">
+          <mat-toolbar-row>
+            <span class="title"><span
+                class="">{{ selection.hasValue() ? globalService.showTextOnSelection(selection.selected.length, globalService.formatNumber(totalManagers), ('managers' | translate) ) : ('showing_all_managers' | translate) }}</span></span>
+            <span class="spacer"></span>
+            <button class="add-manager addEntity" matTooltip="{{'add_new_manager' | translate}}" [disabled]="!isFiltersLoaded"
+              matTooltipPosition="below" (click)="addNewManager()" *ngIf="managerPermission && managerPermission.add"
+              mat-fab>
+              <mat-icon>add</mat-icon>
+            </button>
+            <div class="icon-wrapper">
+              <div matTooltip="{{'how_to_login_add_users' | translate}}" (click)="showVideo()" class="open-video">
+                <mat-icon>play_circle_outline</mat-icon>
+              </div>
+              <button class="menu-options" *ngIf="userDataSource?.data?.length" mat-icon-button
+                [matMenuTriggerFor]="menu" matTooltip="{{'options' | translate}}" (click)="menuOptionsToBeDisplay() ||
+                menuOptionsToBeDisplaySom()">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+            </div>
+            <mat-menu #menu="matMenu" class="menu_status" y-position="below" overlapTrigger="false">
+              <button mat-menu-item class="options-menu-item"
+                (click)="navigateToManagerDetailsPage(selection.selected[0])"
+                *ngIf="!is_editable && selection.selected.length == 1">
+                <mat-icon class="toolbar-icon-color" matTooltip="{{'edit' | translate}}" matTooltipPosition="left">edit
+                </mat-icon>
+                <span>{{'edit' | translate}}</span>
+              </button>
+              <button mat-menu-item class="options-menu-item" (click)="downloadManagersCSV()">
+                <mat-icon class="toolbar-icon-color" matTooltipPosition="left">cloud_download</mat-icon>
+                <span>{{'download' | translate}}</span>
+              </button>
+              <button mat-menu-item class="options-menu-item" (click)="activateDeactivateManagers('active')"
+                *ngIf="!is_editable && selection.selected.length && (selection.selected.length === 1 ? selectedManager?.status !== 'active' : true)">
+                <mat-icon>visibility</mat-icon>
+                <span>{{'activate' | translate}}</span>
+              </button>
+              <button mat-menu-item class="options-menu-item" (click)="activateDeactivateManagers('inactive')"
+                *ngIf="!is_editable && selection.selected.length && (selection.selected.length === 1 ? selectedManager?.status === 'active' : true)">
+                <mat-icon>visibility_off</mat-icon>
+                <span>{{'deactivate' | translate}}</span>
+              </button>
+              <button mat-menu-item class="options-menu-item" (click)="confirmDeletion()"
+                *ngIf="managerPermission && managerPermission?.delete && selection.selected.length">
+                <mat-icon>delete_on</mat-icon>
+                <span>{{'delete' | translate}}</span>
+              </button>
+            </mat-menu>
+
+          </mat-toolbar-row>
+          <mat-toolbar-row>
+            <app-search class="filter-chip" style="width:100%" [filter_options]="filter_options"
+              [shouldAllowAddMore]="userDataSource?.data.length" [dataSource]="menuList"
+              (getDataSource)="getDataSource($event)" (filtersUpdated)="refreshListOnFilterChange($event)"
+              [context]="context" (filterOptionUpdated)="filterOptionUpdated($event)"></app-search>
+          </mat-toolbar-row>
+        </mat-toolbar>
+      </mat-card-header>
+      <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+      <mat-card-content>
+        <div class="no_messages" *ngIf="!userDataSource?.data?.length">
+          <p>{{is_loading ? ('please_wait' | translate) : ('no_record_found' | translate)}}</p>
+        </div>
+        <div id="scrollToTop"></div>
+        <table mat-table [dataSource]="userDataSource" class="responsive-table" matSort
+          (matSortChange)="sortData($event)" matSortActive="first_name" matSortDirection="asc" matSortDisableClear
+          *ngIf="userDataSource?.data?.length" [ngClass]="{'disabled-style': is_loading}">
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef class="checkboxes checkBoxColumn select-all-checkbox">
+              <mat-checkbox (change)="$event ? masterToggle() : null"
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let manager" (click)="$event.stopPropagation();"
+              class="checkboxes checkboxes-colors">
+              <mat-checkbox color="primary" (change)="$event ? selection.toggle(manager) : null"
+                [checked]="selection.isSelected(manager)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="manager_profile_pic">
+            <th mat-header-cell *matHeaderCellDef class="checkboxes imgColumn"></th>
+            <td mat-cell *matCellDef="let manager" class="user-logo">
+              <app-custom-images-table class="img-wrapper" [className]="'img40by40'" [ImageSrc]="manager.profile_image_url" > </app-custom-images-table>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="first_name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'name' | translate}} </th>
+            <td mat-cell *matCellDef="let manager">{{manager.first_name}} {{manager.last_name}}</td>
+          </ng-container>
+          <ng-container matColumnDef="manager_status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'status' | translate}} </th>
+            <td mat-cell *matCellDef="let manager">{{manager.status === 'active' ? 'Active' : 'Inactive'}}</td>
+          </ng-container>
+          <ng-container matColumnDef="manager_type">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'type' | translate}} </th>
+            <td mat-cell *matCellDef="let manager">{{getManagerType(manager.access_type)}}</td>
+          </ng-container>
+          <ng-container matColumnDef="location_name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'location' | translate}} </th>
+            <td mat-cell *matCellDef="let manager">
+              <p class="department_name" *ngIf="manager.access_type === 'M'">{{'all_uppercase' | translate}}</p>
+              <p class="department_name" *ngIf="(manager.access_type === 'MM' || manager.access_type === 'T') &&
+                (manager?.link_locations.length === 1 || !manager?.link_locations.length)">
+                {{manager?.link_locations.length ? manager?.link_locations[0].location_name  : '---'}}
+              </p>
+              <p class="department_name"
+                *ngIf="(manager.access_type === 'MM' || manager.access_type === 'T') && manager?.link_locations.length > 1"
+                [matMenuTriggerFor]="menu_loc" (menuOpened)="menuOpened()"
+                (click)="manager?.link_locations.length ? $event.stopPropagation() : '';">
+                {{manager?.link_locations.length ? departmentColoumText(manager?.link_locations[0].location_name, (manager?.link_locations.length - 1), ('number_and_more' | translate)) : '---'}}
+              </p>
+              <mat-menu #menu_loc="matMenu" class="customeMenu-1">
+                <form #search="ngForm" (click)="$event.stopPropagation()">
+                  <input class="inputSearch"
+                    *ngIf="manager && manager?.link_locations && manager?.link_locations.length > 5" name="search-key"
+                    [(ngModel)]="selectedSearchKey_loc" [value]="selectedSearchKey_loc" autocomplete="off"
+                    placeholder="{{'enter_location' | translate}}">
+                </form>
+                <div class="menu_container"> 
+                  <mat-list role="list">
+                    <mat-list-item
+                      *ngFor="let item of manager?.link_locations | search:selectSearchFilterKey_loc: selectedSearchKey_loc"
+                      role="listitem">{{item?.location_name}}
+                    </mat-list-item>
+
+                  </mat-list>
+                </div>
+              </mat-menu>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="department_name">
+            <label>{{'department' | translate}}</label>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'department' | translate}}</th>
+            <td mat-cell *matCellDef="let manager"><label>{{'department' | translate}}</label>
+              <p class="department_name" *ngIf="manager.access_type === 'M'">{{'all_uppercase' | translate}}</p>
+              <p class="department_name"
+                *ngIf="(manager.access_type === 'MM' || manager.access_type === 'T') && (manager?.link_departments.length === 1 || !manager?.link_departments.length)">
+                {{manager?.link_departments.length ? manager?.link_departments[0].department_name  : '---'}}
+              </p>
+              <p class="department_name"
+                *ngIf="(manager.access_type === 'MM' || manager.access_type === 'T') && manager?.link_departments.length > 1"
+                [matMenuTriggerFor]="menu" (menuOpened)="menuOpened()"
+                (click)="manager?.link_departments.length ? $event.stopPropagation() : '';">
+                {{manager?.link_departments.length ? departmentColoumText(manager?.link_departments[0].department_name, (manager?.link_departments.length - 1), ('number_and_more' | translate)) : '---'}}
+              </p>
+              <mat-menu #menu="matMenu" class="customeMenu-1">
+                <form #search="ngForm" (click)="$event.stopPropagation()">
+                  <input class="inputSearch"
+                    *ngIf="manager && manager?.link_departments && manager?.link_departments.length > 5"
+                    name="search-key" [(ngModel)]="selectedSearchKey" [value]="selectedSearchKey" autocomplete="off"
+                    placeholder="{{'enter_department' | translate}}">
+                </form>
+                <div class="menu_container">
+                  <mat-list role="list">
+                    <mat-list-item
+                      *ngFor="let item of manager?.link_departments | search:selectSearchFilterKey: selectedSearchKey"
+                      role="listitem">{{item?.department_name}}
+                    </mat-list-item>
+                  </mat-list>
+                </div>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header"></tr>
+          <tr mat-row *matRowDef="let manager; columns: displayedColumns;"
+            (click)="navigateToManagerDetailsPage(manager)"
+            [ngClass]="{'selected-row-styling': (selection && selection.selected.indexOf(manager) > -1)}"></tr>
+        </table>
+        <span class="spacer"></span>
+      </mat-card-content>
+      <mat-card-actions>
+        <mat-paginator #paginator [length]="totalManagers" [pageSize]="noOfItemsPerPage"
+          [pageSizeOptions]="pageSizeOptions" (page)="getManagersOverPagination($event)">
+        </mat-paginator>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

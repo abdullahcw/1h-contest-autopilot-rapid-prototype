@@ -1,0 +1,21 @@
+<div class="calendar_wrapper">
+    <div class="calendar" #calendar>
+        <div class="calendar_month_nav">
+            <mat-icon (click)="prevMonth()" [ngClass]="{'disable-icon': diff < -2}">chevron_left</mat-icon>
+            <span class="month_text">{{getCapitalized(currentDate?.format('MMMM'))}}</span>
+            <mat-icon (click)="nextMonth()" [ngClass]="{'disable-icon': diff >= 0}">chevron_right</mat-icon>
+        </div>
+        <div class="calendar_day_names">
+            <div class="calendar_day_name" *ngFor="let name of namesOfDays">{{name}}</div>
+        </div>
+        <div class="calendar_weeks" [ngClass]="{'custom_calendar_weeks': showPlayerGameplay}">
+            <div class="calendar_week" *ngFor="let week of weeks">
+                <ng-container *ngFor="let day of week">
+                    <div class="calendar_date" (click)="showGamePlayByDate(day.mDate, day.selected)">
+                        <span class="calendar_number" [ngClass]="{'selected': day.selected}">{{day.mDate.date()}}</span>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>

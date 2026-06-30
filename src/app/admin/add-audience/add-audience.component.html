@@ -1,0 +1,30 @@
+<div class="main-container">
+  <mat-toolbar class="small-toolbar" color="primary">
+    {{titleToBeDisplayed}}
+  </mat-toolbar>
+  <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+  <section class="add-audience-content" [ngClass]="{'disabled-style': is_loading}">
+    <form #addAudience="ngForm">
+      <div class="container">
+        <div class="input-text">
+          <input type="text" class="holder form-inputs" placeholder="{{'enter_audience_name' | translate}}"
+            name="audience_name" (input)="audienceChanged()" [(ngModel)]="audience.audience_name" maxlength="32"
+            minlength="1" appValidateInput required>
+          <mat-error class="error-msg" *ngIf="audienceExist">
+            {{'audience_already_exists' | translate}}
+          </mat-error>
+        </div>
+        <div class="button-row">
+          <div class="btn-right">
+            <button type="button" mat-button class="cancel-button" tabindex="-1"
+              (click)="cancel()">{{'cancel_uppercase' | translate}}</button>
+          </div>
+          <div>          
+            <button type="button" mat-button class="next-button" tabindex="-1" (click)="validateAudience()"
+              [disabled]="!addAudience.valid || !addAudience.dirty || audienceExist">{{'next_uppercase' | translate}}</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </section>
+</div>

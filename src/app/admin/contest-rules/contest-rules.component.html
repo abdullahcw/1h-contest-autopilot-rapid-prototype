@@ -1,0 +1,35 @@
+<section class="master-wrapper">
+  <mat-toolbar class="small-toolbar" color="primary">
+    <div>{{'rules' | translate}}</div>
+    <mat-icon class="cancel-icon" (click)="cancel()" *ngIf="!contestService.isContestEditable">close</mat-icon>
+  </mat-toolbar>
+  <div class="wrapper" [ngClass]="{'view-mode': !contestService.isContestEditable }">
+
+    <div class="main-container">
+      <form #contestRuleForm="ngForm" style="height: 100%;">
+        <div class="rules-wrapper">
+          <div class="label-container">
+            <label for="rules" *ngIf="contestService.isContestEditable">{{ 'rules_title' | translate }}</label>
+            <label for="rules"
+              *ngIf="!contestService.isContestEditable">{{ 'view_mode_rules_title' | translate }}</label>
+            <label class="updating-message" *ngIf="is_updating">{{ 'saving_changes' | translate }}</label>
+          </div>
+          <textarea class="contest-rules" name="contest-rules" placeholder="{{ 'rules_placeholder' | translate}}"
+            [(ngModel)]="rules" tabindex="-1" [readonly]="!contestService.isContestEditable" maxlength="1000"
+            appValidateInput></textarea>
+        </div>
+      </form>
+    </div>
+    <div class="button-row" *ngIf="contestService.isContestEditable">
+      <div class="btn-right">
+        <button type="button" mat-button class="cancel-button" tabindex="-1"
+          (click)="cancel()">{{'cancel_uppercase' | translate}}</button>
+      </div>
+      <div>
+        <button type="submit" mat-button (click)="saveRules()" [disabled]="contestRuleForm.pristine || !rules.length">
+          {{'done_uppercase' | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

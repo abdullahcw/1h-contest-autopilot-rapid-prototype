@@ -1,0 +1,114 @@
+<div class="main_container">
+  <div class="wrapper">
+    <mat-card class="container-card">
+      <mat-card-header>
+        <mat-toolbar class="toolbar">
+          <mat-toolbar-row>
+            <span class="title"><span class="">{{ selection.hasValue() ? globalService.showTextOnSelection(selection.selected.length, totalAttempts, ('additional_game_attempts' | translate) ) :
+                ('showing_additional_game_attempts' | translate)}}</span></span>
+            <span class="spacer"></span>
+            <div *ngIf="selection.hasValue()" class="delete-button">
+              <mat-icon (click)="confirmDeletion()">delete</mat-icon>
+            </div>
+            <button class="add-attempt addEntity" matTooltip="{{'add_attempts' | translate}}" matTooltipPosition="below"
+              (click)="presentAddAttemptPopup()" mat-fab [disabled]= "is_loading">
+              <mat-icon>add</mat-icon>
+            </button>
+          </mat-toolbar-row>
+          <mat-toolbar-row>
+            <app-search class="filter-chip" style="width:100%" [shouldAllowMultiline]="false"
+              [filter_options]="!disabledAppSearch ? filter_options : []" [dataSource]="menuList"
+              (getDataSourceWithFilterDetails)="getDataSource($event)" (getDataSourceWithSearchKey)="getDataSourceWithSearchKey($event)" [shouldAllowAddMore]="attempts?.length"
+              (filtersUpdated)="refreshListOnFilterChange($event)" [context]="context"
+              (filterOptionUpdated)="filterOptionUpdated($event)"></app-search>
+          </mat-toolbar-row>
+        </mat-toolbar>
+      </mat-card-header>
+      <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+      <mat-card-content>
+        <div class="no_messages" *ngIf="!dataSource?.data.length || is_loading">
+          <p>{{is_loading ? ('please_wait' | translate) : ('no_record_found' | translate)}}</p>
+        </div>
+        <table mat-table [dataSource]="dataSource" class="responsive-table" matSort (matSortChange)="sortData($event)"
+          matSortActive="created_on" matSortDirection="desc" matSortDisableClear *ngIf="dataSource?.data.length">
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef class="checkboxes select-all-checkbox">
+              <mat-checkbox (change)="$event ? masterToggle() : null"
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let attempt" (click)="$event.stopPropagation();"
+              class="checkboxes checkboxes-colors">
+              <mat-checkbox color="primary" (change)="$event ? selection.toggle(attempt) : null"
+                [checked]="selection.isSelected(attempt)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'name' | translate}} </th>
+            <td mat-cell *matCellDef="let attempt">
+              <label>{{'name' | translate}}</label>
+              <p>{{attempt.first_name + ' ' + attempt.last_name}}</p>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="game_name">
+            <th mat-header-cell *matHeaderCellDef>{{'game' | translate}} </th>
+            <td mat-cell *matCellDef="let attempt">
+              <label>{{'game' | translate}}</label>
+              <p>{{attempt.game_name}}</p>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="attempts">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'attempts' | translate}} </th>
+            <td mat-cell *matCellDef="let attempt">
+              <label>{{'attempts' | translate}}</label>
+              <input class="small-number-content"
+                [ngClass]="{'invalid-attempts': attempt.attempts < 1 || attempt.attempts > 10 }"
+                [(ngModel)]="attempt.attempts" (change)="markForUpdation(attempt); attemptsField.blur()"
+                (keypress)="numberOnly($event)" [value]="attempt.attempts" autocomplete="off" #attemptsField>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="location">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'location' | translate}} </th>
+            <td mat-cell *matCellDef="let attempt">
+              <label>{{'location' | translate}}</label>
+              <p (click)="toggleMenu($event, attempt.player_id,'location_id'); $event.stopPropagation();">{{attempt.location_name}}
+                <span *ngIf="attempt.secondary_location_count > 0"> + {{attempt.secondary_location_count}} {{'more' |translate}}</span>
+              </p>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="department">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'department' | translate}} </th>
+            <td mat-cell *matCellDef="let attempt">
+              <label>{{'department' | translate}}</label>
+              <p (click)="toggleMenu($event, attempt.player_id, 'department_id'); $event.stopPropagation();">{{attempt.department_name}}
+                <span *ngIf="attempt.secondary_department_count > 0"> + {{attempt.secondary_department_count}} {{'more' |translate}}</span>
+              </p>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="created_on">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'date' | translate}} </th>
+            <td mat-cell *matCellDef="let attempt">
+              <label>{{'date' | translate}}</label>
+              <p>{{getDateTime(attempt.created_on)}}</p>
+            </td>
+          </ng-container>
+
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header"></tr>
+          <tr mat-row *matRowDef="let attempt; columns: displayedColumns;"
+            [ngClass]="{'selected-row-styling': (selection && selection.selected.indexOf(attempt) > -1)}">
+          </tr>
+        </table>
+        <span class="spacer"></span>
+      </mat-card-content>
+      <mat-card-actions>
+        <mat-paginator #paginator [length]="totalAttempts" [pageSize]="noOfItemsPerPage"
+          [pageSizeOptions]="pageSizeOptions" (page)="getAttemptsOverPagination($event)">
+        </mat-paginator>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
+<app-menu [openCustomMenu]="openCustomMenu" [selectedId]="selectedId" [fieldType]="selectedType"> </app-menu>

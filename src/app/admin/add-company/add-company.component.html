@@ -1,0 +1,405 @@
+<mat-card>
+  <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+  <div class="company_form_wrapper">
+    <div class="company_info">
+      <form name="myForm" class="main-form" #companyForm="ngForm" [ngClass]="{'disabled-style': is_loading}">
+        <div class="left-pane" *ngIf="!nextpage">
+          <div class="company-name-logo">
+            <div class="company-inline-holder">
+              <div class="logo-holder">
+                <label for="upload_image">
+                  <img class="company_logo" [src]="logo" onError="this.src='/assets/img/default.png'"
+                    (click)="imgInput && imgInput?.click()" alt="">
+                  <input type="file" class="form-control" onclick="this.value=null" #imgInput id="upload_image"
+                    [hidden]="true" accept="image/*"
+                    *ngIf="companyPermission && companyPermission?.edit_details && companyPermission?.edit_details?.logo"
+                    (change)="fileChangeEvent($event)" />
+                  <div class="image-overlay"
+                    *ngIf="companyPermission && companyPermission?.edit_details && companyPermission?.edit_details?.logo">
+                    <div class="edit-icon">
+                      <mat-icon>edit</mat-icon>
+                    </div>
+                    <div class="delete-icon" (click)="deleteLogo(); $event.preventDefault();"
+                      *ngIf="company.company_logo || croppedImage.blob">
+                      <mat-icon>delete</mat-icon>
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="location">{{ 'company' | translate }}</label>
+            <input type="text" class="holder form-inputs" placeholder="{{'company_name' | translate}}"
+              name="company_name" #name="ngModel" maxlength="40" minlength="1" pattern="^(?!\s*$)[A-Za-z0-9\- ]*"
+              [(ngModel)]="company.company_name"
+              [disabled]="companyPermission && companyPermission.edit_details && !companyPermission.edit_details.name"
+              (ngModelChange)="valueChange($event)" appValidateInput required>
+          </div>
+          <div class="form-group" style="position: relative;">
+            <label for="location">{{ 'company_id' | translate }}</label>
+            <input type="text" class="holder form-inputs" placeholder="{{'company_id' | translate}}" name="company_slug"
+              #name="ngModel" maxlength="50" minlength="1" pattern="^(?!\s*$)[A-Za-z0-9\-]*"
+              [disabled]="companyPermission && companyPermission.edit_details && !companyPermission.edit_details.name"
+              (keydown.space)="$event.preventDefault();" (ngModelChange)="slugValueChange($event)"
+              [ngModel]="company.company_slug" appValidateInput required>
+              <mat-icon *ngIf="company.company_slug" class="toolbar-icon-color qrPosition handCursor" (click)="openQRCode(company)">qr_code_scanner</mat-icon>
+          </div>
+          <div class="form-group">
+            <label for="industry">{{ 'industry' | translate }}</label>
+            <input type="text" class="holder form-inputs" placeholder="{{'enter_industry' | translate}}" name="industry"
+              #industry="ngModel" [(ngModel)]="company.industry" pattern="^(?!\s*$)[A-Za-z0-9\- ]*"
+              [disabled]="companyPermission && companyPermission.edit_details && !companyPermission?.edit_details?.industry"
+              appValidateInput>
+          </div>
+          <div class="toggle-section">
+            <div class="report-section">
+              <div class="report-sw  checkboxes-colors">
+                <mat-checkbox class="spacing" color="primary" name="reports" [(ngModel)]="company.send_monthly_report"
+                  [disabled]="companyPermission && companyPermission.edit_details && !companyPermission?.edit_details?.monthly_report">
+                  <span>{{ 'monthly_report' | translate }}</span>
+                </mat-checkbox>
+              </div>
+            </div>
+            <div class="report-section" *ngIf="isAdmin() || show_ethinicity">
+              <div class="report-sw  checkboxes-colors">
+                <mat-checkbox class="spacing" color="primary" name="ethnicity" [(ngModel)]="company.is_ethnicity"
+                  [disabled]="companyPermission && companyPermission.edit_details && !companyPermission?.edit_details?.ethnicity">
+                  <span>{{ 'ethnicity' | translate }}</span>
+                </mat-checkbox>
+              </div>
+            </div>
+          </div>
+          <div class="form-group url-container" *ngIf="company.web_app_url">
+            <div class="url-style">
+              <a href="{{company.web_app_url}}" target="_blank"
+                [ngClass]="{'not-active' : isActive}">{{webAppUrl ? 'https://'+webAppUrl : company.web_app_url}}
+              </a>
+            </div>
+          </div>
+        </div>
+        <mat-divider [vertical]="true" class="vertical-divider"></mat-divider>
+        <div>
+          <mat-divider [vertical]="false" class="horizontal-divider"></mat-divider>
+        </div>
+        <div class="right-pane" *ngIf="!nextpage">
+          <div class="headquarters-wrapper">
+            <div class="form-group location-name-container">
+              <label for="location" class="location-name">{{ 'headquarters_uppercase' | translate }}</label>
+            </div>
+          </div>
+          <div class="form-group suffix-spinner-wrapper">
+            <label for="country">{{ 'country' | translate }}</label>
+            <app-search-select [items]="countriesList" [selectedId]="company.location_details.country_id"
+              placeholderText="{{('select_country' | translate)}}" (change)="onCountrySelectionChanged($event)"
+              [isRequired]="true"
+              [disabled]="companyPermission && companyPermission.edit_details && !companyPermission?.edit_details?.country || fetchingCountries"
+              [disabledArrow]="companyPermission && companyPermission.edit_details && !companyPermission?.edit_details?.country || fetchingCountries">
+            </app-search-select>
+            <mat-spinner class="spinner" mode="indeterminate" *ngIf="fetchingCountries" diameter="20">
+            </mat-spinner>
+          </div>
+          <div class="form-group suffix-spinner-wrapper">
+            <label for="state">{{ 'state' | translate }}</label>
+            <app-search-select [items]="statesList" [selectedId]="company.location_details.state_id"
+              placeholderText="{{('select_state' | translate)}}" (change)="onStateSelectionChanged($event)"
+              [disabled]="(companyPermission && companyPermission.edit_details && !companyPermission?.edit_details?.state) || !company.location_details.country_id || fetchingStates"
+              [disabledArrow]="(companyPermission && companyPermission.edit_details && !companyPermission?.edit_details?.state) || !company.location_details.country_id || fetchingStates">
+            </app-search-select>
+            <mat-spinner class="spinner" mode="indeterminate" *ngIf="fetchingStates" diameter="20">
+            </mat-spinner>
+          </div>
+          <div class="form-group city-container">
+            <label for="city">{{ 'city' | translate }}</label>
+            <input type="text" class="holder form-inputs" placeholder="{{'enter_city' | translate}}" name="city"
+              #city="ngModel" [(ngModel)]="company.location_details.city" pattern="^(?!\s*$)[A-Za-z0-9\- ]*"
+              [disabled]="companyPermission && companyPermission?.edit_details && !companyPermission?.edit_details?.city"
+              appValidateInput>
+          </div>
+          <div class="form-group suffix-spinner-wrapper">
+            <label for="timezone">{{ 'timezone' | translate }}</label>
+            <app-search-select [items]="timeZoneList" [selectedId]="company.location_details.tz_id"
+              placeholderText="{{('select_timezone' | translate)}}"
+              [disabled]="companyPermission && companyPermission.edit_details && !companyPermission?.edit_details?.timezone || fetchingTimezones"
+              [disabledArrow]="companyPermission && companyPermission.edit_details && !companyPermission?.edit_details?.timezone || fetchingTimezones"
+              [isRequired]="true" (change)="onTimeZoneSelectionChanged($event)"></app-search-select>
+            <mat-spinner class="spinner" mode="indeterminate" *ngIf="fetchingTimezones" diameter="20">
+            </mat-spinner>
+          </div>
+        </div>
+        <div class="next-page-wrapper" *ngIf="nextpage">
+          <div class="next-page-header">
+            <label class="account-details">{{ 'account_details' | translate }}</label>
+            <mat-icon (click)="cancelCompany()">close</mat-icon>
+          </div>
+          <hr class="horizontal-line">
+          <div class="account-type">
+            <div class="account-type-wrapper form-group custom-form-group custom-radio-error">
+              <label>{{ 'account_type' | translate }}</label>
+              <mat-radio-group md-autofocus class="custom-radio-error custom-input"
+                [ngClass]="{'radio-required': isRequired && !selectedAccountType}" aria-label="Games" name="gameMode"
+                [(ngModel)]="selectedAccountType">
+                <mat-radio-button class="radio-btn" [value]="accountType.TRIAL">{{ 'trial_account' | translate }}
+                </mat-radio-button>
+                <mat-radio-button class="radio-btn" [value]="accountType.PAID">{{ 'paid_account' | translate }}
+                </mat-radio-button>
+                <mat-error *ngIf="isRequired && !selectedAccountType">
+                  {{ 'err_msg_for_account_type' | translate }}
+                </mat-error>
+              </mat-radio-group>
+            </div>
+            <div class="toggle-container" (click)="confirmModeChange()"
+              [ngStyle]="{'pointer-events': action ? 'auto' : 'none'}">
+              <label [ngClass]="{'disable-text': !action}">{{ 'paywall' | translate }}</label>
+              <mat-slide-toggle #practiceToggle class="toggle-group" [ngClass]="{'enable-toggle': action}"
+                [checked]="action" [disabled]="true" [ngStyle]="{'opacity': action ? '1' : '0.38'}">
+              </mat-slide-toggle>
+            </div>
+          </div>
+
+          <div class="next-page">
+            <div class="next-page-left-pane">
+              <div class="form-group custom-form-group">
+                <mat-form-field class="example-full-width custom-input-field">
+                  <input matInput class="holder custom-input next-page-date" [matDatepicker]="startDatePicker"
+                    placeholder="{{'start_date' | translate}}" name="startDate" (click)="startDatePicker.open()"
+                    (open)="isDatePickerOpen" (keydown)="$event.preventDefault(); isDatePickerOpen = true;"
+                    (ngModelChange)="markedasTouched('endDate')" [(ngModel)]="company.paywall_start_date"
+                    [required]="false">
+                  <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                  <mat-datepicker #startDatePicker></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="form-group custom-form-group">
+                <mat-form-field class="example-full-width custom-input-field">
+                  <input matInput class="holder custom-input next-page-date" md-autofocus
+                    [matDatepicker]="endDatePicker" placeholder="{{'end_date' | translate}}"
+                    (click)="endDatePicker.open()" name="endDate" (open)="isDatePickerOpen"
+                    (keydown)="$event.preventDefault(); isDatePickerOpen = true;" [min]="company.paywall_start_date"
+                    [(ngModel)]="company.paywall_end_date" [required]="false">
+                  <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+                  <mat-datepicker #endDatePicker></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="next-page-right-pane">
+              <div class="wrapper">
+                <label class="title">{{ 'usage_metrics' | translate }}</label>
+                <hr class="horizontal-line">
+                <div class="table-wrap">
+                  <div class="column">
+                    <label>{{ 'no_of_managers' | translate }}</label>
+                    <div class="row">
+                      <span>{{companyStastics.managers}}</span><span>/</span>
+                      <input name="no_of_managers" maxlength="3"  (keypress)="numberOnly($event)"
+                        [(ngModel)]="company.managers_limit" class="editLimit" autocomplete="off">
+
+                    </div>
+                  </div>
+                  <div class="column">
+                    <label>{{ 'no_of_players' | translate }}</label>
+                    <div class="row">
+                      <span>{{globalService.formatNumber(companyStastics.players) }}</span><span>/</span>
+                      <input name="no_of_players" [ngModel]="globalService.formatNumber(company.players_limit)"
+                        (keypress)="numberOnly($event)" (blur)="chackEmptyValue($event.target.value,'players_limit');"
+                        (ngModelChange)="commaSeparatedNumbersOnly($event,company,'players_limit')" class="editLimit"
+                        autocomplete="off" maxlength="6">
+                    </div>
+                  </div>
+                  <div class="column">
+                    <label>{{ 'no_of_games' | translate }}</label>
+                    <div class="row">
+                      <span>{{globalService.formatNumber(companyStastics.games)}}</span><span>/</span>
+                      <input name="no_of_games" [ngModel]="globalService.formatNumber(company.games_limit)"
+                        (keypress)="numberOnly($event)" (blur)="chackEmptyValue($event.target.value,'games_limit');"
+                        (ngModelChange)="commaSeparatedNumbersOnly($event,company,'games_limit')" class="editLimit"
+                        autocomplete="off" maxlength="5">
+                    </div>
+                  </div>
+                </div>
+                <div class="table-wrap">
+                  
+                  <div class="column ai-assest">
+                    <label>{{ 'no_of_ai_Assist' | translate }}</label>
+                    <div class="row">
+                      <span>{{globalService.formatNumber(companyStastics.ai_token_consumed)}}</span><span>/</span>
+                      <input name="no_of_ai_Assist" [ngModel]="globalService.formatNumber(company.ai_token_limit)" *ngIf="!showInputAI"
+                        (keypress)="numberOnly($event)" (blur)="chackEmptyValueForAI($event.target.value,'ai_token_limit');"
+                        (ngModelChange)="commaSeparatedNumbersOnly($event,company,'ai_token_limit')" class="editLimit"
+                        autocomplete="off" maxlength="10" onpaste="return false;">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="next-page">
+            <div class="next-page-left-pane">
+              <div class="column">
+                <label class="title-representative">{{ 'sales_representative' | translate }}</label>
+                <div class="form-group custom-form-group">
+                  <mat-form-field class="example-full-width custom-input-field">
+                    <input matInput class="custom-input" placeholder="{{'enter_name' | translate}}" name="sdr_name"
+                      [required]="(!!company?.sdr_email && !!!company?.sdr_name)" [(ngModel)]="company.sdr_name"
+                      (ngModelChange)="markedasTouched('sdr_email')" maxlength="40" minlength="1">
+                    <mat-error *ngIf="!!company?.sdr_email && !!!company?.sdr_name">
+                      {{ 'err_msg_for_field_mandatory' | translate }}
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="form-group custom-form-group">
+                  <mat-form-field class="example-full-width custom-input-field">
+                    <input matInput class="custom-input" placeholder="{{'email_id' | translate}}" name="sdr_email"
+                      [required]="(!!company?.sdr_name && !!!company?.sdr_email)" [(ngModel)]="company.sdr_email"
+                      pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$"
+                      (ngModelChange)="markedasTouched('sdr_name')">
+                    <mat-error *ngIf="!!company?.sdr_name && !!!company?.sdr_email">
+                      {{ 'err_msg_for_field_mandatory' | translate }}
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="next-page-right-pane">
+              <div class="column">
+                <label class="title-representative">{{ 'customer_sales_representative' | translate }}</label>
+                <div class="form-group custom-form-group">
+                  <mat-form-field class="example-full-width custom-input-field">
+                    <input matInput class="custom-input" placeholder="{{'enter_name' | translate}}" name="csr_name"
+                      [required]="(!!company?.csr_email && !!!company?.csr_name)" [(ngModel)]="company.csr_name"
+                      (ngModelChange)="markedasTouched('csr_email')" maxlength="40" minlength="1">
+                    <mat-error *ngIf="!!company?.csr_email && !!!company?.csr_name">
+                      {{ 'err_msg_for_field_mandatory' | translate }}
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="form-group custom-form-group">
+                  <mat-form-field class="example-full-width custom-input-field">
+                    <input matInput class="custom-input" placeholder="{{'email_id' | translate}}" name="csr_email"
+                      [(ngModel)]="company.csr_email" [required]="(!!company?.csr_name && !!!company?.csr_email)"
+                      pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$"
+                      (ngModelChange)="markedasTouched('csr_name')">
+                    <mat-error *ngIf="!!company?.csr_name && !!!company?.csr_email">
+                      {{ 'err_msg_for_field_mandatory' | translate }}
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        <div class="ai-policy-wrapper">
+          <label>{{ 'addon-features' | translate }}</label>
+          <div class="contentWrapper">
+
+            <div class="checkbox-section-clock">
+              <div class="report-sw  checkboxes-colors">
+                <mat-checkbox class="spacing" color="primary" name="reports" [(ngModel)]="company.clock_mandatory"
+                (change)="changedCheckbox($event,'clock_mandatory')" 
+                  [disabled]="storageService?.getAccessType() != role.ADMIN">                  
+                  <span style="margin-top: 2px;">{{ 'employee-policy-text' | translate }}</span>
+                </mat-checkbox>
+              </div>
+            </div>
+
+            <div class="checkbox-section-clock ai-assest">
+              <div class="report-sw  checkboxes-colors">
+                <mat-checkbox class="spacing" color="primary" name="ai-assest" [(ngModel)]="company.ai_game_builder"
+                (change)="changedCheckbox($event,'ai_game_builder')" 
+                  [disabled]="storageService?.getAccessType() != role.ADMIN">                  
+                  <span style="margin-top: 2px;">{{ 'ai_assist_text' | translate }}</span>
+                </mat-checkbox>
+              </div>
+            </div>
+            <div class="checkbox-section-clock">
+              <div class="report-sw  checkboxes-colors">
+                <mat-checkbox class="spacing" color="primary" name="engagement_insights" [(ngModel)]="company.engagement_insights"
+                 (change)="changedCheckbox($event,'engagement_insights')" 
+                  [disabled]="storageService?.getAccessType() != role.ADMIN">                  
+                  <span style="margin-top: 2px;">{{ 'enable_engagement_Insights' | translate }}</span>
+                </mat-checkbox>
+              </div>
+            </div>
+
+            <div class="checkbox-section-clock">
+              <div class="report-sw  checkboxes-colors">
+                <mat-checkbox class="spacing" color="primary" name="ip-configuration" [(ngModel)]="company.ip_whitelisting"
+                 (change)="changedCheckbox($event,'ip_whitelisting')" 
+                  [disabled]="storageService?.getAccessType() != role.ADMIN">                  
+                  <span style="margin-top: 2px;">{{ 'enable_ip_restriction' | translate }}</span>
+                </mat-checkbox>
+              </div>
+            </div>
+
+            <div class="checkbox-section-clock">
+              <div class="report-sw  checkboxes-colors">
+                <mat-checkbox class="spacing" color="primary" name="pathway_insights" [(ngModel)]="company.pathway_insights"
+                 (change)="changedCheckbox($event,'pathway_insights')" 
+                  [disabled]="storageService?.getAccessType() != role.ADMIN">                  
+                  <span style="margin-top: 2px;">{{ 'enable_pathway_Insights' | translate }}</span>
+                </mat-checkbox>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="ai-policy-wrapper">
+          <label>{{ 'AIAssistfeatures' | translate }}</label>
+          <div class="contentWrapper" [ngClass]="{'disabled-style': !company.ai_game_builder}">
+            <mat-radio-group md-autofocus class="custom-radio-error custom-input" (change)="radioChange($event)"
+            aria-label="Games" name="ai_assist_type"
+            [(ngModel)]="company.ai_type">
+            <mat-radio-button class="radio-btn" [value]="aiAssistType.AI_ASSIST">{{ 'type_ai_assist' | translate }}
+            </mat-radio-button>
+            <mat-radio-button class="radio-btn" [value]="aiAssistType.AI_ASSIST_PLUS">{{ 'type_ai_assist_plus' | translate }}
+            </mat-radio-button>
+            <!-- <mat-error *ngIf="isRequired && !selectedAssistType">
+              {{ 'err_msg_for_account_type' | translate }}
+            </mat-error> -->
+          </mat-radio-group>
+            
+          </div>
+        </div>
+        </div>
+        <div>
+          <footer class="footer">
+            <div class="button-row">
+              <button type="button"
+                *ngIf="companyPermission && companyPermission?.delete && company.company_id && nextpage"
+                class="delete-button" mat-button (click)="presentDeleteCompanyPopup()" #delete>
+                <img src="/assets/img/deleteicon.png" alt="1huddle" class="delete-icon">
+                <span> {{ 'delete_uppercase' | translate }}</span>
+              </button>
+
+              <div class=" right-button">
+                <button type="button" *ngIf="isAdmin() && !nextpage" mat-button class="cancel-button"
+                  (click)="cancelCompany()">
+                  {{ 'cancel_uppercase' | translate }}
+                </button>
+                <button type="submit" mat-button *ngIf="isAdmin() && !nextpage" (click)="gotonextpage()" [disabled]="(companyPermission && !companyPermission?.edit) ||
+                 !companyForm?.valid || !company?.location_details?.country_id ||
+                 !company?.location_details?.tz_id">
+                  {{ 'next_uppercase' | translate }}
+                </button>
+                <button type="submit" mat-button *ngIf="nextpage" (click)="gotopreviouspage()">
+                  {{ 'back_uppercase' | translate }}
+                </button>
+                <button type="submit" mat-button *ngIf="!isAdmin() && !nextpage"
+                  [disabled]="(companyPermission && !companyPermission?.edit) ||
+                !companyForm?.valid || !companyForm?.dirty || !company?.location_details?.country_id || !company?.location_details?.tz_id"
+                  (click)="company.company_id ? updateCompany() : addCompany()">
+                  {{ 'save_uppercase' | translate }}
+                </button>
+                <button type="submit" mat-button *ngIf="nextpage" class="save-button"
+                  (click)="company.company_id ? updateCompany() : addCompany()" [disabled]="!companyForm?.valid">
+                  {{ 'save_uppercase' | translate }}
+                </button>
+              </div>
+            </div>
+          </footer>
+        </div>
+      </form>
+    </div>
+  </div>
+</mat-card>

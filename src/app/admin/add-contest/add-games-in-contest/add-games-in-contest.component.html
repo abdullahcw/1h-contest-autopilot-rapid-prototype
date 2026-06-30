@@ -1,0 +1,140 @@
+<mat-card class="container-card">
+  <div class="back-btn">
+    <span (click)="goToContestBuilder()"> {{'back_upper' | translate}} </span>
+  </div>
+  <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+  <div class="content-wrapper">
+    <div class="left-wraper"
+      [ngClass]="{'open-menu-background': openFilterMenu ,'disabled-style': is_loading && !isMobile}"
+      (click)="closeSidenav()">
+      <div class="left" [ngClass]="{'open-menu': openFilterMenu}">
+        <mat-icon class=" mat-close" (click)=filterMenuClose()>close</mat-icon>
+        <div class="fliters">
+          <label class="text-style">{{'filters' | translate}}</label>
+          <label class="text-link" (click)="clearAll()">{{'clear_all_upper' | translate}}</label>
+        </div>
+        <div class="spacer"> </div>
+        <div class="wrapper">
+          <div class="filters-wrapper" [class.show]="show" [ngClass]="{'cat-filter': gameCategoryLengthCheck()}">
+            <label for="item">{{'category_upper' | translate}}</label>
+            <div class="options-wrapper">
+              <mat-option class="option" *ngFor="let item of gameCategory">
+                <div class="option-container">
+                  <mat-checkbox class="checkbox-filter" [(ngModel)]="item.checked" (click)="$event.stopPropagation()"
+                    (change)="onItemClick(item , $event);">
+                    <span class="filter-name">{{ item.category_name }}</span>
+                  </mat-checkbox>
+                </div>
+              </mat-option>
+            </div>
+          </div>
+          <span (click)="show = !show" class="less-more-text"
+            *ngIf="gameCategoryLengthCheck()">{{ show ? '-Less': '+More' }}</span>
+          <div class="filters-wrapper rating-filter">
+            <label for="item">{{'win_rate_upper' | translate}}</label>
+            <div class="options-wrapper">
+              <mat-option class="option" *ngFor="let itemRating of ratingItems">
+                <div class="option-container">
+                  <mat-checkbox class="checkbox-filter" [(ngModel)]="itemRating.checked"
+                    (click)="$event.stopPropagation()" (change)="onRatingClick(itemRating , $event);">
+                    <span class="filter-name">{{ itemRating.value }}</span>
+                  </mat-checkbox>
+                </div>
+              </mat-option>
+            </div>
+          </div>
+          <div class="filters-wrapper lastplayed-filter">
+            <label for="item">{{'last_played_uppper' | translate}}</label>
+            <div class="options-wrapper radio-wrapper">
+              <mat-radio-group aria-labelledby="radio-group-label" class="radio-group"
+                [(ngModel)]="lastPlayedItemRadio">
+                <div class="option-container-radio" *ngFor="let item of lastPlayedItems">
+                  <mat-radio-button class="radio-button" #button [value]="item" (click)="onLastedPlayedClick(item)">
+                    {{item.label}}
+                  </mat-radio-button>
+                </div>
+              </mat-radio-group>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="right">
+      <div>
+        <mat-toolbar-row class="search-toolbar-row">
+          <img class="mobile-open" (click)="filterMenuOpen()" src="/assets/img/Icon-filter.png" alt="">
+          <mat-icon class="details-icon">search</mat-icon>
+          <input #search_field type="search" [formControl]="filterGames" class="search-item"
+            placeholder="{{'search_game' | translate}}">
+          <span class="game-count">{{selection.selected.length}}</span>
+          <button mat-stroked-button class="add-to-btn" (click)="addGamesToContest()"
+            [disabled]="selection && selection.selected.length == 0">
+            <span>{{(isMobile ? 'add_upper' : 'add_to_contest') | translate}}</span>
+          </button>
+        </mat-toolbar-row>
+      </div>
+      <div class="content-wrapper-right">
+        <div infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="isMobile ? 300 : 100"
+          [alwaysCallback]="true" (scrolled)="onScroll()" [scrollWindow]="false"
+          style="height: calc(100vh - 272px); overflow-y: scroll;" id="container">
+          <table mat-table aria-describedby="" [dataSource]="gameDatsSource" class="responsive-table" matSort
+            (matSortChange)="sortData($event)" matSortActive="" matSortDirection="asc" matSortDisableClear
+            [ngClass]="{'disabled-style': is_loading}">
+            <ng-container matColumnDef="select">
+              <th id="" mat-header-cell *matHeaderCellDef class="checkboxes checkBoxColumn select-all-checkbox">
+                <mat-checkbox (change)="$event ? masterToggle() : null" [disabled]="!games?.length"
+                  [checked]="selection.hasValue() && isAllSelected()"
+                  [indeterminate]="selection.hasValue() && !isAllSelected()">
+                </mat-checkbox>
+              </th>
+              <td mat-cell *matCellDef="let game" (click)="$event.stopPropagation();"
+                class="checkboxes checkboxes-colors">
+                <mat-checkbox color="primary" (change)="selection.toggle(game);totalPlayerSelected = false;"
+                  [checked]="selection.isSelected(game)">
+                </mat-checkbox>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="game_logo">
+              <th id="" mat-header-cell *matHeaderCellDef class="checkboxes game-logo-holder"></th>
+              <td mat-cell *matCellDef="let game">
+                <app-custom-images-table class="img-wrapper" [className]="'img40by40'"  [ImageSrc]="game?.game_logo" > </app-custom-images-table>
+
+              </ng-container>
+
+            <ng-container matColumnDef="game_name">
+              <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{'game_name' | translate}}
+              </th>
+              <td mat-cell *matCellDef="let game" class="game-name-holder">{{game.game_name}}</td>
+            </ng-container>
+            <ng-container matColumnDef="game_category">
+              <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'Category' | translate}}
+              </th>
+              <td mat-cell *matCellDef="let game" class="game-name-holder">{{game.game_category}}</td>
+            </ng-container>
+            <ng-container matColumnDef="last_played">
+              <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'Last Played' | translate}}
+              </th>
+              <td mat-cell *matCellDef="let game" class="game-name-holder">{{getDate(game.last_played) || '----'}}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="winrate">
+              <th id="" mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: right; width: 120px;">
+                <div class="win-rate">
+                  <span>{{'win_rate' | translate}}</span>
+                  <span class="add-players">{{'for_added_players' | translate}}</span>
+                </div>
+              </th>
+              <td mat-cell *matCellDef="let game" class="game-name-holder">{{game.winrate || '----'}}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header"></tr>
+            <tr mat-row *matRowDef="let game; columns: displayedColumns;" class="game-row pointerDefault"></tr>
+          </table>
+
+          <span class="spacer"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-card>

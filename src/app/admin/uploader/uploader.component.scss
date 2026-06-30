@@ -1,0 +1,121 @@
+@import '../../../styles.scss';
+.uploader-container {
+    // max-height: 40vh;
+    // height: 95vh;
+    min-width: 410px;
+    position: relative;
+    overflow: hidden;
+    @include media-breakpoint-down(sm) {
+        min-width: 260px;
+    } // .ng-valid[required],
+    // .ng-valid.required {
+    //     border-left: 5px solid #17b057 !important;
+    //     __<<ngThemingMigrationEscapedComment0>>__
+    // }
+    // .ng-invalid:not(form) {
+    //     border-left: 5px solid #a94442 !important;
+    //     __<<ngThemingMigrationEscapedComment1>>__
+    // }
+    .small-toolbar {
+        height: 50px;
+        font-size: 16px;
+    } // ::ng-deep .mat-tab-label {
+    //     opacity: 1 !important;
+    // }
+    // ::ng-deep .mat-tab-disabled {
+    //     color: $textMidGrey !important;
+    // }
+    // ::ng-deep .mat-tab-label-active {
+    //     color: $textMidGrey !important;
+    // }
+    .content {
+        display: flex;
+        flex-direction: column;
+        padding: 0 0;
+        .container {
+            // padding: 15px 15px 0;
+            // height: calc(95vh - 160px);
+            .select-file {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                height: 127px;
+            }
+            .selectFileLabel {
+                background: $brand_color;
+                position: relative;
+                padding: 10px 20px;
+                border-radius: 4px;
+                color: #fff;
+            }
+            .errorMessage {
+                font-family: Roboto_Regular;
+                font-size: 15px;
+                margin: 0;
+                padding: 0;
+            }
+            .fileSectedIcon {
+                position: absolute;
+                /* bottom: -8px; */
+                top: -9px;
+                color: white;
+                right: -10px;
+                background: green;
+                border-radius: 50%;
+            }
+        }
+        .sendText {
+            padding-top: 10px;
+            font-family: Roboto_Regular;
+            font-size: 15px;
+        }
+        .footer {
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px;
+            background-color: $secondary_bg_color;
+            position: sticky;
+            z-index: 5;
+            .button-row {
+                width: 100%;
+                display: flex;
+                // flex: 2;
+                .btn-right {
+                    margin-left: auto;
+                }
+                .downloadSample {
+                    display: flex;
+                    align-items: center;
+                    width: 100%;
+                    justify-content: flex-start;
+                    span {
+                        font-size: 13px;
+                        font-family: Roboto_Regular;
+                        padding: 0 8px;
+                        @include media-breakpoint-down(sm) {
+                            display: none;
+                        }
+                    }
+                }
+                .button-section{
+                    display: flex;
+                    width: 100%;
+                    justify-content: flex-end;
+                .cancel-button {
+                    border: 0px; // margin-right: 10px;
+                    background: white;
+                    cursor: pointer;
+                }
+                .sendBtns {
+                    display: flex;
+                    margin-left: 135px;
+                }
+            }
+        }
+        }
+    }
+    .container>* {
+        width: 100%;
+    }
+}

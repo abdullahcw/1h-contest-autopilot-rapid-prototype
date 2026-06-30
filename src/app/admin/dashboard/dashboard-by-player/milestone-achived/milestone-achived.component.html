@@ -1,0 +1,14 @@
+<section class="milestones_container">
+    <div class="milestones_wrapper">
+        <div *ngFor="let data of levels">
+
+          <div class="milestone_gray" *ngIf="!data?.is_achived" [ngClass]="{'custom_milestone_gray': showPlayerGameplay}"></div> 
+          <img class="milestone" [ngClass]="{'disable_milestone': !data?.is_achived, 'custom_milestone': showPlayerGameplay}"
+            [src]="data?.logo_url" 
+            alt=""
+            onError="this.src='/assets/img/default.png'"                         
+          >
+        </div>
+      </div>
+
+</section>

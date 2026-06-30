@@ -1,0 +1,131 @@
+<div class="main_container">
+  <div class="wrapper">
+    <mat-card class="container-card">
+      <div class="pane-container">
+        <div class="left-pane" [ngClass]="{'full-width': (!game || (isMobile && hideGameAttempts)),'hideLeftPane': (isMobile && !hideGameAttempts),
+          'show-left-panel': (isMobile && hideGameAttempts)}">
+          <div class="game-list-header">{{'ready_or_live_games' | translate}}</div>
+          <input #search_field type="search" [formControl]="filterGames" class="search-item"
+            placeholder="{{'search' | translate}}" (click)="$event.stopPropagation()">
+          <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading_games"></mat-progress-bar>
+          <div class="no_messages" *ngIf="!games || games.length === 0">
+            <p>
+              {{is_loading_games ? (is_loading ? ('loading_games' | translate) : ('please_wait' | translate)) : ('no_record_found' | translate)}}
+            </p>
+          </div>
+          <mat-list *ngIf="games?.length">
+            <mat-list-item *ngFor="let gameData of games" (click)="changeGame(gameData);"
+              [ngClass]="{'selected': game && gameData.game_id === game.game_id}">
+              <app-custom-images-table class="game-icon" [className]="'img40by40'"  [ImageSrc]="gameData?.game_logo" > </app-custom-images-table>
+              <span class="game-name">{{gameData.game_name}}</span>
+              <mat-icon *ngIf="game && gameData.game_id === game.game_id">keyboard_arrow_right</mat-icon>
+            </mat-list-item>
+          </mat-list>
+        </div>
+        <div class="right-pane" *ngIf="game" [ngClass]="{'hideRightPane': (isMobile && hideGameAttempts)}">
+          <button class="add-limit addEntity" [disabled]="mode === 'PRACTICE' || isLoadingLocations || is_loading"
+            matTooltipPosition="below" (click)="showSchedulePopup()" mat-fab>
+            <mat-icon>add</mat-icon>
+          </button>
+          <mat-card-header>
+            <mat-toolbar-row class="toolbar">
+              <div *ngIf="isMobile" class="arrowButtons handCursor" matTooltipDisabled="false"
+                matTooltipPosition="after" (click)="toggleGameSelection()">
+                <mat-icon *ngIf="isMobile && !hideGameAttempts">
+                  arrow_right
+                </mat-icon>
+              </div>
+              <span class="title">{{'schedule_game_uppercase' | translate}}: {{game.game_name}}</span>
+              <span class="spacer"></span>
+              <div class="updating-message" *ngIf="updatingCount > 0">{{'saving_changes' | translate}}</div>
+              <div class="right-content">
+                <div *ngIf="selection.hasValue()" class="delete-button">
+                  <mat-icon (click)="confirmDeletion()">delete</mat-icon>
+                </div>
+                <div *ngIf="selection.hasValue()" class="edit-button">
+                  <mat-icon (click)="presentEditLimitsPopup()">edit</mat-icon>
+                </div>
+              </div>
+            </mat-toolbar-row>            
+          </mat-card-header>
+          <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading_recipant || is_loading"></mat-progress-bar>
+          <mat-card-content [ngClass]="{'disable-limits': mode === 'PRACTICE'}">
+            <div class="no_messages" *ngIf="!assignment.length || is_loading">
+              <p>
+                {{(is_loading || isLoadingLocations) ? ('please_wait' | translate) :  mode === 'PRACTICE' ? ('turn_off_practice_mode_to_schedule' | translate) : ('game_not_scheduled_add_new' | translate)}}
+              </p>
+            </div>
+            <table mat-table [dataSource]="dataSource" class="responsive-table" matSort *ngIf="assignment.length && !is_loading"
+              (matSortChange)="sortData($event)" matSortActive="limit" matSortDirection="asc" matSortDisableClear>
+              <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef class="checkboxes">
+                  <mat-checkbox (change)="$event ? masterToggle() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+                  </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let limit" (click)="$event.stopPropagation();" class="checkboxes">
+                  <mat-checkbox color="primary" (change)="$event ? selection.toggle(limit) : null"
+                    *ngIf="assignment?.length" [checked]="selection.isSelected(limit)">
+                  </mat-checkbox>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="recipients">
+                <th mat-header-cell *matHeaderCellDef class="recipient-column">
+                  {{'selected_players_for_game' | translate}}</th>
+                <td class="recipients-section" mat-cell *matCellDef="let limit" style="padding: 0 6px 0 0;">
+                  <label>Selected Players</label>
+                  <div (click)="editAssignment(limit, limit.assignment_id)" *ngIf="assignment?.length"
+                    [ngClass]="{'disable-click': selection.selected.length}">
+                    <app-search class="filter-chip" [placeholder_text]="'Add'" [shouldAllowMultiline]="true"
+                      style="width:100%; pointer-events: none;" [filter_options]="limit.filterOptions" [dataSource]="menuList"
+                      [shouldAllowChipSelection]="true" [applied_filters]="limit.appliedFilters" [context]="context"
+                      [chipCloseButtonHide]="true"></app-search>
+                  </div>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="attempts">
+                <th mat-header-cell *matHeaderCellDef>{{'attempts' | translate}}</th>
+                <td mat-cell *matCellDef="let limit;let i=index;"><label>{{'attempts' | translate}} </label>
+                  <div *ngIf="assignment?.length" [ngClass]="{'disable-click': selection.selected.length}">
+                    <input class="attempts-field" [(ngModel)]="limit.attempts" (change)="markForUpdation(limit, i)"
+                      (keypress)="numberOnly($event)" [value]="limit.attempts" autocomplete="off" maxlength="4">
+                    <mat-select class="limit-select" [(value)]="limit.limit_type"
+                      (selectionChange)="markForUpdation(limit)">
+                      <mat-option value="DAILY">{{'daily' | translate}}</mat-option>
+                      <mat-option value="TOTAL">{{'total' | translate}}</mat-option>
+                    </mat-select>
+                  </div>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="schedule">
+                <th mat-header-cell *matHeaderCellDef>{{'schedule' | translate}}</th>
+                <td mat-cell *matCellDef="let limit" class="schedule-date"><label>{{'schedule' | translate}}</label>
+                  <div *ngIf="assignment?.length" [ngClass]="{'disable-click': selection.selected.length}">
+                    <input class="date-picker-field" (dateChange)="markForUpdation(limit); updateDate(limit);"
+                      (click)="startDatePicker.open()" (open)="isDatePickerOpen"
+                      (keydown)="$event.preventDefault(); isDatePickerOpen = true;" [min]="minDate"
+                      [(ngModel)]="limit.startDate" [max]="maxDate" [matDatepicker]="startDatePicker"
+                      placeholder="{{'date_format_mmddyyyy' | translate}}" readonly>
+                    <b class="divider">{{'to_lowercase' | translate}}</b>
+                    <input class="date-picker-field" (dateChange)="markForUpdation(limit); updateDate(limit);"
+                      (click)="endDatePicker.open()" (open)="isDatePickerOpen"
+                      (keydown)="$event.preventDefault(); isDatePickerOpen = true;" [min]="limit.startDate"
+                      [(ngModel)]="limit.endDate" [max]="maxDate" [matDatepicker]="endDatePicker"
+                      placeholder="{{'date_format_mmddyyyy' | translate}}" readonly>
+                    <mat-datepicker #startDatePicker></mat-datepicker>
+                    <mat-datepicker #endDatePicker></mat-datepicker>
+                  </div>
+                </td>
+              </ng-container>             
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header"></tr>
+              <tr mat-row *matRowDef="let limit; columns: displayedColumns;"
+                [ngClass]="{'pulse-row': limit.should_highlight }">
+              </tr>
+            </table>
+          </mat-card-content>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>

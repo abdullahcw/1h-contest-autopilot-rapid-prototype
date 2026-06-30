@@ -1,0 +1,544 @@
+@import "../../../styles.scss";
+
+.container-card {
+  margin: 0 40px;
+  // padding: 0px;
+  height: $header_height;
+  max-height: $header_height;
+  padding: 0;
+  @include i-pad-design-with-btn;
+
+  @include media-breakpoint-down(sm) {
+    margin: 0 10px;
+  }
+
+  .logo {
+    width: 40px;
+    border-radius: 50%;
+    margin: 5px 20px 5px 5px;
+    background: black;
+  }
+
+  .search-container {
+    margin-left: 15px;
+  }
+
+  .mat-card-header {
+    .mat-card-header-text {
+      display: none !important;
+    }
+
+    .mat-toolbar {
+      padding: 0;
+      padding-left: 0px;
+      padding-right: 0px;
+      border: none;
+
+      .mat-toolbar-row {
+        height: $row_height;
+        border-bottom: 1px solid $mat_border_color;
+
+        // padding-top: 30px;
+        // padding-bottom: 30px;
+        .game-toggle-switch {
+          border: solid 1px $brand_color;
+
+          ::ng-deep .mat-button-toggle-checked {
+            background-color: $brand_color;
+            color: $selected_bg_color;
+          }
+
+          @include media-breakpoint-down(sm) {
+            display: none;
+          }
+        }
+
+        .game-mobile-toggle-switch {
+          display: none;
+
+          @include media-breakpoint-down(sm) {
+            display: flex;
+            flex-direction: row;
+            border: solid 1px $brand_color;
+
+            ::ng-deep .mat-button-toggle-checked {
+              background-color: $brand_color;
+              color: $selected_bg_color;
+            }
+
+            mat-button-toggle {
+              width: 40px;
+            }
+
+            .level {
+              position: absolute;
+              width: 22px;
+              height: 25px;
+              right: 1px;
+              bottom: -9px;
+            }
+          }
+        }
+
+        .toolbar-icon-color {
+          cursor: pointer;
+          color: $disable_color;
+        }
+
+        .filter-chip {
+          margin-left: 16px;
+        }
+
+        // &:last-child {
+        //   border-top: 1px solid transparent;
+        //   border-bottom: 1px solid transparent;
+        // }
+
+        .title {
+          margin-left: 14px;
+
+          font: {
+            family: $Roboto_Bold_font;
+            size: 18px;              
+          }
+
+          .name {
+            font: {
+              family: $Roboto_Medium_font;
+              size: $default_font_size;
+            }
+
+            color: $textMidGrey;
+          }
+
+          // span {
+          //   color: $textColor;
+          // }
+        }
+      }
+    }
+  }
+
+  .mat-card-content {
+    // max-height: calc
+    width: 100%;
+    min-height: calc(100vh - 320px);
+    height: calc(100vh - 320px);
+    max-height: calc(100vh - 320px);
+    overflow: auto;
+    margin: 0;
+    // border-top: 1px solid $mat_border_color;
+    // border-bottom: 0px solid $mat_border_color;
+
+    font-family: Roboto_Regular;
+    font-size: $text_size_med;
+    background: #fbfafa;
+
+    .no_messages {
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      padding-top: 20px;
+
+      font: {
+        family: Roboto_Regular;
+        size: $default_font_size;
+      }
+
+      @extend .center-align;
+    }
+
+    //changes
+    mat-grid-list {
+      margin: 20px;
+
+      mat-grid-tile {
+        border: 1px solid #f4f4f4;
+        box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05), 0 1px 10px 0 rgba(0, 0, 0, 0.05),
+          0 3px 5px -1px rgba(0, 0, 0, 0.05);
+        background: #fff;
+
+        mat-card {
+          height: 100%;
+          padding: 0;
+        }
+
+        border-radius: 5px;
+
+        .content {
+          display: flex !important;
+          justify-content: center;
+          align-items: center;
+          height: 100%;
+          width: 100%;
+          overflow: hidden;
+
+          mat-icon {
+            cursor: pointer;
+            font-size: 30px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -o-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+          }
+
+          .left-side {
+            width: 40%;
+
+            left: 0;
+            justify-content: center;
+            display: flex;
+
+            height: 100%;
+            align-items: center;
+
+            .logo-wrapper {
+              width: 100px;
+              height: 100px;
+              display: flex;
+              position: relative;
+
+              img {
+                cursor: pointer;
+                display: block;
+                position: absolute;
+                width: 86px; // has to be exact as XD
+                height: 85px;
+                border-radius: 50%;
+                border: 5px solid white;
+                box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.4), 0 1px 10px 0 rgba(0, 0, 0, 0.05),
+                  0 3px 5px -1px rgba(0, 0, 0, 0.27);
+              }
+
+              .mlg-logo {
+                left: 0;
+                bottom: 0;
+                z-index: 1;
+                background: white;
+              }
+
+              .game-icon {
+                right: 5px;
+                top: 0;
+                border: none;
+              }
+            }
+          }
+
+          .right-side {
+            width: 60%;
+            //  background: rgba(0, 0, 0, 0.5);
+            right: 0;
+            justify-content: center;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            padding-right: 2px;
+
+            .topRight {
+              text-align: right;
+              height: 20%;
+
+              .gameCopy {
+                top: 4px;
+                position: absolute;
+                right: 10px;
+                font-size: 12px;
+                font-style: italic;
+              }
+
+              .gameModeSelected {
+                background: #6edc0b;
+                color: #fff;
+                border-radius: 20px;
+                padding: 0px 8px;
+
+                @include media-breakpoint-down(md) {
+                  font-size: 9px;
+                }
+              }
+            }
+
+            .top-right-content {
+              // height: 80%;
+              height: 100%;
+              display: flex;
+              flex-direction: column;
+              margin-top: 16px;
+            }
+
+            .mat-card-title {
+              font-size: 15px;
+              line-height: 1;
+              margin-bottom: 6px;
+              font-family: Roboto_Bold;
+              margin-top: 4px;
+
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+
+              @include media-breakpoint-only(md) {
+                margin-top: 10px;
+              }
+            }
+
+            .mat-card-subtitle {
+              font-size: 13px;
+              margin-bottom: 0px;
+              line-height: 1.7;
+              color: #787878;
+
+              @include media-breakpoint-only(md) {
+                font-size: 12px;
+              }
+            }
+          }
+
+          .lower-text-container {
+            padding-top: calc(50% - 20px);
+          }
+        }
+
+        .isActiveContent {
+          opacity: 1 !important;
+        }
+
+        .theme-container {
+          cursor: pointer;
+        }
+      }
+
+      .asset-card {
+        width: 100%;
+      }
+    }
+  }
+
+  .mat-card-actions {
+    margin: 0;
+    padding: 0;
+
+    .mat-paginator {
+      width: 95%;
+      margin: 0 auto;
+
+      .mat-paginator-page-size {
+        flex: 1;
+      }
+    }
+  }
+
+  .no_messages {
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    padding-top: 20px;
+
+    font: {
+      family: Roboto_Regular;
+      size: $default_font_size;
+    }
+
+    @extend .center-align;
+  }
+}
+
+.matGridTile,
+.mat-icon-button,
+.mat-menu {
+  transition: transform 0.2s;
+  /* Animation */
+  box-shadow: none;
+}
+
+.matGridTile:hover,
+.tileFocus {
+  transform: scale(1.06);
+  background: red;
+
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05), 0 1px 10px 0 rgba(0, 0, 0, 0.05), 0 3px 6px 3px rgba(0, 0, 0, 0.12) !important;
+}
+
+.tileCopying {
+  border: 1px solid #6edc0b !important;
+  animation: blinker 1s linear infinite;
+  padding: 0;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.horizontalLine {
+  margin: auto;
+}
+
+.topRight {
+  .gameMode {
+    background: #d2d2d2;
+    border-radius: 20px;
+    padding: 2px 12px 1px 12px;
+    font-size: 9px;
+    color: #fff;
+    font-family: Roboto_Regular;
+    box-shadow: 1px 1px 1px 0px #8080807d;
+
+    @include media-breakpoint-down(md) {
+      font-size: 9px;
+    }
+  }
+
+  .draft-color {
+    background: #c4c4c4;
+  }
+
+  .ready-color {
+    background: #1ba0f4;
+  }
+
+  .practise-color {
+    background: #ffc21d;
+  }
+
+  .live-color {
+    background: #59d721;
+  }
+
+  .offsetMargin {
+    margin-right: 3px;
+  }
+
+  .gameModeSelected {
+    background: #6edc0b;
+    color: #fff;
+    border-radius: 20px;
+    padding: 0px 8px;
+
+    @include media-breakpoint-down(md) {
+      font-size: 9px;
+    }
+  }
+}
+
+.gameListRow {
+  cursor: pointer;
+}
+
+.fontMore {
+  font-size: 20px !important;
+  color: #767676;
+}
+
+.matMenuCustom {
+  margin-top: -15px;
+}
+
+.moreBtnSize {
+  width: 25px;
+  height: 30px;
+}
+
+.disabled-btn {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.quick-nav-bar {
+  padding: 5px 40px;
+  background-color: $secondary_bg_color;
+  font-size: $text_size_med;
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05), 0 1px 10px 0 rgba(0, 0, 0, 0.05), 0 3px 5px -1px rgba(0, 0, 0, 0.05);
+}
+
+.toolbar {
+  background-color: $secondary_bg_color;
+  border-bottom: 1px solid $mat_border_color;
+  padding: 5px 20px;
+  font-size: $text_size_med;
+  width: 100%;
+
+  .add-game {
+    width: 54px;
+    height: 54px;
+    background-color: $add_icon_background;
+    color: $add_icon;
+    padding: 5px 20px;
+    border-radius: 50%;
+    font-size: $default_font_size;
+    position: absolute;
+    left: -27px;
+    top: 22px;
+    @extend .center-align;
+    -webkit-transition: all 1s;
+    -moz-transition: all 1s;
+    -o-transition: all 1s;
+    -ms-transition: all 1s;
+    transition: all 1s;
+  }
+
+  .library-toolbar {
+    border: none !important;
+    background: #FBFAF9;
+  }
+
+  .progress-bar {
+    position: absolute;
+    top: 100px;
+    left: 0px;
+  }
+}
+
+.spacer {
+  flex: 1;
+}
+
+.toolbar-button {
+  font-size: 12px;
+  color: $add-filter-icon-color;
+}
+
+.mat-sort-header-container {
+  align-items: center;
+}
+
+.no_messages {
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  padding-top: 20px;
+
+  font: {
+    family: Roboto_Regular;
+    size: $default_font_size;
+  }
+
+  @extend .center-align;
+}
+
+/* Use the button type you're using here */
+button.mat-icon-button {
+  &.cdk-program-focused {
+    ::ng-deep .mat-button-focus-overlay {
+      opacity: 0; // hide overlay
+    }
+  }
+}
+
+::ng-deep .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+  line-height: 30px !important;
+}
+
+::ng-deep .mat-button-toggle-button {
+  height: 30px !important;
+}
+
+::ng-deep .mat-paginator-container {
+  align-items: center !important;
+}

@@ -1,0 +1,37 @@
+<div class="container">
+  <mat-toolbar color="primary">
+    Question Tags
+  </mat-toolbar>
+  <section>      
+    <div class="content">
+      <mat-form-field class="example-chip-list chipParent">
+        <mat-chip-list #chipList>
+          <div class="input-wrapper">
+            <div class="add-filter-indicator" *ngIf="!is_editing" [matBadge]="showShortcuts ? 'F' : ''" matBadgeColor="primary"
+              matBadgeSize="medium" (click)="is_editing = true;">
+              <mat-icon>add</mat-icon><span>Add a tag</span>
+            </div>
+            <input #tagInput type="text" *ngIf="is_editing" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              [matChipInputAddOnBlur]="addOnBlur" (blur)="is_editing = false" (keydown)="restrictSpace($event)" (focus)="is_editing = true"
+              (matChipInputTokenEnd)="add($event)">
+          </div>
+        </mat-chip-list>
+      </mat-form-field>
+
+      <mat-form-field class="example-chip-list">
+        <mat-chip-list>
+          <div class="chips-container">
+            <mat-chip *ngFor="let tag of tags" [selectable]="selectable" [removable]="removable" (removed)="remove(tag)">
+              {{tag}}
+              <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+            </mat-chip>
+          </div>
+        </mat-chip-list>
+      </mat-form-field>
+    </div>
+  </section>
+  <div class="footer button-row">
+      <button mat-button (click)="done()">DONE
+      </button>
+    </div>
+</div>

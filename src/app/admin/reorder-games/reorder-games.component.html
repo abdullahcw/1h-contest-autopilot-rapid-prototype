@@ -1,0 +1,64 @@
+<div class="wrapper">
+  <mat-card class="container-card">
+    <mat-card-header>
+      <mat-toolbar class="toolbar" >
+        <div class="title">
+          {{'layout' | translate}}
+        </div>
+        <div class="box" [ngClass]="{'open-border': check}">
+          <span class="info">
+            <svg id="noun_Info_2086835" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17"
+              (click)="openTag()">
+              <g id="Group_4459" data-name="Group 4459">
+                <path id="Path_4319" data-name="Path 4319"
+                  d="M22.53,14.03a8.5,8.5,0,1,1-8.5,8.5A8.5,8.5,0,0,1,22.53,14.03Zm0,6.636a.837.837,0,1,1,.837-.837A.835.835,0,0,1,22.53,20.666Zm.515,5.4a.515.515,0,0,1-1.03,0V22.124a.515.515,0,0,1,1.03,0ZM22.53,15.06A7.47,7.47,0,1,0,30,22.53,7.472,7.472,0,0,0,22.53,15.06Z"
+                  transform="translate(-14.03 -14.03)" fill="#707070" />
+              </g>
+            </svg>
+          </span>
+          <div class="open-Message" *ngIf="openMsg">
+            <span class="message">
+              {{'info_message' | translate}}
+            </span>
+            <span>
+              <mat-icon class="cancel-icon" (click)="closeTag()">close</mat-icon>
+            </span>
+          </div>
+        </div>
+      </mat-toolbar>
+      </mat-card-header>
+      <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+
+     <div class="mlg-container-card" >
+        <mat-toolbar class="msg_toolbar" >
+          <div class="title">
+              {{'multi_level_game' | translate}} 
+          </div>          
+        </mat-toolbar>
+        <div class="no_messages" *ngIf="!multilevelGames?.length">
+          <p>{{'no_live_game_available' | translate}}</p>
+        </div>
+        <div *ngIf="multilevelGames?.length">
+          <app-reorder [gameDataSource]="multilevelGames" [gameCount]="totalGamesMLG" gameType="MLG"
+          (positionChanged)="positionChanged($event)"></app-reorder>
+        </div>
+      </div>
+
+      <div class="mlg-container-card">
+        <mat-toolbar class="msg_toolbar">
+          <div class="title">
+            {{'single_level_game' | translate}}
+          </div>
+        </mat-toolbar>
+        <div class="no_messages" *ngIf="!games?.length">
+          <p>{{'no_live_game_available' | translate}}</p>
+        </div>
+        <div *ngIf="games?.length">
+          <app-reorder [gameDataSource]="games" [gameCount]="totalGamesSLG" gameType="SLG"
+            (positionChanged)="positionChanged($event)"></app-reorder>
+        </div>
+      </div>
+
+    </mat-card>
+  </div>
+            

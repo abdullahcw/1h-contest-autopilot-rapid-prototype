@@ -1,0 +1,76 @@
+<div class="wrapper">
+  <mat-toolbar class="small-toolbar" color="primary">
+      <div>{{'select_players' | translate}}</div>
+  </mat-toolbar>
+  <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+  <div class="filter-container">
+    <div class="search-container">
+      <div class="chip-wrapper" [ngClass]="{'disabled-style': is_loading , 'disabled-filter': noPlayer && !appliedFilters.length}">
+        <app-search class="filter-chip name" placeholder_text="{{ 'add_filter' | translate}}" [hideTypeToSearch]="true"
+          style="width:100%; position: relative;" [filter_options]="filter_options" [dataSource]="menuList"
+          (getDataSourceWithFilterDetails)="getDataSource($event)" [applied_filters]="appliedFilters"
+          (getDataSourceWithSearchKey)="getDataSourceWithSearchKey($event)" [isFossilCustomField]="true"
+          (filtersUpdated)="refreshListOnFilterChange($event)" [context]="context"(filterOptionUpdated)="filterOptionUpdated($event)"></app-search>
+      </div>
+    </div>
+    <div class="search-toolbar-row" [ngClass]="{'disabled-style': is_loading}">
+      <mat-checkbox (change)="$event ? masterToggle() : null; isAllNextPlayersSelected = false" *ngIf="!searchText" style="margin-top: 5px;"
+          [checked]="selection.hasValue() && isAllSelected()" [disabled]="!playerList?.length || isSuperMasterToggle || playerList[0] == -1"
+          [indeterminate]="(selection.hasValue() && !isAllSelected())">
+      </mat-checkbox>
+      <input #search_field type="search" [formControl]="filterPlayers" class="search-item" (keypress)="noTyping($event)" (click)="onSearch($event)"
+        placeholder="{{'search_without_three_dots' | translate}}">
+    </div>
+    <div class="header-container" [ngClass]="{'disabled-style': is_loading}" *ngIf="!searchText && selection.selected.length">
+      <div *ngIf="isMasterToggle">
+        <div *ngIf="!isAllNextPlayersSelected">
+          <span>{{selectionBasedText(('players_selected_without_on_this_page' | translate), totalUsers, selection.selected.length, unlinked_players.length)}}</span>
+          <button (click)="isAllNextPlayersSelected = true; isSuperMasterToggle = true; masterToggle()" mat-button class="highlight-text" color="primary">
+            {{selectionBasedText(('select_all_players' | translate), totalUsers)}}</button>
+        </div>
+        <div *ngIf="isAllNextPlayersSelected">
+          <span>{{selectionBasedText(('all_players_are_selected' | translate), totalUsers)}}</span>
+          <button (click)="isAllNextPlayersSelected = false; isSuperMasterToggle = false; masterToggle()" mat-button class="highlight-text"
+            color="primary">
+            {{'clear_all' | translate}}</button>
+        </div>
+      </div>
+      <div *ngIf="!isSuperMasterToggle && !isMasterToggle" class="normal-selection">
+        <span>{{globalService.showTextOnSelection(selection.selected.length, globalService.formatNumber(totalUsers), ('players' | translate))}}</span>
+      </div>
+    </div>
+  </div>
+  <div class="player-container" [ngClass]="{'disabled-style': is_loading}">
+    <div infiniteScroll [infiniteScrollDistance]="scrollDistance" [infiniteScrollThrottle]="isMobile ? 300 : 100"
+      [alwaysCallback]="true" (scrolled)="onScroll()" [scrollWindow]="false" class="adjust-style" [ngClass]="{'no_player': noPlayer}"
+      style="overflow-y: scroll;" id="container">
+      <mat-selection-list *ngIf="playerList?.length">
+        <mat-list role="list">
+          <mat-list-item role="listitem" *ngFor="let player of playerList; let i=index" (click)="onItemClick(player)">
+            <div class="list-item-name" *ngIf="player != -1">
+              <div class="checkboxes-colors">
+                <mat-checkbox [checked]="selection.isSelected(player)" (click)="$event.stopPropagation()"
+                  (change)="onItemClick(player)"></mat-checkbox>
+              </div>
+              <div class="item-name">
+                {{player?.first_name}} {{player.last_name}}
+              </div>
+            </div>
+            <div class="no_messages_no_record" *ngIf="player == -1 && playerList.length == 1"><p>{{('no_record_found' | translate)}}</p></div>
+          </mat-list-item>
+        </mat-list>
+      </mat-selection-list>
+      <div class="no_messages" *ngIf="is_loading && !playerList?.length">
+        <p>{{ ('please_wait' | translate) }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="button-row">
+    <div class="btn-right">
+      <button type="button" mat-button class="cancel-button" tabindex="-1" (click)="back()">{{'cancel' | translate}}</button>
+    </div>
+    <div>
+      <button type="submit" mat-button [disabled]="!canGoNext()" (click)="next()">{{'done' | translate}}</button>
+    </div>
+  </div>
+</div>

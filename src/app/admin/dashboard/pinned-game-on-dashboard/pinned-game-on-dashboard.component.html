@@ -1,0 +1,107 @@
+<div class="main-container-pinned-games">
+    <mat-toolbar class="small-toolbar" color="primary">
+      <div>
+        {{ 'editGlobalPinnedGames' | translate}}
+      </div>
+    </mat-toolbar>    
+    <section class="content">
+
+        <div class="re-games-list-wrapper">
+            <div class="titleHeader" *ngIf="pinnedGamesList.length">
+                <div class="header1"></div>
+                <div class="header2">
+                    <span>{{'number_shortform' | translate}}</span>
+                </div>
+                <div class="header3"></div>
+                <div class="header4">
+                    <span>{{'game' | translate}}</span>
+                </div>
+                <div class="header5">
+                    <span>{{'win_rate' | translate}}</span>
+                </div>
+                <div class="header6"></div>
+            </div>
+            <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>             
+            <div id="scroll" [ngClass]="{'disabled-style': isLoading}"  class="re-games-list-container" *ngIf="pinnedGamesList.length">
+                <div cdkDropList class="re-games-list" (cdkDropListDropped)="drop($event)">
+                    <div class="example-box" *ngFor="let game of pinnedGamesList;let i = index" cdkDrag>
+                      <div class="repositionDocWrapper">
+                        <div class="dragIndicator">
+                            <img src="/assets/img/dragElement.png" alt="drag Icon" />
+                        </div>
+                        <div class="srno">
+                            <span>
+                                {{i+1}}
+                            </span>
+                        </div>
+                        <div class="gameLogo">
+                            <app-custom-images-table class="img-wrapper" [className]="'img40by40'"  [ImageSrc]="game?.game_logo" > </app-custom-images-table>                                              
+                        </div>
+                        <div class="gameName">
+                            <span>{{game.game_name}}</span>
+                        </div>
+                        <div class="winRate">
+                            <span>{{game.win_rate == -1 ? '--' : game.win_rate }}</span>
+                        </div>
+    
+                        <div class="closIcon" (click)="removeGame(game,i)">
+                            <mat-icon>close</mat-icon>
+                        </div>                                        
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <div class="no_messages" *ngIf="!pinnedGamesList.length">
+              <span>{{('no_game_pinned' | translate)}}</span>
+            </div>
+            
+        </div>
+        
+        
+    <mat-card-actions class="footer">
+      <div class="addButtonWrapper">
+        <button class=" addGameBtn" matTooltip="{{tootlTipMsg}}"
+        
+        [ngClass]="{'disabledColor': pinnedGamesList.length == 10}"
+        [disabled]="pinnedGamesList.length == 10"
+        matTooltipPosition="below" #menuTrigger="matMenuTrigger" (menuClosed)="menuClosed()" [matMenuTriggerFor]="menu" mat-fab>
+
+        <mat-icon>add</mat-icon>
+      </button>
+      </div>
+      <div class="button-row">
+        <div class="btn-right">
+          <button mat-button type="button" class="cancel-button" tabindex="-1"
+            (click)="closePopUp()">{{ 'cancel_uppercase'| translate }}</button>
+        </div>
+        <div>
+          <button mat-button type="button" (click)="save()">
+            {{ 'save_uppercase'| translate }}
+          </button>
+        </div>
+      </div>
+    </mat-card-actions>
+    </section>
+  </div>
+
+
+  <mat-menu #menu="matMenu"  xPosition="after" yPosition="above"  class="gameListWrapper">
+    <div class="title">
+      <span>{{'game' | translate}}</span>
+    </div>
+    <form (click)="$event.stopPropagation($event)" (keydown.tab)="$event.stopPropagation()"  class="countrynamesForm">
+      <div class="search">
+        <input #searchCountry placeholder="{{'enterGameNamePlaceholder' | translate}}" class="gameSearchBar" title="game" id="game"    name="searchgame" [(ngModel)]="query"
+        [value]="query" >
+      </div>
+      <mat-list role="list" class="gameNames">
+        <mat-list-item (click)="addGameToList(game)" (keydown)="checkTabDown($event)"
+          *ngFor="let game of gameList | search:'game_name':query let i= index" class="handCursor">
+          <div>
+            <span>{{game.game_name}}</span>
+          </div>
+        </mat-list-item>
+      </mat-list>
+    </form>
+  </mat-menu>
+

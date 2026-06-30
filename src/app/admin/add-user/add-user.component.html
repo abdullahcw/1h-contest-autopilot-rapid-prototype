@@ -1,0 +1,335 @@
+<div class="main-container">
+  <mat-toolbar class="small-toolbar" color="primary">
+    <div *ngIf="user && user.isNew; else add_header">
+      {{'add' | translate}} {{userDetails.userInfo.userType}}
+    </div>
+    <ng-template #add_header>{{'edit' | translate}} {{userDetails.userInfo.userType}}</ng-template>
+  </mat-toolbar>
+  <section class="content" [ngClass]="{'disabled-style': is_loading}">
+    <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+
+
+    <form #addUser="ngForm" (ngSubmit)="user && user?.isNew ? saveUser() : updateUser()">
+      <mat-tab-group mat-stretch-tabs backgroundColor="white" class="custom-tab-label" [(selectedIndex)]="selectedTab">
+        <mat-tab label="{{'basic_information' | translate}}" #tab [disabled]='tab.isActive'>
+          <div class="container">
+            <div class="company-inline-holder">
+              <div class="logo-holder" [ngClass]="{'disabled-style': !user.is_editable}">
+                <label for="upload_image">
+                  <img class="company_logo" [src]="user.profile_image_url" onerror="this.src='/assets/img/default.png'"
+                    alt="" (click)="imgInput && imgInput?.click()">
+                  <input type="file" onclick="this.value=null" #imgInput id="upload_image" [hidden]="true"
+                    accept="image/*" (change)="fileChangeEvent($event)" />
+                  <div class="image-overlay">
+                    <div class="edit-icon">
+                      <mat-icon>edit</mat-icon>
+                    </div>
+                    <div class="delete-icon" (click)="deleteLogo(); $event.preventDefault();"
+                      *ngIf="user.profile_image_url || croppedImage.blob" style="display: none;">
+                      <mat-icon>delete</mat-icon>
+                    </div>
+                  </div>
+                </label>
+
+              </div>
+            </div>
+
+
+            <div class="user-name">
+              <div class="form-group department-container name-field">
+                <label for="first_name">{{'first_name' | translate}}</label>
+                <input type="text" class="holder form-inputs" placeholder="{{'enter_first_name' | translate}}"
+                  id="first_name"
+                  [readonly]="permission && !permission?.edit && loginUser.access_type !== role.TEAM_LEAD"
+                  appValidateInput [(ngModel)]="user.first_name" name="first_name" maxlength="35" minlength="1"
+                  #first_name required>
+              </div>
+              <div class="spacer"></div>
+              <div class="form-group department-container name-field">
+                <label for="department">{{'last_name' | translate}}</label>
+                <input type="text" class="holder form-inputs" placeholder="{{'enter_last_name' | translate}}"
+                  id="last_name"
+                  [readonly]="permission && !permission?.edit && loginUser.access_type !== role.TEAM_LEAD"
+                  appValidateInput name="last_name" [(ngModel)]="user.last_name" maxlength="35" minlength="1" required>
+              </div>
+            </div>
+
+            <div *ngIf="userDetails.userType !== 'player'">
+              <label for="type">{{'type' | translate}}</label>
+
+
+              <select class="state-drop-down form-inputs form-control" [(ngModel)]="user.access_type" name="type"
+                id="type" (ngModelChange)="onTypeChange($event)" [required]="userDetails.userType !== 'player'"
+                [disabled]="isTypeSelectDisabled()">
+                <option *ngFor="let mtype of managerTypes" selected [ngValue]="mtype.id">{{mtype.value}}</option>
+              </select>
+            </div>
+            <div [hidden]="((user.access_type === role.MANAGER) && userDetails.userType !== 'player')"
+              *ngIf="!globalService.isCompanyBelongsToCustomField()">
+              <div class="form-group suffix-spinner-wrapper" *ngIf="userDetails.userType === 'player'">
+                <label for="location">{{'primary_location' | translate}}</label>
+                <app-search-select [items]="locationList" [selectedId]="user.location_id"
+                  placeholderText="{{('select_location' | translate)}}" (change)="onLocationChangePrimary($event)"
+                  [disabled]="shouldDisableEditLocation()"   [isRequired]="true">
+                </app-search-select>
+                <mat-spinner class="spinner" mode="indeterminate" *ngIf="fetchLoc" diameter="20">
+                </mat-spinner>
+              </div>
+          
+              <div class="form-group suffix-spinner-wrapper" *ngIf="userDetails.userType === 'player'">
+                <label for="department">{{'primary_department' | translate}}</label>
+                <app-search-select [items]="preparedDepartmentList" [selectedId]="user.department_id"
+                  placeholderText="{{('select_department' | translate)}}" (change)="onPrimaryDepartmentChange($event)"
+                  [isRequired]="true"
+                  [disabled]="shouldDisableDeptForPlayer()">
+                </app-search-select>
+                <mat-spinner class="spinner" mode="indeterminate" *ngIf="fetchDept" diameter="20">
+                </mat-spinner>
+              </div>
+          <div *ngFor="let field of secAllFields; let i = index;">
+              <div class="form-group suffix-spinner-wrapper" *ngIf="userDetails.userType === 'player'">
+                <label for="location">{{'secondary_location_department' | translate}}</label>
+                <div class="add-sec remove"> <p class="add-sec" (click)="removeSecLD(i)"> - {{'Remove' | translate}}</p></div>
+                <app-search-select 
+                [items]="field?.location_src" 
+                [selectedId]="field.location_id"
+                [disabled]="shouldDisableEditLocation()"   
+                [isRequired]="false" 
+                placeholderText="{{('select_secondary_location' | translate)}}" 
+                (change)="onLocationSEC($event,field)" >
+                </app-search-select>
+                <mat-spinner class="spinner" mode="indeterminate" *ngIf="fetchLoc" diameter="20">
+                </mat-spinner>
+              </div>
+          
+              <div class="form-group suffix-spinner-wrapper" *ngIf="userDetails.userType === 'player'">
+                <app-search-select 
+                [items]="field?.department_src" 
+                [selectedId]="field.department_id"
+                [isRequired]="field.location_id ? true : false"
+                [disabled]="shouldDisableDeptForPlayer()"
+                placeholderText="{{('select_secondary_department' | translate)}}" 
+                (change)="onDepartmentSEC($event,field)" >
+                </app-search-select>
+                <mat-spinner class="spinner sec-dept-spinner" mode="indeterminate" *ngIf="field.is_loading" diameter="20">
+                </mat-spinner>
+              </div>
+            </div>
+            <div class="add-sec" *ngIf="userDetails.userType === 'player' && linked_sec_locations_departments_count < 5">
+            <p class="add-loc-dept"  (click)="secAllFields?.length < 5 ? addMore() : $event.stopPropagation()" >
+              + {{ 'add_another_location_department' | translate }}</p>
+          </div>
+             <div class="form-group suffix-spinner-wrapper" *ngIf="userDetails.userType !== 'player'">
+                <label for="location">{{'location' | translate}}</label>
+                <app-search-multiselect [items]="locationList" placeholderText="{{('select_location' | translate)}}"
+                  [isRequired]="user.access_type !== role.MANAGER" [disabled]="shouldDisableEditLocation()"
+                  [readMode]="shouldDisableEditLocation()" [shouldAllowSearch]="true" [limit]="limit"
+                  [limitMassage]="locationMsg" [limitValidation]="true" (selectedItems)="selectedLocations($event)"
+                  (closedPanel)="closedPanel($event)">
+                </app-search-multiselect>
+                <mat-spinner class="spinner" mode="indeterminate" *ngIf="fetchLoc" diameter="20">
+                </mat-spinner>
+              </div>
+              <div class="form-group suffix-spinner-wrapper" *ngIf="userDetails.userType !== 'player'">
+                <label for="timezone">{{'Timezone' | translate}}</label>
+                <app-search-select [items]="timeZoneList" [selectedId]="selectedTimezoneId"
+                  placeholderText="{{('select_timezone' | translate)}}" [disabled]="shouldDisableEditTimeZone()"
+                  (change)="onTimeZoneSelectionChanged($event)" [disabledArrow]="shouldDisableEditTimeZone()"
+                  [isRequired]="user.access_type === role.MID_MANAGER || user.access_type === role.TEAM_LEAD">
+                </app-search-select>
+                <mat-spinner class="spinner" mode="indeterminate" *ngIf="fetchTimezone " diameter="20">
+                </mat-spinner>
+              </div>
+              <div class="form-group suffix-spinner-wrapper" *ngIf="userDetails.userType !== 'player'">
+                <label for="department">{{'department' | translate}}</label>
+                <app-search-multiselect [items]="preparedDepartmentList"
+                  placeholderText="{{('select_department' | translate)}}" [isNewLocationLinked]="isNewLocationLinked"
+                  [isRequired]="user.access_type === role.MID_MANAGER || user.access_type === role.TEAM_LEAD"
+                  [disabled]="shouldDisableEditDepartment()" [readMode]="shouldDisableEditDepartment()" [limit]="limit"
+                  [limitMassage]="departmentMsg" [limitValidation]="true" [shouldAllowSearch]="true"
+                  (selectedItems)="selectedDepartments($event)">
+                </app-search-multiselect>
+                <mat-spinner class="spinner" mode="indeterminate" *ngIf="fetchDept" diameter="20">
+                </mat-spinner>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="user-email">{{'email' | translate}}</label>
+              <input type="email" class="holder form-inputs" autocorrect="off" [readonly]="is_loading"
+                autocapitalize="off" spellcheck="false" id="user-email" placeholder="{{'email_address' | translate}}"
+                name="useremail" [(ngModel)]="user.email" autocomplete="off" [required]="company?.email"
+                pattern="\S+@\S+\.\S+">
+            </div>
+            <div class="form-group" *ngIf="company?.user_name">
+              <label for="user-email">{{'username' | translate}}</label>
+              <input type="text" class="holder form-inputs" autocorrect="off" [readonly]="is_loading"
+                autocapitalize="off" spellcheck="false" id="user-name" placeholder="{{'username' | translate}}"
+                name="username" [(ngModel)]="user.user_name" autocomplete="off" [required]="company?.user_name">
+            </div>
+            <div class="form-group" *ngIf="company?.global_id">
+              <label for="user-email">{{'global_id' | translate}}</label>
+              <input type="text" class="holder form-inputs" autocorrect="off" [readonly]="is_loading"
+                autocapitalize="off" spellcheck="false" id="global-id" placeholder="{{'global_id' | translate}}"
+                name="globalid" [(ngModel)]="user.global_id" autocomplete="off" [required]="company?.global_id">
+            </div>
+            <div class="form-group" *ngIf="!(company?.is_sso_company && !company?.dual_login)">
+              <label for="user-password">{{'password' | translate}}</label>
+              <input type="password" class="holder form-inputs" autocomplete="off" autocorrect="off" maxlength="32"
+                autocapitalize="off" spellcheck="false" id="user-password" [readonly]="is_loading" minlength="4"
+                name="userpassword" [(ngModel)]="user.password" placeholder="{{'password' | translate}}"
+                [required]="user && (user?.password?.length > 0 || user.confirmPassword?.length > 0)">
+            </div>
+
+            <div class="form-group" style="padding-bottom:10px" *ngIf="!(company?.is_sso_company && !company?.dual_login)">
+              <label for="confirm-password">{{'confirm_password' | translate}}</label>
+              <input type="password" class="holder form-inputs" autocomplete="off" autocorrect="off" maxlength="32"
+                autocapitalize="off" spellcheck="false" id="confirm-password" minlength="4" name="confirmpassword"
+                [(ngModel)]="user.confirmPassword" placeholder="{{'confirm_password' | translate}}"
+                [required]="user && user?.password?.length > 0">
+            </div>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="{{'extra_information' | translate}}"
+          *ngIf="globalService.isCompanyWithCustomField() && userDetails.userType === 'player'">
+          <div class="container">
+            <div class="form-group department-container"
+              *ngFor="let custonField of user.company_custom_fields; let i=index">
+              <label for="college">{{custonField.title}}</label>
+              <input type="text" class="holder form-inputs" placeholder="Enter {{custonField.title}}"
+                id="{{custonField.key}}" [(ngModel)]="custonField.value" name="{{custonField.key}}">
+            </div>
+
+          </div>
+        </mat-tab>
+
+        <mat-tab label="{{'additional_information' | translate}}">
+          <div class="container">
+            <div class="form-group" *ngIf="userDetails.userType === 'player'">
+              <label for="group">{{'group' | translate}}</label>
+              <app-search-select [items]="groupsList" [selectedId]="user.group_id"
+                placeholderText="{{('select_group' | translate)}}" (change)="onGroupSelectionChanged($event)"
+                [disabled]="!user.is_editable"></app-search-select>
+            </div>
+
+            <div class="form-group department-container">
+              <label for="title">{{'job_title' | translate}}</label>
+              <input type="text" class="holder form-inputs" placeholder="{{'enter_job_title' | translate}}" id="title"
+                [(ngModel)]="user.title" name="title" [disabled]="!user.is_editable">
+            </div>
+
+            <div class="form-group suffix-spinner-wrapper">
+              <label for="country">{{'country' | translate}}</label>
+
+              <app-search-select [items]="countryList" [selectedId]="user.country_id"
+                [disabled]="fetchCountry || !user.is_editable" placeholderText="{{('select_country' | translate)}}"
+                (change)="onCountrySelectionChanged($event)"></app-search-select>
+              <mat-spinner class="spinner" mode="indeterminate" *ngIf="fetchCountry" diameter="20">
+              </mat-spinner>
+            </div>
+            <div class="form-group suffix-spinner-wrapper">
+              <label for="state">{{'state' | translate}}</label>
+
+              <app-search-select [items]="statesList" [selectedId]="user.state_id"
+                placeholderText="{{('select_state' | translate)}}" (change)="onStateSelectionChanged($event)"
+                [disabled]="!user.country_id || fetchState">
+              </app-search-select>
+              <mat-spinner class="spinner" mode="indeterminate" *ngIf="fetchState" diameter="20">
+              </mat-spinner>
+            </div>
+
+            <div class="form-group department-container">
+              <label for="city">{{'city' | translate}}</label>
+              <input type="text" class="holder form-inputs" placeholder="{{'enter_city' | translate}}" id="city"
+                [(ngModel)]="user.city" name="city">
+            </div>
+            <div class="form-group department-container date-picker">
+              <label for="dob">{{'date_of_birth' | translate}}</label>
+              <input matInput class="holder form-inputs calendar-input" [matDatepicker]="picker"
+                placeholder="{{'date_format_mmddyyyy' | translate}}" [(ngModel)]="user.date_of_birth" name="dateOfBirth"
+                [max]="startDate" (click)="picker.open()" (open)="isDatePickerOpen" (keydown)="isDatePickerOpen = true;"
+                readonly>
+              <mat-datepicker-toggle matPrefix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker [startAt]="startDate" startView="year" #picker [disabled]="!user.is_editable">
+              </mat-datepicker>
+            </div>
+
+
+            <div class="form-group department-container">
+              <label for="college">{{'college' | translate}}</label>
+              <input type="text" class="holder form-inputs" placeholder="{{'enter_college' | translate}}" id="college"
+                [(ngModel)]="user.college" name="college">
+            </div>
+
+            <div class="form-group department-container date-picker">
+              <label for="colg_grad_year">{{'college_graduation_year' | translate}}</label>
+              <select class="state-drop-down form-inputs form-control" id="colg-grad-year" [(ngModel)]="year"
+                name="college_graduation_year">
+                <option selected value="0">{{'select_college_graduation_year' | translate}}</option>
+                <option *ngFor="let year of yearsOptions" [value]="year">{{year}}</option>
+              </select>
+            </div>
+
+            <div class="form-group department-container">
+              <label for="colg-major">{{'college_major' | translate}}</label>
+              <input type="text" class="holder form-inputs" placeholder="{{'enter_college_major' | translate}}"
+                id="colg-major" [(ngModel)]="user.college_major" name="college_major">
+            </div>
+
+            <div class="form-group">
+              <label for="highest-degree">{{'highest_degree_completed' | translate}}</label>
+              <select class="state-drop-down form-inputs form-control" id="highest-degree"
+                [(ngModel)]="user.highest_degree_id" name="highest_degree_id">
+                <option selected value="0">{{'select_highest_degree_completed' | translate}}</option>
+                <option value="1">{{'high_school' | translate}}</option>
+                <option value="2">{{'undergraduate' | translate}}</option>
+                <option value="3">{{'graduate' | translate}}</option>
+              </select>
+            </div>
+
+            <div class="form-group department-container" style="padding-bottom:10px">
+              <label for="emp-id">{{'employee_id' | translate}}</label>
+              <input type="text" class="holder form-inputs" placeholder="{{'enter_employee_id' | translate}}"
+                id="emp-id" [(ngModel)]="user.employee_id" name="employee_id" pattern="^[a-zA-Z0-9_#\-]*$"
+                maxlength="15">
+            </div>
+
+            <div class="form-group" *ngIf="showEthnicity" style="padding-bottom:10px;margin: 0;">
+              <label for="ethnicity">{{'ethnicity' | translate}}</label>
+              <select class="state-drop-down form-inputs form-control" id="ethnicity" [(ngModel)]="user.eth_id"
+                name="ethnicity_name">
+                <option selected value="0">{{'select_ethnicity' | translate}}</option>
+                <option *ngFor="let ethnicity of ethnicities" [value]="ethnicity.ethnicityId">
+                  {{ethnicity.ethnicityName}}</option>
+              </select>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+
+      <mat-card-actions class="footer">
+        <div class="button-row">
+          <div *ngIf="permission && permission?.delete">
+            <button type="button" class="delete-button" *ngIf="!(user && user?.isNew)" (click)="confirmDeletion(user)"
+              mat-button>
+              {{'delete_uppercase' | translate}}
+            </button>
+          </div>
+          <div class="btn-right">
+            <button mat-button type="button" class="cancel-button" tabindex="-1"
+              (click)="cancel()">{{'cancel_uppercase' | translate}}</button>
+          </div>
+          <div>
+            <button mat-button type="submit" [disabled]="!addUser?.valid || !addUser?.dirty || shouldDisable() || checkSecLocDept() || shouldDisableForm()" >
+              <div *ngIf="user && user?.isNew; else other_content">
+                {{'add_uppercase' | translate}}
+              </div>
+              <ng-template #other_content>{{'done_uppercase' | translate}}</ng-template>
+            </button>
+          </div>
+        </div>
+      </mat-card-actions>
+    </form>
+  </section>
+
+</div>

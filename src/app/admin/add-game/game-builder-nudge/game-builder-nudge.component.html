@@ -1,0 +1,16 @@
+<div class="wrapper">
+    <mat-toolbar class="small-toolbar" color="primary">
+        <div class="title">{{data[index].title}}</div>
+        <div class="closeIcon">
+            <mat-icon (click)="cancel()">close</mat-icon>
+        </div>
+    </mat-toolbar>
+  
+    <div class="text">{{data[index].text}}</div>
+    <div class="nav">
+        <mat-icon (click)="previous()" [ngClass]="{'disable': index !== 1}">chevron_left</mat-icon>
+        <span class="title">{{index+1}}/2 </span>
+        <mat-icon (click)="next()" [ngClass]="{'disable': index !== 0}" >chevron_right</mat-icon>
+
+    </div>
+</div>

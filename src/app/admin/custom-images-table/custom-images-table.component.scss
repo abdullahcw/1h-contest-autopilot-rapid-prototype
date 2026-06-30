@@ -1,0 +1,47 @@
+@import "../../../styles.scss";
+
+img {
+    margin-right: 10px;
+    border-radius: 50%;
+}
+.img-border{
+    border: 1px solid #eae9e9;
+}
+.img40by40{
+    height: 40px;
+    width: 40px;
+}
+
+.img35by35{
+    height: 35px;
+    width: 35px;
+}
+
+.img25by25 {
+    @include media-breakpoint-down(md) {
+        height: 25px;
+        width: 25px;
+    }
+    @include media-breakpoint-down(xs) {
+        height: 25px;
+        width: 25px;
+        margin: 0px;
+    }
+}
+.img45by45{
+    height: 45px !important;
+    width: 45px !important;
+}
+.img80by80{
+    height: 80px !important;
+    width: 80px !important;
+}
+.img48by48{
+    height: 48px !important;
+    width: 48px !important;
+}
+.img100by100{
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: cover;
+}

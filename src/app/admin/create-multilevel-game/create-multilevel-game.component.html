@@ -1,0 +1,182 @@
+<div class="wrapper">
+  <app-create-multilevel-game-header (cancelEvent)="cancelGames($event)" (saveAddedLevels)="save($event)"
+    [(multilevelGameData)]="multilevelGameData" [viewbutton]="true" [disableSave]="disableSave">
+  </app-create-multilevel-game-header>
+  <mat-card class="container-card" [ngClass]="{'disable-contest-change': isMultilevelGamesEditable}">
+    <mat-card-header>
+      <div class="button-wrapper">
+        <button class="add-game addEntity" matTooltip="{{'add_level' | translate}}" matTooltipPosition="below" mat-fab
+          (click)="presentAddGamePopUp()" [disabled]="!games || is_loading"
+          *ngIf="multilevelGameData.mlg_state !== 'READY' && !globalService.isRoleLimited()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </mat-card-header>
+    <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+    <mat-card-content>
+      <div id="scrollToTop"></div>
+      <table mat-table [dataSource]="multilevelGameDataSource" class="responsive-table">
+        <ng-container matColumnDef="level">
+          <th mat-header-cell *matHeaderCellDef class="game-level" style="width: 80px;">
+            {{'level' | translate}}
+          </th>
+          <td mat-cell *matCellDef="let level;let i=index" class="levelCount"
+            [ngClass]="{'disable-mlg-change': !multilevelGameData?.is_editable}">
+            {{level.level}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="game_logo">
+          <th mat-header-cell *matHeaderCellDef class="checkboxes game-logo-holder"></th>
+          <td mat-cell *matCellDef="let game" [ngClass]="{'disable-mlg-change': !multilevelGameData?.is_editable}">
+            <img class="game-logo" 
+            appSignedUrl [imgSelector]="'changeImageSrc'" [imgSrcValue]="game.game_logo" src="/assets/img/default.png"
+           onError="this.src='/assets/img/default.png'">
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="game_name">
+          <th mat-header-cell *matHeaderCellDef style="max-width: 89px;width: 200px !important;">
+            {{'game' | translate}}
+          </th>
+          <td mat-cell *matCellDef="let game" class="game-name-holder"
+            [ngClass]="{'disable-mlg-change': !multilevelGameData?.is_editable}">
+            {{game.game_name}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="completion_critera">
+          <th mat-header-cell *matHeaderCellDef style="max-width: 89px;">
+            {{'how_to_win' | translate}}
+          </th>
+          <td mat-cell *matCellDef="let game" class="game-criteria-holder">
+            <div class="criteria-container"
+              [ngClass]="{'disable-mlg-change': (!multilevelGameData?.is_editable && !game.newlyAdded) || game.disable_level}">
+              <mat-form-field class="chip-form-field scrollable" *ngIf="game.criteria?.length >= 1">
+                <mat-chip-list style=" display: flex;flex-direction: row;" class="chip-list"
+                  *ngIf="!multilevelGameData.is_editable && !game.newlyAdded">
+                  <div *ngFor="let category of game.criteria ;let i=index;" (removed)="remove(category, game)">
+                    <div class="mat-chip mat-standard-chip handCursor" *ngIf="category.isSelected">
+                      <div class="chip-wrapper static-chip-align">
+                        <span>{{category.title | uppercase}}:</span>
+                        <span>&nbsp;&nbsp;{{category.value}}</span>
+                      </div>
+                    </div>
+                  </div>
+                </mat-chip-list>
+                <mat-chip-list style=" display: flex;flex-direction: row;" class="chip-list"
+                  *ngIf="(!multilevelGameData.is_editable && game.newlyAdded) || multilevelGameData.is_editable">
+                  <div *ngFor="let category of game.criteria ;let i=index;" (removed)="remove(category, game)">
+                    <div class="mat-chip mat-standard-chip handCursor" *ngIf="category.isSelected">
+                      <div class="chip-wrapper">
+                        <span>{{category.title | uppercase}}:</span>
+                        <input type="text" [id]="'isContent' + i" class="editable-tag" *ngIf="category.id === 1"
+                          (blur)="chackCriteriaValue(category?.key, $event.target.value, game);" #total_points
+                          (focus)="updateSelectedInputValue(category.value);" name="mlg-criteria"
+                          (ngModelChange)="commaSeparatedNumbersOnly($event, game)" (keypress)="numberOnly($event)"
+                          [ngModel]="globalService.formatNumber(category.value)" tabindex="1" maxlength="10"
+                          autocomplete="off" elastic-input />
+
+                        <input type="text" [id]="'isContent' + i" class="editable-tag" *ngIf="category.id === 2"
+                          (blur)="chackCriteriaValue(category?.key, category.value, game);"
+                          (focus)="updateSelectedInputValue(category.value)" (keypress)="numberOnly($event)"
+                          [(ngModel)]="category.value" name="mlg-criteria" maxlength="3" autocomplete="off"
+                          (keydown.enter)="$event.target.blur();false" elastic-input />
+
+                        <select class="high-score-select" name="High Score" [(ngModel)]="category.value" #hight_score
+                          (change)="multilevelGameData.mlg_state === 'DRAFT' ? updateGameCriteria(category?.key, hight_score.value, game) 
+                          : addNewGameCriteria(game)" *ngIf="category.id === 3">
+                          <option *ngFor="let score of higScoreValue;" [value]="score"> {{score}} %</option>
+                        </select>
+                        <mat-icon (click)="remove(category, game)">cancel</mat-icon>
+                      </div>
+                    </div>
+                  </div>
+                </mat-chip-list>
+                <app-multiselect-editable-input [gameItems]="game" placeholderText="{{'select' | translate}}"
+                  [isDisabled]="checkSelecteditems(game)" [shouldAllowSearch]="true"
+                  (selectedItems)="selectedCriteria($event)" class="multiselectInput">
+                </app-multiselect-editable-input>
+              </mat-form-field>
+            </div>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="game_limit" class="showNudge">
+          <th mat-header-cell *matHeaderCellDef >
+            {{'limits' | translate}}
+            <div class="tooltiptext" [ngClass]="{'hidePatch': hasManagerSetLimit }" *ngIf="!is_loading && !globalService.isRoleLimited()">
+              <mat-icon (click)="closeNudge()" class="close-nudge">close</mat-icon>
+              <div class="tooltipcontent">
+                <span>{{ "you_can_now_set_daily" | translate }}</span>
+                <span class="tooltext">{{ "limits_for_each_level" | translate}}</span>
+              </div>
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let game" class="game-limit-holder" [ngClass]="{'disable-mlg-change': multilevelGameData.mlg_state === 'READY' || game.disable_level || globalService.isRoleLimited()}">
+            <div class="limit-wrapper">
+              <input class="game-limit-input" [(ngModel)]="game.max_limit" (blur)="updateGameCriteria('max_limit', game.max_limit, game)"
+                name="max_limit" [value]="game.max_limit" (input)="multilevelGameData.mlg_state === 'LIVE' ? addLimit($event, game) : $event.stopPropagation()" 
+                (keypress)="checkLimit($event)" autocomplete="off" maxlength="3" minlength="1">
+              <span>{{'daily' | translate}}</span>
+            </div>
+          </td>  
+        </ng-container>
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef style="text-align: right;width: 100px;">
+            {{'action' | translate}}
+          </th>
+          <td mat-cell *matCellDef="let game" (click)="$event.stopPropagation();">
+            <div class="delete-icon handCursor" [ngClass]="{'disable-mlg-change': game.disable_level}">
+              <button class="edit-button" mat-icon-button [matMenuTriggerFor]="mlgMenuBtns" *ngIf="!game.newlyAdded">
+                <mat-icon style="margin-left: -30px;">more_vert</mat-icon>
+              </button>
+            </div>
+            <div class="delete-icon handCursor">
+              <button class="edit-button" mat-icon-button
+                *ngIf="multilevelGameData?.mlg_state === 'LIVE' && game.newlyAdded">
+                <mat-icon (click)="removeGame(game)" style="margin-left: -30px;">close</mat-icon>
+              </button>
+            </div>
+
+
+            <mat-menu class="matMenuCustom" #mlgMenuBtns="matMenu" overlapTrigger="false" [xPosition]="'before'">
+              <span>
+                <button mat-menu-item class="options-menu-item" *ngIf="!multilevelGameData?.is_editable"
+                  (click)="disableLevel(game)"
+                  [disabled]="multilevelGameData.mlg_state === 'READY' || globalService.isRoleLimited() ">
+                  <mat-icon
+                    [ngClass]="{'disable-icon': multilevelGameData.mlg_state === 'READY' ||  globalService.isRoleLimited()}">
+                    block</mat-icon>
+                  <span>{{'disable_text' | translate}}</span>
+                </button>
+                <div *ngIf="multilevelGameData?.is_editable">
+                  <button mat-menu-item class="options-menu-item" (click)="changePosition(game)"
+                    [disabled]="multilevelGameData.mlg_state === 'READY' || globalService.isRoleLimited()">
+                    <img class="img_inMatMenu" alt="" src="assets/img/position_icon.png"
+                      [ngClass]="{'disable-icon': multilevelGameData.mlg_state === 'READY' || globalService.isRoleLimited()}">
+                    <span>{{'position_text' | translate}}&nbsp;({{game.level}})</span>
+                  </button>
+                  <button mat-menu-item class="options-menu-item" (click)="deleteGame(game)"
+                    [disabled]="multilevelGameData.mlg_state === 'READY' || globalService.isRoleLimited()">
+                    <mat-icon
+                      [ngClass]="{'disable-icon': multilevelGameData.mlg_state === 'READY' || globalService.isRoleLimited()}">
+                      delete</mat-icon>
+                    <span>{{'delete' | translate}}</span>
+                  </button>
+                </div>
+              </span>
+            </mat-menu>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header"></tr>
+        <tr mat-row *matRowDef="let game; columns: displayedColumns;" class="game-row" [matTooltip]="showToolTip(game)"
+          matTooltipPosition="left"
+          [ngClass]="{'selected-row-styling': (selection && selection.selected.indexOf(game) > -1) , 'disableLevel': game.disable_level }">
+        </tr>
+      </table>
+      <div class="no_messages" *ngIf="!multilevelGameDataSource?.data?.length">
+        <p *ngIf="is_loading">{{('please_wait' | translate)}}</p>
+        <p *ngIf="!is_loading">{{('click' | translate)}} <strong>'+'</strong> {{('to_add_levels' | translate) }}</p>
+      </div>
+
+      <span class="spacer"></span>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,98 @@
+<div class="main-container">
+  <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+  <div class="content">
+    <mat-grid-list cols="{{breakpoint}}" rowHeight="1:1" [gutterSize]="'20px'" *ngIf="!is_loading">
+
+      <mat-grid-tile *ngIf="branding?.theme">
+        <mat-card class="asset-card theme-container">
+          <div class="content" [ngStyle]="{'background-color': branding?.theme.text_color}">
+            <div class="lower-text-container" [ngStyle]="{'color': branding?.theme.background_color}"
+              (click)="openThemeEditor()">{{'text' | translate}}</div>
+            <div class="color-content" [ngStyle]="{'background-color': branding?.theme.background_color}">
+              <div class="upper-text-container" [ngStyle]="{'color': branding?.theme.text_color}">{{'background' | translate}}</div>
+            </div>
+            <div class="overlay" [ngStyle]="{'background': '#00000077'}" (click)="openThemeEditor()">
+              <mat-icon>edit</mat-icon>
+            </div>
+          </div>
+          <mat-card-footer>{{'mobile_design' | translate}}</mat-card-footer>
+        </mat-card>
+      </mat-grid-tile>
+
+      <mat-grid-tile *ngFor="let image of branding?.image" class="image-container">
+        <mat-card class="asset-card">
+          <mat-spinner style="margin:40px auto;" mode="indeterminate" [diameter]="40"
+            *ngIf="image.is_loading; else show_content"></mat-spinner>
+          <ng-template #show_content>
+            <div class="content" [ngClass]="{'device-content': (globalService.isMobile())}">
+              <div class="overlay" *ngIf="image.url">
+                <div class="left-side">
+                  <mat-icon (click)="selectedItem = image; openImage()">open_with</mat-icon>
+                </div>
+                <div class="right-side">
+                  <div class="right-upper-side">
+                    <mat-icon (click)="selectedItem = image; imgInput.click()">edit</mat-icon>
+                  </div>
+                  <div class="right-lower-side">
+                    <mat-icon (click)="deleteAsset(image)">delete</mat-icon>
+                  </div>
+                </div>
+              </div>
+              <mat-icon *ngIf="!image.url" (click)="selectedItem = image; imgInput.click()">add</mat-icon>
+              <img class="company_logo" [src]="image.url" *ngIf="image.url" />
+            </div>
+          </ng-template>
+          <mat-card-footer>{{assetKeys[image?.name]}}</mat-card-footer>
+        </mat-card>
+      </mat-grid-tile>
+    </mat-grid-list>
+    <mat-divider></mat-divider>
+    <mat-grid-list cols="{{breakpoint}}" rowHeight="1:1" [gutterSize]="'20px'" *ngIf="!is_loading">
+      <mat-grid-tile *ngFor="let sound of branding?.sound" class="sound-container">
+        <mat-card class="asset-card">
+          <mat-spinner style="margin:40px auto;" mode="indeterminate" [diameter]="40"
+            *ngIf="sound.is_loading; else show_content"></mat-spinner>
+          <ng-template #show_content>
+            <div class="content" [ngClass]="{'device-content': (globalService.isMobile())}">
+              <div class="overlay" *ngIf="sound.url"
+                [ngClass]="{'isActiveContent': (currentPlaying === sound.name && !audio?.paused)}">
+                <div class="left-side">
+                  <mat-icon *ngIf="currentPlaying === sound.name && !audio?.paused; else show_play_icon"
+                    (click)="audio?.pause()">pause</mat-icon>
+                  <ng-template #show_play_icon>
+                    <mat-icon (click)="getSignedURLAndPlay(sound)">play_arrow</mat-icon>
+                  </ng-template>
+                </div>
+                <div class="right-side">
+                  <div class="right-upper-side">
+                    <mat-icon (click)="selectedItem = sound; audioInput.click()">edit</mat-icon>
+                  </div>
+                  <div class="right-lower-side">
+                    <mat-icon (click)="deleteAsset(sound)">delete</mat-icon>
+                  </div>
+                </div>
+              </div>
+              <mat-icon *ngIf="!sound.url; else show_play_button" (click)="selectedItem = sound; audioInput.click()">add
+              </mat-icon>
+            </div>
+            <ng-template #show_play_button>
+              <mat-icon>music_note</mat-icon>
+            </ng-template>
+          </ng-template>
+          <mat-card-footer>{{assetKeys[sound?.name]}}</mat-card-footer>
+        </mat-card>
+      </mat-grid-tile>
+    </mat-grid-list>
+    <div class="format-info" *ngIf="!is_loading">
+        <div class="note-styling">
+          <div class="note"> &#9679; {{'note_supported_img_formats' | translate}}</div>
+          <div class="note"> &#9679; {{'note_supported_audio_format_size' | translate}}
+          </div>
+        </div>
+      </div>
+  </div>
+  <input type="file" onclick="this.value=null" #imgInput [hidden]="true" accept="image/*"
+    (change)="fileChangeEvent($event)" />
+  <input type="file" onclick="this.value=null" #audioInput [hidden]="true" accept="audio/mp3"
+    (change)="audioPicked($event)" />
+</div>

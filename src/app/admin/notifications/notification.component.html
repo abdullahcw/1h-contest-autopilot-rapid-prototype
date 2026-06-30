@@ -1,0 +1,74 @@
+<div class="main_container">
+  <div class="wrapper">
+    <mat-card class="container-card">
+      <mat-card-content>
+        <mat-tab-group [(selectedIndex)]="selectedTab" class="tabs-container custom-tab-label">
+          <mat-tab label="{{'settings' | translate}}">
+            <div class="no_messages" *ngIf="!notificationSettings || is_loading">
+              <mat-spinner [diameter]="40" *ngIf="is_loading"></mat-spinner>
+              <p>{{is_loading ? ('please_wait' | translate) : ('fetch_notification_setting_failed' | translate)}}</p>
+            </div>
+            <div class="settings-tab" *ngIf="notificationSettings && !is_loading">
+              <div class="notification-header">
+                <div class="title-header">{{'notification' | translate}}</div>
+                <div class="toggle-header">{{'mobile' | translate}}</div>
+                <div class="toggle-header">{{'email' | translate}}</div>
+              </div>
+              <div class="setting-container" *ngFor="let setting of notificationSettings">
+                <div class="setting">
+                  <div class="notification-details">{{setting.notification_name}}<div class="subtitle">
+                      {{setting.subtitle}}</div>
+                  </div>
+                  <div class="toggle-container">
+                    <mat-slide-toggle [disabled]="!notificationPermission?.edit" [checked]="setting.push_notification == 1"
+                      (change)="updateNotificationSettings($event, setting, 'push')"></mat-slide-toggle>
+                  </div>
+                  <div class="toggle-container">
+                    <mat-slide-toggle [checked]="setting.email_notification == 1"
+                      (change)="updateNotificationSettings($event, setting, 'email')" [disabled]="!notificationPermission?.edit"></mat-slide-toggle>
+                  </div>
+                  <div class="separator"></div>
+                </div>
+                <div class="separator"></div>
+              </div>
+            </div>
+          </mat-tab>
+          <mat-tab label="{{'custom_notification' | translate}}">
+            <div class="custom-notifications-tab" [ngClass]="{'disabled-tab' : isSending}">
+              <mat-toolbar-row class="toolbar">
+                <div class="label">{{'to' | translate}}:</div>
+              <app-search class="filter-chip" style="width:100%" placeholder_text="{{'add_a_recipient' | translate}}"
+                  [filter_options]="filter_options" [dataSource]="menuList" (getDataSourceWithFilterDetails)="getDataSource($event)"
+                  [applied_filters]="filters" (filtersUpdated)="refreshListOnFilterChange($event)" [context]="context"></app-search>
+              </mat-toolbar-row>
+              <mat-toolbar-row class="toolbar">
+                <div class="label">{{'by' | translate}}:</div>
+                <div class="toggle-container">
+                  <mat-checkbox [checked]="customNotificationSettings?.push_notification"
+                    (change)="updateCustomNotificationSettings($event, 'push')"></mat-checkbox>
+                  <div class="toggle-text">{{'mobile' | translate}}</div>
+                  <mat-checkbox [checked]="customNotificationSettings?.email_notification"
+                    (change)="updateCustomNotificationSettings($event, 'email')"></mat-checkbox>
+                  <div class="toggle-text">{{'email' | translate}}</div>
+                </div>
+              </mat-toolbar-row>
+              <div class="body-container">
+                <div class="body-wrapper">
+                  <textarea class="body" [(ngModel)]="messageBody" maxlength="200"
+                    placeholder="{{'type_your_msg' | translate}}">
+                  </textarea>
+                </div>
+                <div class="disclaimer"><i>{{messageBody.length}}/200</i></div>
+              </div>
+              <div class="footer">
+                <div class="spacer"></div>
+                <button type="submit" mat-raised-button color="primary" [disabled]="shouldDisableSend()"
+                  (click)="send()">{{ isSending ? ('sending_uppercase' | translate) : ('send_uppercase' | translate)}}</button>
+              </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

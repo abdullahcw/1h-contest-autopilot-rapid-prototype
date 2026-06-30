@@ -1,0 +1,97 @@
+<div class="main-container-create-contest">
+  <mat-toolbar class="small-toolbar" color="primary">
+    <div>
+      {{ 'create_contest' | translate}}
+    </div>
+  </mat-toolbar>
+  <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+  <section class="content" [ngClass]="{'disabled-style': is_loading}">
+    <form class="contest-info" #contestDetails="ngForm" (ngSubmit)="createContest(contest)">
+      <div class="contest-container" [ngClass]="{'device-support-height': storedCompany?.scheduling_filters}">
+        <div class="form-group department-container">
+          <label for="college">{{ 'contest'| translate }}</label>
+          <input type="text" class="holder form-inputs" placeholder="{{'enter_contest' | translate}}" id="contest"
+            name="contest" [(ngModel)]="contest.contest_name" minlength="1" maxlength="40" appValidateInput required>
+        </div>
+
+        <div class="date-section">
+          <div class="form-group date-picker">
+            <label for="dob">{{ 'start_date'| translate }}</label>
+            <input matInput class="holder form-inputs calendar-input" (click)="startDatePicker.open()"
+              (open)="isDatePickerOpen" name="start-date" (keydown)="$event.preventDefault(); isDatePickerOpen = true;"
+              [min]="tomorrow" [(ngModel)]="contest.contest_start_date" [matDatepicker]="startDatePicker"
+              (dateChange)="contestStartDateValidation(contest);" placeholder="{{'date_format_mmddyyyy' | translate}}"
+              required readonly>
+            <mat-datepicker-toggle matPrefix [for]="startDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker [startAt]="contest.contest_start_date" #startDatePicker [disabled]="false">
+            </mat-datepicker>
+          </div>
+          <div class="spacer"></div>
+          <div class="form-group date-picker">
+            <label for="dob">{{ 'end_date'| translate }}</label>
+            <input matInput class="holder form-inputs calendar-input" (click)="endDatePicker.open()"
+              (open)="isDatePickerOpen" name="end-date" (keydown)="$event.preventDefault(); isDatePickerOpen = true;"
+              [min]="contest.contest_start_date" [(ngModel)]="contest.contest_end_date" [matDatepicker]="endDatePicker"
+              placeholder="{{'date_format_mmddyyyy' | translate}}" [max]="contestMaxDate" required readonly>
+            <mat-datepicker-toggle matPrefix [for]="endDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker [startAt]="contest.contest_start_date" #endDatePicker [disabled]="false">
+            </mat-datepicker>
+          </div>
+        </div>
+        <div>
+        <div class="form-group timeZone">
+          <label for="timezone">{{ 'timezone' | translate }}</label>
+          <app-search-select [items]="timeZoneList" [selectedId]="timezoneId"
+            placeholderText="{{('select_timezone' | translate)}}"
+            [isRequired]="true" (change)="onTimeZoneSelectionChanged($event)"></app-search-select>
+        </div>
+        <div class="info-text">
+      
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"  matTooltipPosition="below">
+                <g id="Group_10971" data-name="Group 10971" transform="translate(-536.6 -193.811)">
+                    <g id="noun_Info_2086835" transform="translate(536.6 193.811)">
+                    <g id="Group_4459" data-name="Group 4459">
+                        <path id="Path_4319" data-name="Path 4319" d="M23.03,14.03a9,9,0,1,1-9,9A9,9,0,0,1,23.03,14.03Zm0,7.026a.886.886,0,1,1,.886-.886A.884.884,0,0,1,23.03,21.056Zm.545,5.722a.546.546,0,0,1-1.091,0V22.6a.546.546,0,0,1,1.091,0ZM23.03,15.121a7.909,7.909,0,1,0,7.909,7.909A7.912,7.912,0,0,0,23.03,15.121Z" transform="translate(-14.03 -14.03)" fill="#555"/>
+                    </g>
+                    </g>
+                </g>
+            </svg>
+          <span class="contest-info"> {{selectionBasedText(('create_contest_info' | translate), contest.contest_end_date)}}
+          </span>
+        </div>
+      </div>
+        <div class="search-container" >
+          <div class="label-container">
+            <label>{{'Add Player' | translate}}</label>
+          </div>
+          <div class="chip-wrapper " [ngClass]="{'disabled-style': is_loading,'ng-custum-valid': contest.contest_assignment.length,'ng-invalid':!contest.contest_assignment.length}"  >
+            <app-search class="filter-chip name" name="contest_assignment"  [(ngModel)]="contest.contest_assignment" placeholder_text="{{ 'add' | translate}}" 
+              style="width:100%; position: relative;" [filter_options]="filter_options" [dataSource]="menuList" [shouldAllowMultiline]="true"
+              (getDataSourceWithFilterDetails)="getDataSource($event)" [applied_filters]="appliedFilters"
+              (getDataSourceWithSearchKey)="getDataSourceWithSearchKey($event)" [isFossilCustomField]="true"
+              (filtersUpdated)="refreshListOnFilterChange($event)" [context]="context" ngDefaultControl></app-search>
+          </div>
+          
+        </div>
+       
+        <div class="scheduling-filters" *ngIf="storedCompany?.scheduling_filters">
+          <app-scheduling-filters (scheduling_filters_value)="radioBtnChanged($event)" [isCustomAudianceFilterApplied]="isCustomAudianceFilterApplied" [radioBtnValue]="disjunction_filter_value"></app-scheduling-filters>
+        </div>
+        
+      </div>
+      <mat-card-actions class="footer">
+        <div class="button-row">
+          <div class="btn-right">
+            <button mat-button type="button" class="cancel-button" tabindex="-1"
+              (click)="closePopUp()">{{ 'cancel_uppercase'| translate }}</button>
+          </div>
+          <div>
+            <button mat-button type="submit" [disabled]="!contestDetails?.valid || !contest.contest_assignment.length">
+              {{ 'create_uppercase'| translate }}
+            </button>
+          </div>
+        </div>
+      </mat-card-actions>
+    </form>
+  </section>
+</div>

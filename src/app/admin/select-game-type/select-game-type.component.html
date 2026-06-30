@@ -1,0 +1,56 @@
+<div class="main-container-selectGame" [ngClass]="{'hide-dialog': isShowDialog}">
+  <mat-toolbar class="small-toolbar" color="primary">
+    <div *ngIf="showMultiplayerImg">
+      {{'select_game_mode' | translate}}
+    </div>
+    <div *ngIf="showSingleplayerImg">
+     {{'select_game_type' | translate}}
+    </div>
+    <div class="closeIcon">
+      <i class="material-icons" (click)="closePopUp()">
+        close
+      </i>
+    </div>
+  </mat-toolbar>
+  <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+  <section class="content">
+    <div class="gameType" *ngIf="showMultiplayerImg">
+      <img src="assets/img/single-player-new.png" class="gameType_img" (click)="access_type == 'MM' ? beforeNavigateCheckUsagesLimit(1) : showOptions()"
+        [ngClass]="{'disabled-style': is_loading}">
+      <div class="checkMark" *ngIf="showSingleCheckMark">
+        <i class="material-icons">
+          check_circle
+        </i>
+      </div>
+    </div>
+
+    <div class="gameType" *ngIf="showMultiplayerImg">
+      <img src="assets/img/multi-player-new.png" class="gameType_img" (click)="beforeNavigateCheckUsagesLimit(2)"
+        [ngClass]="{'disabled-style': is_loading}">
+      <div class="checkMark" *ngIf="showMultiplayerCheckMark">
+        <i class="material-icons">
+          check_circle
+        </i>
+      </div>
+    </div>
+
+    <div class="gameType" *ngIf="showSingleplayerImg">
+      <img src="assets/img/single-level.png" class="game-mode-img" (click)="beforeNavigateCheckUsagesLimit(1)"
+        [ngClass]="{'disabled-style': is_loading}">
+      <div class="checkMark" *ngIf="showSingleCheckMark">
+        <i class="material-icons">
+          check_circle
+        </i>
+      </div>
+    </div>
+    <div class="gameType" *ngIf="showSingleplayerImg">
+      <img src="assets/img/multi-level.png" class="game-mode-img" (click)="beforeNavigateCheckUsagesLimit(3)"
+        [ngClass]="{'disabled-style': is_loading}">
+      <div class="checkMark" *ngIf="showMultilevelCheckMark">
+        <i class="material-icons">
+          check_circle
+        </i>
+      </div>
+    </div>
+  </section>
+</div>

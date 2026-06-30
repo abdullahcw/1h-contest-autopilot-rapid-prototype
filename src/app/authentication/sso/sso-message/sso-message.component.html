@@ -1,0 +1,17 @@
+<mat-toolbar color="primary">
+  {{title}}
+</mat-toolbar>
+<section class="content">
+  <div class="title">
+    {{message}}
+  </div>
+  <div class="button-row">
+    <div class="btn-right">
+      <button mat-button *ngIf="isMultiOption" class="cancel-button" tabindex="-1"
+        (click)="cancel()">{{negativeButtonText}}</button>
+    </div>
+    <div>
+      <button mat-button tabindex="-1" (click)="actionConfirmed()">{{positiveButtonText}}</button>
+    </div>
+  </div>
+</section>

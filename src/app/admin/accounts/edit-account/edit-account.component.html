@@ -1,0 +1,80 @@
+<div class="main-container">
+    <mat-toolbar class="small-toolbar" color="primary">
+        <div class="title">{{ 'edit_csm_account' | translate}}</div>
+    </mat-toolbar>
+    <section class="content">
+        <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+        <form #editAccountForm="ngForm" [ngClass]="{'disabled-style': is_loading}">
+            <div class="container">
+                <div class="account_name">
+                    <div class="form-group first_name">
+                        <label for="first_name">{{'first_name' | translate}}</label>
+                        <input type="text" class="holder form-inputs" placeholder="{{'enter_first_name' | translate}}"
+                        id="first_name" appValidateInput [(ngModel)]="account.first_name" name="first_name" maxlength="35" minlength="1" required>
+                    </div>
+                    <div class="form-group last_name">
+                        <label for="last_name">{{'last_name' | translate}}</label>
+                        <input type="text" class="holder form-inputs" placeholder="{{'enter_last_name' | translate}}"
+                        id="last_name" appValidateInput name="last_name" [(ngModel)]="account.last_name" maxlength="35" minlength="1" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email">{{'email' | translate}}</label>
+                    <input type="email" class="holder form-inputs readOnly" readonly="true" id="account_email" name="useremail" [(ngModel)]="account.email" required>
+                </div>
+                <div class="form-group">
+                    <div class="label-container">
+                        <label for="platforms">{{ 'platforms' | translate }}</label>
+                        <label for="selected">{{ this.selection.selected.length }} {{'selected_lowercase' | translate }}</label>
+                    </div>
+                    <div class="search-toolbar-row" [ngClass]="{'disabled-style': is_loading}">
+                        <mat-checkbox (change)="$event ? masterToggle() : null;"  style="margin-top: 5px;"
+                            [checked]="selection.hasValue() && isAllSelected()" [disabled]="!platforms?.length || searchText"
+                            [indeterminate]="(selection.hasValue() && !isAllSelected())">
+                        </mat-checkbox>
+                        <input type="search" name="search-key" [(ngModel)]="selectedSearchKey"
+                            class="search-item" placeholder="{{'search' | translate}}" [formControl]="filterItem">
+                    </div>
+                    <div class="selection-container">
+                        <ng-container *ngIf="(platforms | search:'company_name': selectedSearchKey) as result">
+                        <mat-selection-list>
+                            <mat-list role="list">
+                                <mat-list-item role="listitem" *ngFor="let platform of result" (click)="!platform.is_editable ? $event.stopPropagation() : onItemClick(platform)"
+                                [ngClass]="{'item-disabled': !platform.is_editable}" >
+                                    <div class="list-item-name">
+                                        <div class="checkboxes-colors">
+                                            <mat-checkbox [checked]="selection.isSelected(platform)" (click)="$event.stopPropagation()"  [disabled]="!platform.is_editable"
+                                            (change)="onItemClick(platform)"></mat-checkbox>
+                                        </div>
+                                        <div class="item-name">
+                                            {{platform?.company_name}}
+                                        </div>
+                                    </div>
+                                </mat-list-item>
+                            </mat-list>
+                            <div class="no_messages" *ngIf="result?.length == 0">
+                                <p>{{'no_records_found' | translate}}</p>
+                            </div>
+                        </mat-selection-list>   
+                    </ng-container>                     
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <div class="button-row">
+                    <div class="btn-right">
+                        <button type="button" mat-button class="cancel-button" tabindex="-1"
+                            (click)="cancel()">{{'cancel_uppercase' | translate}}</button>
+                    </div>
+                    <div>
+                        <button type="submit" mat-button
+                            [disabled]="shouldDisableAction() || !editAccountForm.valid"
+                            (click)="done()">
+                            {{'done_uppercase' | translate}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+</div>

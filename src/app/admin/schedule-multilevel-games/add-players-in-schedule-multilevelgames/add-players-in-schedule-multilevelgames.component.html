@@ -1,0 +1,37 @@
+<section class="master-wrapper">
+  <mat-toolbar class="small-toolbar" color="primary">
+    <div>{{'add_players' | translate}}</div>
+  </mat-toolbar>
+  <div class="wrapper">
+    <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+
+    <div class="main-container">
+      <div class="search-container">
+        <div class="label-container">
+          <label>{{'select_players_for_game' | translate}}</label>
+        </div>
+        <div class="chip-wrapper" [ngClass]="{'disabled-style': is_loading}">
+          <app-search class="filter-chip name" placeholder_text="{{ 'add' | translate}}" [shouldAllowMultiline]="true"
+            style="width:100%; position: relative;" [filter_options]="filter_options" [dataSource]="menuList"
+            (getDataSourceWithFilterDetails)="getDataSource($event)" [applied_filters]="appliedFilters" [isFossilCustomField]="true"
+            (getDataSourceWithSearchKey)="getDataSourceWithSearchKey($event)" [viewMode]="action && isMlgPlayable"
+            (filtersUpdated)="refreshListOnFilterChange($event)" [context]="context"></app-search>
+        </div>
+      </div>
+    </div>
+    <div class="scheduling-filters" *ngIf="storedCompany.scheduling_filters">
+      <app-scheduling-filters (scheduling_filters_value)="radioBtnChanged($event)" [state]="isMlgPlayable == true ? 'LIVE' : ''" [isCustomAudianceFilterApplied]="isCustomAudianceFilterApplied" [isEditable]="!isMlgPlayable"  [radioBtnValue]="disjunction_filter_value"></app-scheduling-filters>
+    </div>
+    <div class="button-row">
+      <div class="btn-right">
+        <button type="button" mat-button class="cancel-button" tabindex="-1"
+          (click)="cancel()">{{'cancel_uppercase' | translate}}</button>
+      </div>
+      <div>
+        <button type="submit" mat-button (click)="save()" [disabled]="shouldDisable()">
+          {{'done_uppercase' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

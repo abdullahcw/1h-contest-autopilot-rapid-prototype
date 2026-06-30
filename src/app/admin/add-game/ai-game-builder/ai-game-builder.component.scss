@@ -1,0 +1,47 @@
+@import '../../../../styles.scss';
+
+.aiGameBuilder {
+    // max-height: 50vh;
+    // height: 50vh;
+    // min-width: 280px;
+    // width: 800px;
+    width: 100%;
+    // min-width: 70vw;
+    position: relative;
+    overflow: hidden;
+
+    @include media-breakpoint-down(sm) {
+        // min-width: 330px;
+    }
+
+    @include media-breakpoint-down(xs) {
+        // width: 380px;
+    }
+
+    .small-toolbar {
+        height: 50px;
+        // font-size: 14px;
+        .titleWrapper{
+            font-size: 16px;            
+        }
+    }
+
+    .content {
+        display: flex;
+        flex-direction: row;
+
+        @include media-breakpoint-down(sm) {
+            flex-direction: column;
+            // padding: 10px 0;
+            align-items: center;
+        }
+
+       
+        .disabled-style {
+            cursor: progress;
+            pointer-events: none;
+            opacity: 1;
+        }
+    }
+  
+}

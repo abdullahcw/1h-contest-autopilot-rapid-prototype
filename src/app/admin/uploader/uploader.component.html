@@ -1,0 +1,78 @@
+<div class="uploader-container">
+  <mat-toolbar class="small-toolbar" color="primary">
+    <div>
+      Upload CSV
+    </div>
+  </mat-toolbar>
+  <section class="content" [ngClass]="{'disabled-style': is_loading}">
+    <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+    <form #addUser="ngForm">
+    <div class="container">
+
+        <div class="select-file" *ngIf="!uploadSuccess">
+          <label for="fileUp" class="selectFileLabel handCursor" matBadgePosition="after" matBadgeColor="warn">
+            <span style="font-size: 14px;font-family: roboto_regular;">SELECT A FILE</span>
+            <input type="file" id="fileUp" onclick="this.value=null" accept="csv/*" (change)="fileChangeEvent($event)"
+              hidden required />
+            <i *ngIf="fileURL" class="material-icons fileSectedIcon">
+              check_circle
+            </i>
+          </label>
+          <mat-error *ngIf="showError" style="margin: 0 !important;padding-top: 5px;">
+            {{errorMessage}}
+          </mat-error>
+
+        </div>
+        <div class="select-file" *ngIf="uploadSuccess">
+          <ul class="errorMessage">
+            <li *ngFor="let item of uploadedData">{{item}}</li>
+          </ul>
+          <div *ngIf="playersAdded" class="sendText">
+            Do you want to send onboarding email now?
+          </div>
+        </div>
+
+        
+
+
+    </div>
+    <mat-card-actions class="footer">
+        <div class="button-row">
+          <div class="handCursor downloadSample" (click)="downloadSample()" *ngIf="!uploadSuccess">
+            <i class="material-icons">
+              cloud_download
+            </i>
+            <span>
+              Download Sample CSV
+            </span>
+          </div>
+
+
+         
+          <div class="button-section">
+            <button mat-button type="button" class="cancel-button" *ngIf="!uploadSuccess" tabindex="-1"
+              (click)="cancel()">CANCEL</button>
+            <button mat-button type="submit" (click)="uplaodCSV()" [disabled]="fileSelected" *ngIf="!uploadSuccess">
+              UPLOAD              
+            </button>
+            <button mat-button type="submit" (click)="OK()" style="margin-left: 300px;"
+              *ngIf="uploadSuccess && !playersAdded">
+              OK
+            </button>
+            <div class="sendBtns" *ngIf="uploadSuccess && playersAdded">
+              <button mat-button type="submit" (click)="sendEmail()" *ngIf="uploadSuccess && playersAdded">
+                SEND NOW
+              </button>
+              <button mat-button type="submit" (click)="OK()">
+                SEND LATER
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </mat-card-actions>
+    </form>
+
+  </section>
+
+</div>

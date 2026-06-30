@@ -1,0 +1,72 @@
+<div class="main_container">
+  <div class="wrapper">
+    <mat-card class="container-card">
+      <div class="pane-container">
+        <div class="panel">
+          <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+          <mat-card-content>
+
+            <table mat-table [dataSource]="multilevelGameDataSource" class="responsive-table" matSort matSortActive=""
+              matSortDirection="asc" matSortDisableClear aria-describedby>
+              <ng-container matColumnDef="owner_img">
+                <th mat-header-cell *matHeaderCellDef class="checkboxes person-icon-holder" id=""></th>
+                <td mat-cell *matCellDef="let owner">
+                  <img class="person-icon" [src]="owner.profile_image_url" onError="this.src='/assets/img/default.png'"
+                    alt="">
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef style="padding-left: 12px !important;" id="">
+                  {{'name' | translate}}
+                </th>
+                <td mat-cell *matCellDef="let owner" class="name-wrapper" style="padding-top: 10px;">
+                  <span class="manager-name">{{owner.first_name}} {{owner.last_name}}
+                    <span class="owner-text">{{'owner' | translate}}</span>
+                  </span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="type">
+                <th mat-header-cell *matHeaderCellDef style="padding-left: 12px !important;" id="">
+                  {{'type' | translate}}
+                </th>
+                <td mat-cell *matCellDef="let owner" class="name-wrapper">
+                  <span class="manager-name">{{globalService.getManagerType(owner.type)}}</span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="add_player">
+                <th mat-header-cell *matHeaderCellDef style="padding-left: 20px !important;" id="">
+                  {{'add_players' | translate}}</th>
+                <td class="recipients-section" mat-cell *matCellDef="let owner">
+                  <div (click)="editAssignment(owner)">
+                    <app-search class="filter-chip name" [context]="context" placeholder_text="{{ 'add' | translate}}"
+                      [shouldAllowMultiline]="true" style="width:100%; pointer-events: none;"
+                      [filter_options]="filter_options" [dataSource]="menuList" [viewMode]="action && isMlgPlayable"
+                      [applied_filters]="appliedFilters" 
+                      (getDataSourceWithFilterDetails)="getDataSource($event)"></app-search>
+                  </div>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef style="text-align: right;width: 100px;" id="">
+                  {{'status' | translate}}
+                </th>
+                <td mat-cell *matCellDef="let owner">
+                  <div class="toggle-container" (click)="confirmModeChange()"
+                    [ngStyle]="{'pointer-events': allowAssignmentChange() && !is_loading ? 'auto' : 'none'}">
+                    <mat-slide-toggle #practiceToggle class="toggle-group"
+                      [ngClass]="{'enable-toggle': action && isMlgPlayable }" [checked]="action && isMlgPlayable"
+                      [disabled]="true">
+                    </mat-slide-toggle>
+                  </div>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header"></tr>
+              <tr mat-row *matRowDef="let owner; columns: displayedColumns;" class="owner-row" [ngClass]="{'disabled-style': is_loading}">
+              </tr>
+            </table>
+          </mat-card-content>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>

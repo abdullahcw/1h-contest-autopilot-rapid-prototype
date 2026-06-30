@@ -1,0 +1,171 @@
+/* You can add global styles to this file, and also import other style files */
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+@import 'assets/main';
+
+iframe#launcher {
+  right: -15px !important;
+  bottom: -6px !important;
+
+  @include media-breakpoint-down(xs) {
+    display: none;
+  }
+
+  @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
+    display: none;
+  }
+
+}
+
+table {
+  .mat-header-row {
+    height: 45px;
+  }
+
+  .disable_small_devices {
+    @include media-breakpoint-down(sm) {
+      display: none !important;
+    }
+  }
+
+  width: 100%;
+  box-sizing: border-box;
+
+  .stick-header {
+    top: 0px;
+    position: sticky;
+  }
+
+    .mat-table-sticky {
+        top:-1px !important;
+    }
+  tr {
+    border-bottom: 1px solid $mat_border_color;
+    white-space: nowrap;
+
+    font: {
+      family: Roboto_Regular;
+      size: $text_size_med;
+    }
+
+    @include media-breakpoint-down(sm) {
+      display: table-row;
+      padding: 10px 0;
+    }
+  }
+
+  th {
+    background-color: #e3e3e3;
+    color: $textColor;
+    font-family: Roboto_Bold;
+    font-size: 0.875rem;
+  }
+  td {
+    font-family: Roboto_Regular;
+    font-size: $text_size_small;
+    min-height: 55px;
+    color: #444;
+    padding-left: 5px;
+    padding-left: 10px;
+
+    &:first-child {
+      min-width: 50px;
+      text-align: left;
+      padding: 5px 5px 5px 30px;
+    }
+
+    &.name {
+      color: $textColor;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    label {
+      display: none;
+    }
+
+    .company_location {
+      @include media-breakpoint-down(xs) {
+        display: block;
+      }
+    }
+
+    @include media-breakpoint-down(sm) {
+      border: none;
+      label {
+        display: none;
+      }
+    }
+
+  }
+
+  tr:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+
+    ::ng-deep .mat-checkbox .mat-checkbox-frame {
+      border-color: #767676;
+    }
+  }
+
+  .notHandCursor {
+    cursor: auto !important;
+  }
+
+  .company-logo {
+    height: 40px;
+    width: 40px;
+    margin-right: 10px;
+    border-radius: 50%;
+    border: 1px solid $mat_border_color;
+
+    @include media-breakpoint-down(sm) {
+      display: block;
+    }
+  }
+}
+
+::ng-deep .cdk-overlay-pane {
+  @include media-breakpoint-down(xs) {
+    max-width: 90vw !important;
+  }
+}
+
+::ng-deep .mat-select-arrow-wrapper {
+  color: blue;
+}
+
+::ng-deep .mat-snack-bar-handset  {
+  min-width: auto !important;
+  max-width: auto !important;
+  width: auto !important;
+}
+
+.mat-tab-header-pagination-controls-enabled {
+  .mat-tab-header-pagination-after {
+    padding-right: 15px;
+    min-width: 65px;
+    justify-content: flex-end;
+  }  
+}
+::ng-deep .custom-game-category-container   {
+  @include media-breakpoint-down(xs) {  
+    width: 200px !important;
+    min-width: 200px !important;
+    right: 70px;
+  }
+}
+
+.aiAssistSpinner ::ng-deep .mat-progress-spinner circle, .mat-spinner circle {
+  stroke: #FFFFFF !important;
+  }
+
+  .ai-assist-dialog-wrapper{
+    width: 70vw !important;
+
+    @include media-breakpoint-down(xs) {
+      // width: 90vw !important;
+      width: 380px !important;
+    }
+  }

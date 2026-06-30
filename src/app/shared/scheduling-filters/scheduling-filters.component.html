@@ -1,0 +1,30 @@
+<section class="scheduling-filters-wrapper">
+    <div class="scheduling_filters_title">
+        <span>{{'scheduling_filters_title' | translate}}
+        </span>
+    </div>
+
+    <div class="radio_btn_group_wrapper">
+        <mat-radio-group md-autofocus class="radio_btn_group" [disabled]="!isEditable"
+        (change)="radioChange($event)"
+         aria-label="Games" name="gameMode"
+        [(ngModel)]="selectedAccountType">
+        <mat-radio-button class="radio-btn" value="1" style="padding: 15px 0;" >
+            <div class="radioBtn_text">
+                <span>{{ 'common_players' | translate }}</span>
+                <span class="bgColor">{{'common_players_desc' | translate }}</span>
+            </div>
+            
+
+        </mat-radio-button>
+        <mat-radio-button class="radio-btn" value="0">
+            <div class="radioBtn_text">
+                <span>
+                    {{ 'all_players_scheduling' | translate }}
+                </span>
+                <span class="bgColor">{{'all_players_desc' | translate }}</span>
+            </div>
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+</section>

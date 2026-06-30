@@ -1,0 +1,28 @@
+<section class="content" *ngIf="!accountTypePaid">
+  <div class="title">
+    <span>Hi {{managerName}},</span>
+    <span class="margin-top">
+      <span class="text-bold">Your free trial has ended.</span>
+      Don't worry, your team can keep the game going by selecting a plan with 1Huddle.
+    </span>
+    <span class="margin-top">
+      Select a plan and continue your subscription by emailing our team at
+      <a (click)="track('Paywall_By_Trial_Support_Contacted_For_Subscription')"
+        href="mailto:support@1huddle.co">support@1huddle.co</a>.
+    </span>
+  </div>
+</section>
+<section class="content" *ngIf="accountTypePaid">
+  <div class="title">
+    <span>Hi {{managerName}},</span>
+    <span class="margin-top">
+      <span class="text-bold">Your subscription has ended.</span>
+      Don't worry, your team can keep the game going by renewing your subscription.
+    </span>
+    <span class="margin-top">
+      To continue, please email our team at
+      <a (click)="track('Paywall_By_Paid_Support_Contacted_For_Subscription')"
+        href="mailto:support@1huddle.co">support@1huddle.co</a>.
+    </span>
+  </div>
+</section>

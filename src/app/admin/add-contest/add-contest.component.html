@@ -1,0 +1,91 @@
+<div class="wrapper">
+  <app-add-contest-header #contestHeader (contestDetails)="updateContest($event)" [newContest]="newContest"
+    (updateGames)="updateGames()" (refreshGamesList)="refreshGamesList()">
+  </app-add-contest-header>
+  <app-add-games-in-contest *ngIf="is_addGame" (isGamesScreen)="isGamesScreen()" (hasToRefresh)="hasToRefresh()" [refreshGetGamesWinRate]="refreshGetGamesWinRate">
+  </app-add-games-in-contest>
+  <mat-card class="container-card" *ngIf="!is_addGame"
+    [ngClass]="{'disable-contest-change': !contestService.isContestEditable}">
+    <mat-card-header>
+      <div class="button-wrapper">
+        <button class="add-game addEntity" matTooltip="{{'add_game_in_contest' | translate}}" matTooltipPosition="below"
+          mat-fab *ngIf="contestService.isContestEditable" (click)="presentAddGamePopUp()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </mat-card-header>
+    <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+    <mat-card-content>
+      <div id="scrollToTop"></div>
+      <table mat-table aria-describedby="" [dataSource]="contestDataSource" class="responsive-table" matSort
+        (matSortChange)="sortData($event)" matSortActive="" matSortDirection="asc" matSortDisableClear *ngIf="true"
+        [ngClass]="{'disabled-style': is_loading}">
+        <ng-container matColumnDef="game_logo">
+          <th id="" mat-header-cell *matHeaderCellDef class="checkboxes game-logo-holder"></th>
+          <td mat-cell *matCellDef="let game">
+            <app-custom-images-table class="img-wrapper" [className]="'img45by45'"  [ImageSrc]="game?.game_logo" > </app-custom-images-table>
+        </ng-container>
+        <ng-container matColumnDef="game_name">
+          <th id="" mat-header-cell *matHeaderCellDef style="max-width: 89px;">{{'game_name' | translate}}
+          </th>
+          <td mat-cell *matCellDef="let game" class="game-name-holder">{{game.game_name}}</td>
+        </ng-container>
+        <ng-container matColumnDef="contest_date">
+          <th id="" mat-header-cell *matHeaderCellDef class="startDateEndButton">
+            <div class="date-wrapper">
+              <div class="start-date"> {{contestDateRange.contest_start_date | date:'mediumDate'}}</div>
+              <div class="end-date"> {{contestDateRange.contest_end_date | date:'mediumDate'}}</div>
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let game" (mousedown)="isDateRangeValid()" class="handCursor"
+            (click)="sliderChanged ? null : openDatePicker(game); sliderChanged = false">
+            <ngx-slider class="date-range-slider" [(value)]="game.game_start_date" [options]="contestRange"
+              [(highValue)]="game.game_end_date" (userChangeEnd)="onUserChange($event, game); sliderChanged = true">
+            </ngx-slider>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="attempts">
+          <th id="" mat-header-cell *matHeaderCellDef class="attempts-column">
+            {{'attempts' | translate}}
+          </th>
+          <td mat-cell *matCellDef="let game">
+            <div class="attempts-container">
+              <input class="attempts-field" [(ngModel)]="game.attempt_count"
+                (blur)="chackValue('attempt_count',game.attempt_count,game);"
+                (focus)="updateSelectedInputValue(game.attempt_count)" (keypress)="numberOnly($event)"
+                [value]="game.attempt_count" autocomplete="off" maxlength="4">
+              <mat-select class="limit-select" [(value)]="game.attempt_type"
+                (selectionChange)="callToupdatGamesInContest('attempt_type',game.attempt_type,game)">
+                <mat-option value="DAILY">{{'daily' | translate}} </mat-option>
+                <mat-option value="WEEKLY">{{'weekly' | translate}}</mat-option>
+                <mat-option value="TOTAL">{{'total' | translate}}</mat-option>
+              </mat-select>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <th id="" mat-header-cell *matHeaderCellDef style="text-align: right;width: 100px;">
+            {{'action' | translate}}
+          </th>
+          <td mat-cell *matCellDef="let game" (click)="$event.stopPropagation();">
+            <div class="delete-icon handCursor">
+              <mat-icon (click)="deleteGame(game)">delete</mat-icon>
+            </div>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header"></tr>
+        <tr mat-row *matRowDef="let game; columns: displayedColumns;" class="game-row"
+          [ngClass]="{'selected-row-styling': (selection && selection.selected.indexOf(game) > -1) }"></tr>
+      </table>
+
+      <div class="no_messages" *ngIf="!contestDataSource?.data.length">
+        <p *ngIf="is_loading">{{('please_wait' | translate)}}</p>
+        <p *ngIf="!is_loading">{{('click' | translate)}} <strong>'+'</strong> {{('to_add_games' | translate) }}</p>
+      </div>
+
+      <span class="spacer"></span>
+    </mat-card-content>
+  </mat-card>
+
+</div>

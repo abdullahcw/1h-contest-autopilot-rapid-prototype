@@ -1,0 +1,19 @@
+<mat-toolbar color="primary">
+  Confirm Action
+</mat-toolbar>
+<section class="delete-company-content">
+  <div class="title">
+  Are you sure you want to delete this company?
+  </div>
+  <div class="captcha-container">
+    <re-captcha class="captcha" (resolved)="resolved($event)" siteKey="6LdyxngUAAAAANFHX3H7a90alrzao6CCpgmNl0po"></re-captcha>
+  </div>
+  <div class="button-row">
+      <div class="btn-right">
+        <button mat-button class="cancel-button" tabindex="-1" (click)="cancel()">NO</button>
+      </div>
+      <div>
+        <button mat-button (click)="deleteCompany()" [disabled]="!isCaptchaValid">YES</button>
+      </div>
+    </div>
+</section>

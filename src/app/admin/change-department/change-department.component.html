@@ -1,0 +1,40 @@
+<div class="main-container">
+  <mat-toolbar class="small-toolbar" color="primary">
+    <div>
+      Change Location/Department
+    </div>
+  </mat-toolbar>
+  <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+  <form #updateDepartment="ngForm" [ngClass]="{'disabled-style': is_loading}">
+
+    <section class="add-group-content">
+      <div class="container">
+        <div class="form-group">
+          <label for="location">{{'primary_location' | translate}}</label>
+          <select class="state-drop-down form-inputs form-control" id="location" [(ngModel)]="department.location_id"
+            name="location_name" (ngModelChange)="onLocationChange($event)" required>
+            <option selected disabled value="">{{'select_primary_location' | translate}}</option>
+            <option *ngFor="let location of locations" [ngValue]="location.location_id">{{location.location_name}}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="department">{{'primary_department' | translate}}</label>
+          <select class="state-drop-down form-inputs form-control" [(ngModel)]="department.department_id" name="department_name"
+            id="department" (ngModelChange)="onDepartmentChange($event)" [disabled]="!department.location_id" required>
+            <option selected disabled value="">{{'select_primary_department' | translate}}</option>
+            <option *ngFor="let department of departments" [ngValue]="department.department_id">{{department.department_name}}</option>
+          </select>
+        </div>
+        <div class="button-row">
+          <div class="btn-right">
+            <button type="button" mat-button class="cancel-button" tabindex="-1" (click)="cancel()">CANCEL</button>
+          </div>
+          <div>
+            <button type="submit" mat-button (click)="updatePlayersDepartment()" [disabled]="!updateDepartment?.valid || department.isUpdating">DONE</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </form>
+</div>

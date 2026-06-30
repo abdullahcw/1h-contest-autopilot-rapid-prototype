@@ -1,0 +1,190 @@
+@import '../../../../../src/assets/main.scss';
+
+.main-container {
+    min-width: 480px;
+    height: 100%;
+
+    @include media-breakpoint-down(sm) {
+        min-width: 320px;
+    }
+
+
+    .small-toolbar {
+        min-height: 50px;
+        font-size: 16px;
+
+        .title{
+            font-size: 18px;
+            font-family: $Roboto_Bold_font;
+        }
+    }
+    .item-disabled{
+        cursor: not-allowed !important;
+        padding-top: 4px;
+        opacity: 0.6;
+    }
+    .content {
+        display: flex;
+        flex-direction: column;
+        padding: 0 0;
+    
+        .container {
+            display: flex;
+            flex-direction: column;
+            padding: 0 20px;
+            width: 480px;
+        
+            @include media-breakpoint-down(sm) {
+                width: 100%;
+            }
+        }
+        
+        
+        .label-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        
+        .account_name {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+
+            .first_name {
+                margin-right: 5px;
+            }
+
+            .last_name {
+                margin-left: 5px;
+            }
+        }
+        
+        .readOnly {
+            background: #e6e6e6 !important;
+            pointer-events: none;
+            color: #8a8a8a;
+        }
+        
+        .footer {
+            display: flex;
+            justify-content: flex-end;
+            position: sticky;
+            z-index: 5;
+            padding: 12px 20px;
+        
+            .button-row {
+                display: flex;
+        
+                .btn-right {
+                    margin-left: auto;
+                }
+        
+                .cancel-button {
+                    border: 0px;
+                    background: white;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+
+    .search-toolbar-row {
+        display: flex;
+        align-items: center;
+        padding: 0 15px;
+        height: 50px;
+        background: #f6f6f6;
+        border-bottom: 1px solid #efefef;
+
+        .search-item {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            background: #f6f6f6;
+            margin-left: 16px;
+            font-size: 14px;
+            font-family: $Roboto_Regular_font;
+            outline: none;
+
+            @include media-breakpoint-down(md) {
+                margin-left: 10px;
+            }
+        }
+    }
+
+    .selection-container {
+        overflow-y: scroll;
+
+        @include media-breakpoint-down(md) {
+            height: calc(76vh - 290px);
+        }
+
+        @include media-breakpoint-up(lg) {
+            height: calc(76vh - 309px);
+        }
+
+        @media (min-width: 1920px) and (max-width: 2560px)  {
+            height: calc(76vh - 296px);
+        }
+
+        @include media-breakpoint-down(sm) {
+            height: calc(76vh - 296px);
+        }
+
+        ::ng-deep .list-selection-container .listItem-checkbox {
+            max-height: 100% !important;
+        }
+
+        mat-selection-list {
+            padding-top: 5px !important;
+            max-height: 400px;
+            min-height: 400px !important;
+            outline: none;
+        }
+
+        mat-list-item {
+            height: 40px;
+
+            &:hover {
+                background-color: #f4f4f4;
+            }
+        }
+
+        cursor: pointer;
+
+        .list-item-name {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+
+            &:hover {
+                .mat-checkbox .mat-checkbox-frame {
+                    border-color: #767676;
+                }
+            }
+
+            .item-name {
+                margin-left: 20px;
+                text-overflow: ellipsis;
+                overflow: hidden;
+
+                font: {
+                    family: $Roboto_Regular_font;
+                    size: 14px;
+                }
+            }
+        }
+
+        .no_messages{
+            width: 100%;
+            font-family: $Roboto_Regular_font;
+            height: calc(76vh - 297px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}
+
+

@@ -1,0 +1,27 @@
+<mat-card-content style="height: calc(100vh - 230px)">
+  <div *ngIf="!resetView" class="grid-wrapper"
+    [ngStyle]="{'flex': 1}">
+    <div class="stats-wrapper">
+      <mat-grid-list cols="{{breakpoint}}" rowHeight="fit" gutterSize="10px" style="height:100%">
+        <mat-grid-tile *ngFor="let matTile of matTiles" class="stats-section">
+          <mat-spinner class="spinner" mode="indeterminate" *ngIf="matTile.isLoading" diameter="20">
+          </mat-spinner>
+          <mat-card class="mat-card-item" [ngClass]="{'disabled-style': matTile.isLoading}">
+            <div class="items">
+              <mat-card-subtitle class="title margin-padding-0 robotoBold">{{matTile.title}}</mat-card-subtitle>
+              <mat-card-subtitle class="sub-title margin-padding-0 robotoBold sub-titleParticipation">
+                {{matTile.value}}{{matTile.showPercentageSign ? '' : ''}}</mat-card-subtitle>
+            </div>
+          </mat-card>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </div>
+  </div>
+  <div class="reset_view" *ngIf="resetView && !fetchingAllLocations">
+    <p>{{'pls_add_filter' | translate}}</p>
+  </div>
+  <div class="no_messages" *ngIf="fetchingAllLocations">
+    <mat-spinner [diameter]="40"></mat-spinner>
+    <p>{{'please_wait' | translate}}</p>
+  </div>
+</mat-card-content>

@@ -1,0 +1,193 @@
+@import "../../../../../styles.scss";
+
+.no_messages {
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  padding-top: 20px;
+
+  font: {
+    family: $Roboto_Regular_font;
+    size: $default_font_size;
+  }
+
+  @extend .center-align;
+}
+
+.playerAchivementWrapper {
+  width: 100%;
+  // height: 100%;
+ 
+
+  .trophies-tab {
+    // background: #efefef;
+    padding: 20px 20px 30px 20px;
+    height: 100%;
+    overflow: auto;
+
+    @include media-breakpoint-up(xs) {
+      overflow: unset;
+    }
+
+    
+
+    .totalCountWrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      .totalCount {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+
+        .title{
+            font-family: $Roboto_Medium_font;
+            font-size: 16px;
+        }
+
+        .titleValue{
+            font-family: $Drukwide_Bold_font;
+            font-size: 45px;
+            color: #3F55CA;
+        }
+      }
+    }
+
+    .trophies_title {
+      margin: 30px 0;
+      span {
+        font-family: $Roboto_Medium_font;
+        font-size: 16px;
+      }
+    }
+    
+    .mat-grid-tile {
+      background: white;
+      border: 1px solid #3F55CA;
+      border-radius: 5px;
+      box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05),
+        0 1px 10px 0 rgba(0, 0, 0, 0.05), 0 3px 5px -1px rgba(0, 0, 0, 0.05);
+
+      .maximise {
+        width: 15px;
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        cursor: pointer;
+      }
+
+     
+
+      .trophy-wrapper {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;        
+
+        .trophy-icon {
+          width: 60%;
+          min-width: 60%;
+        }
+
+        .contest-trophy-icon {
+          padding: 10px 0;
+          width: 50%;
+          min-width: 50%;
+          margin: 10px 0;
+        }
+
+        .contest-reward-icon {
+          padding: 6px 0;    
+          margin: 0;      
+        }
+
+        .reward-icon {
+          width: 50%;
+          min-width: 50%;
+        }
+
+        .title {
+          font-size: 18px;
+          font-family: $Roboto_Bold_font;
+          margin-top: 10px;
+          line-height: 1.2;
+          max-height: 50px;
+          overflow: hidden;
+          text-align: center;
+          text-overflow: ellipsis;
+          -webkit-line-clamp: 2;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+        }
+        
+
+        .reward_desc {
+          font-size: 14px;
+          font-family: $Roboto_Bold_font;
+          // margin-top: 10px;
+          line-height: 1.2;
+          max-height: 50px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          overflow: hidden;
+          text-align: center;
+          text-overflow: ellipsis;
+          -webkit-line-clamp: 2;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+
+          .reward_desc_sub{
+            font-size: 12px;
+            font-family: $Roboto_Regular_font;
+          }
+        }
+
+        .trophies_sub_title {
+          span {
+            font-family: $Roboto_Bold_font;
+            font-size: 16px;
+          }
+        }
+
+        .description {
+          text-align: center;
+          font-size: 12px;
+          font-family: $Roboto_Regular_font;
+          margin-top: 10px;
+          text-overflow: ellipsis;
+          -webkit-line-clamp: 2;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          max-height: 30px
+        }
+
+        .contest-type {
+          font-size: 20px;
+          font-family: $Roboto_Bold_font;
+          justify-content: center;
+        }
+
+        .contest-reward {
+          font-size: 14px;
+          font-family: $Roboto_Regular_font;
+        }
+
+        .contest-title {
+          font-size: 20px;
+          font-family: $Roboto_Bold_font;
+        }
+
+        .reward-details {
+          display: inline-flex;
+        }
+      }
+    }
+  }
+}

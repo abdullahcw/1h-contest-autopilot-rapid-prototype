@@ -1,0 +1,103 @@
+@import "../../../styles.scss";
+
+.wrapper {
+    width: 600px;
+    height: 475px;
+
+    @include media-breakpoint-down(sm) {
+        width: 100%;
+        height: 500px;
+    }
+
+    .header {
+        height: 50px;
+        background: #3956d1;
+        color: #fff;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        p {
+            padding: 15px 0 0 20px;
+        }
+    }
+
+    .progress-section {
+        padding: 3px 20px;
+
+        p {
+            font-family: $Roboto_Medium_font;
+            margin: 10px 0;
+        }
+
+        mat-select {
+            width: 230px;
+
+            img {
+                width: 20px;
+            }
+        }
+
+        ::ng-deep .mat-select-value {
+            width: 200px !important;
+
+        }
+    }
+
+    .lang-checkbox-wrap {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        height: 238px;
+        align-content: flex-start;
+
+        img {
+            width: 20px;
+        }
+
+        @include media-breakpoint-down(sm) {
+            flex-wrap: inherit;
+            height: 238px;
+            align-content: flex-start;
+            overflow-y: scroll;
+            width: calc(100vw - 62px);
+        }
+    }
+
+    .box {
+        flex: 0 0 30px;
+        width: 200px;
+        padding: 2px 0 0 0;
+
+        ::ng-deep .mat-checkbox-label {
+            font-size: 14px;
+            font-family: $Roboto_Regular_font;
+
+        }
+    }
+
+    .button-row {
+        display: flex;
+        padding-right: 10px;
+
+        .btn-right {
+            margin-left: auto;
+        }
+
+        .cancel-button {
+            border: 0px;
+            background: white;
+            cursor: pointer;
+        }
+    }
+
+    .disabled-style {
+        pointer-events: none;
+    }
+  .lang-wraper {
+    ::ng-deep .cdk-overlay-pane{
+        width: auto !important;
+        // margin-left: -25px;
+    }
+  }
+}

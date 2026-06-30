@@ -1,0 +1,409 @@
+<div class="main_container">
+  <div class="wrapper">
+    <mat-card class="container-card">
+      <mat-card-content>
+        <mat-tab-group [(selectedIndex)]="selectedTab" class="tabs-container" (selectedTabChange)="changeTab()">
+          <mat-tab label="{{'total_gameplay' | translate}}">
+            <div class="no_messages" *ngIf="!gameplayData && is_loading">
+              <mat-spinner [diameter]="40" *ngIf="is_loading"></mat-spinner>
+              <p>{{is_loading ? ('please_wait' | translate) : ('no_gameplay_details' | translate)}}</p>
+            </div>
+            <!-- <div class="gameplay-tab tab-section" *ngIf="gameplayData && !is_loading && getDashboardFilter()['dashboard_by'] == dashboard.BY_TEAM" [ngClass]="{'contest-gameplay-tab': contestId}"> -->
+            <div class="gameplay-tab tab-section" *ngIf="false" [ngClass]="{'contest-gameplay-tab': contestId}">
+              <div class="gameplay-data-container">
+                <div class="gameplay-data"
+                  *ngFor="let i = index; let data of gameplayData ? [gameplayData.sp_data, gameplayData.mp_data] : []">
+                  <div class="header" [ngClass]="{'disabled': contestId && i == 1 ? true : false}">
+                    {{ i == 0 ? ('single_player_uppercase' | translate) : ('multiplayer_uppercase' | translate) }}
+                  </div>
+
+                  <div class="content" [ngClass]="{'disabled': contestId && i == 1 ? true : false}">
+                    <div class="pane dividerLine">
+                      <div class="number">{{globalService.formatNumber(data?.total_games)}}</div>
+                      <div class="sub-title">
+                        {{data?.total_games == 1 ? ('game_played' | translate) : ('games_played' | translate)}}</div>
+                    </div>
+                    <div class="pane">
+                      <div class="number">{{getTime(data?.total_time)}}</div>
+                      <div class="sub-title">{{'time_played' | translate}}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="level-container">
+                <div *ngFor="let level of levels" class="level" [ngClass]="{'disabled': !level.is_achived}">
+                  <img width="150" height="150" [src]="level.logo_url" alt="" />
+
+                  <div class="item-name">
+                    {{level?.level_name}}
+                  </div>
+                  <div class="achieved-date" *ngIf="level.is_achived">
+                    {{'achieved_on' | translate}}: {{getAchievedDate(level)}}
+                  </div>
+                  <div class="to-go" *ngIf="!level.is_achived">
+                    {{getRemainingGamesText(level)}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <app-total-gameplay-by-contest [showContestGameplay]="true" [contestId]="contestId" [playerId]="playerId" class="gameplay-tab tab-section" [selectedTab]="selectedTab" 
+              [contestState]="contestState" *ngIf="!gameplayData && !is_loading && contestId" [companyId]="companyId">
+            </app-total-gameplay-by-contest>
+            <app-total-gameplay-by-player [playerId]="playerId" class="gameplay-tab tab-section" [selectedTab]="selectedTab" [showPlayerGameplay]="true"
+              [startDate]="startDate" [endDate]="endDate" [gameId]="gameId" [gameMode]="gameMode" *ngIf="!gameplayData && !is_loading && 
+              (getDashboardFilter()['dashboard_by'] === dashboard.BY_PLAYER || getDashboardFilter()['dashboard_by'] === dashboard.BY_GAME || getDashboardFilter()['dashboard_by'] === dashboard.BY_TEAM)">
+            </app-total-gameplay-by-player>
+          </mat-tab>
+          <mat-tab label="{{'single_level_games' | translate}}">
+            <div class="no_messages" *ngIf="(!singlePlayerGameHistory || singlePlayerGameHistory.length === 0)">
+              <mat-spinner [diameter]="40" *ngIf="is_loading"></mat-spinner>
+              <p>{{is_loading ? ('please_wait' | translate) : ('no_records_found' | translate)}}</p>
+            </div>
+            <div class='tables-tab tab-section' *ngIf="singlePlayerGameHistory && singlePlayerGameHistory.length">
+              <table aria-describedby="" mat-table [dataSource]="dataSourceSPGames" class="responsive-table" matSort
+                (matSortChange)="sortData($event)" matSortActive="game" matSortDirection="asc" matSortDisableClear
+                *ngIf="dataSourceSPGames?.data.length" matSortStart="desc">
+                <ng-container matColumnDef="game">
+                  <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'game' | translate}} </th>
+                  <td mat-cell *matCellDef="let row">
+                    <label>{{'game' | translate}}</label>
+                    <p>{{row.game_name}} <span *ngIf="row?.is_deleted" class="delete-game-text">(Deleted)</span></p>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="points">
+                  <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'points' | translate}}</th>
+                  <td mat-cell *matCellDef="let row">
+                    <label>{{'points' | translate}}</label>
+                    <p class="small-number-content">{{row.pointsFormatted || '0'}}</p>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="accuracy">
+                  <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'accuracy' | translate}} </th>
+                  <td mat-cell *matCellDef="let row">
+                    <label>{{'accuracy' | translate}}</label>
+                    <p class="medium-number-content">{{row.accuracy}}%</p>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="time_spent">
+                  <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'time_spent' | translate}} </th>
+                  <td mat-cell *matCellDef="let row">
+                    <label>{{'time_spent' | translate}}</label>
+                    <p class="long-number-content">{{row.timeFormatted}}</p>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="played_on">
+                  <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'played_on' | translate}} </th>
+                  <td mat-cell *matCellDef="let row">
+                    <label>{{'played_on' | translate}}</label>
+                    <p>{{row.playedOnFormatted}} {{row.tzAbbrevation}}</p>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="navigateToPlayerGameReport(row)">
+                </tr>
+              </table>
+              <mat-card-actions>
+                <mat-paginator #paginator [length]="totalSPGames" [pageSize]="noOfItemsPerPage" [id]="'spgames' + totalSPGames"
+                  [pageSizeOptions]="pageSizeOptions" (page)="getSPGamesOverPagination($event)">
+                </mat-paginator>
+              </mat-card-actions>
+            </div>
+          </mat-tab>
+          <mat-tab label="{{'multi_level_games' | translate}}" *ngIf="getDashboardFilter()['dashboard_by'] === dashboard.BY_PLAYER || getDashboardFilter()['dashboard_by'] === dashboard.BY_TEAM">
+            <div class="no_messages" *ngIf="(!mlgplayerGameHistory || mlgplayerGameHistory.length === 0)">
+              <mat-spinner [diameter]="40" *ngIf="is_loading"></mat-spinner>
+              <p>{{is_loading ? ('please_wait' | translate) : ('no_records_found' | translate)}}</p>
+            </div>
+            <div class='tables-tab tab-section' *ngIf="mlgplayerGameHistory && mlgplayerGameHistory.length">
+              <table aria-describedby="" mat-table [dataSource]="dataSourceMLGGames" class="responsive-table" matSort
+                (matSortChange)="sortData($event)" matSortActive="mlg_name" matSortDirection="asc" matSortDisableClear
+                *ngIf="dataSourceMLGGames?.data.length" matSortStart="desc">
+                <ng-container matColumnDef="mlg_name">
+                  <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'game' | translate}} </th>
+                  <td mat-cell *matCellDef="let row">
+                    <p>{{row.mlg_name}} 
+                    </p>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="current_level">
+                  <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'current_level' | translate}} </th>
+                  <td mat-cell *matCellDef="let row">
+                    <p class="long-number-content">{{row.current_level}} / {{row.total_levels}}</p>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="total_points">
+                  <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'total_points' | translate}}</th>
+                  <td mat-cell *matCellDef="let row">
+                    <p class="long-number-content" *ngIf="row.total_points">
+                      <app-numbers [value]="row.total_points"></app-numbers>
+                    </p>
+                    <p class="long-number-content" *ngIf="!row.total_points">0</p>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="games_played">
+                  <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'games_played' | translate}} </th>
+                  <td mat-cell *matCellDef="let row">
+                    <p class="long-number-content">
+                      <app-numbers [value]="row.games_played"></app-numbers>
+                    </p>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="time_played">
+                  <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'time_played' | translate}} </th>
+                  <td mat-cell *matCellDef="let row">
+                    <p class="long-number-content">{{row.timeFormatted}}</p>
+                  </td>
+                </ng-container>
+
+              
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsMLGGame; sticky: true" class="header"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsMLGGame;" (click)="navigateToPlayerMLGPopup(row)">
+                </tr>
+              </table>
+              <mat-card-actions>
+                <mat-paginator #paginator [length]="totalMLGGames" [pageSize]="noOfItemsPerPage" [id]="'mlggames' + totalMLGGames"
+                  [pageSizeOptions]="pageSizeOptions" (page)="getMLGGamesOverPagination($event)">
+                </mat-paginator>
+              </mat-card-actions>
+            </div>
+          </mat-tab>
+          <mat-tab label="{{'multiplayer_games' | translate}}" *ngIf="!contestId">
+            <div class="no_messages" *ngIf="(!multiplayerGameHistory || multiplayerGameHistory.length === 0)">
+              <mat-spinner [diameter]="40" *ngIf="is_loading"></mat-spinner>
+              <p>{{is_loading ? ('please_wait' | translate) : ('no_records_found' | translate)}}</p>
+            </div>
+            <div class='tables-tab tab-section' *ngIf="multiplayerGameHistory && multiplayerGameHistory.length">
+              <table aria-describedby="" mat-table [dataSource]="dataSourceMPGames" class="responsive-table" matSort
+                (matSortChange)="sortData($event)" matSortActive="game" matSortDirection="asc" matSortDisableClear
+                *ngIf="dataSourceMPGames?.data.length" matSortStart="desc">
+        
+                <ng-container matColumnDef="game">
+                  <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'game' | translate}} </th>
+                  <td mat-cell *matCellDef="let mpRow">
+                    <label>{{'game' | translate}}</label>
+                    <p>{{mpRow.game_name}} <span *ngIf="mpRow?.is_deleted" class="delete-game-text">(Deleted)</span></p>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="result">
+                  <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'result' | translate}} </th>
+                  <td mat-cell *matCellDef="let mpRow">
+                    <label>{{'result' | translate}}</label>
+                    <p>{{mpRow.is_winner ? ('won' | translate) : ('lost' | translate)}}</p>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="points">
+                  <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'points' | translate}} </th>
+                  <td mat-cell *matCellDef="let mpRow">
+                    <label>{{'points' | translate}}</label>
+                    <p class="small-number-content">{{mpRow.pointsFormatted}}</p>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="time_spent">
+                  <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'time_spent' | translate}} </th>
+                  <td mat-cell *matCellDef="let mpRow">
+                    <label>{{'time_spent' | translate}}</label>
+                    <p>{{mpRow.timeFormatted}}</p>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="played_on">
+                  <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'played_on' | translate}} </th>
+                  <td mat-cell *matCellDef="let mpRow">
+                    <label>{{'played_on' | translate}}</label>
+                    <p>{{mpRow.playedOnFormatted}} {{mpRow.tzAbbrevation}}</p>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsMpGame; sticky: true" class="header"></tr>
+                <tr mat-row *matRowDef="let mpRow; columns: displayedColumnsMpGame;"
+                  (click)="navigateToPlayerGameReport(mpRow)">
+                </tr>
+              </table>
+              <mat-card-actions>
+                <mat-paginator #paginator [length]="totalMPGames" [pageSize]="noOfItemsPerPage" [id]="'mpgames' + totalMPGames"
+                  [pageSizeOptions]="pageSizeOptions">
+                </mat-paginator>
+              </mat-card-actions>
+
+            </div>
+          </mat-tab>
+          <mat-tab label="{{'contests' | translate}}" *ngIf="getDashboardFilter()['dashboard_by'] === dashboard.BY_PLAYER || getDashboardFilter()['dashboard_by'] === dashboard.BY_TEAM">
+            <div class="no_messages" *ngIf="(!playerContestHistory || playerContestHistory.length === 0)">
+              <mat-spinner [diameter]="40" *ngIf="is_loading"></mat-spinner>
+              <p>{{is_loading ? ('please_wait' | translate) :  ('no_records_found' | translate)}}</p>
+            </div>
+            <div class='tables-tab tab-section' *ngIf="playerContestHistory && playerContestHistory.length"> 
+              <table aria-describedby="" mat-table [dataSource]="dataSourceContestPlayer" class="responsive-table" matSort
+                (matSortChange)="sortData($event)" matSortActive="contest_name" matSortDirection="asc" matSortDisableClear
+                *ngIf="dataSourceContestPlayer?.data.length" matSortStart="desc">
+      
+                <ng-container matColumnDef="contest_name">
+                  <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'contest' | translate}} </th>
+                  <td mat-cell *matCellDef="let row">
+                    <p>{{row.contest_name}}</p>
+                  </td>
+                </ng-container>
+                 <ng-container matColumnDef="start_date">
+                  <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'start_date' | translate}}</th>
+                  <td mat-cell *matCellDef="let row" class="start_date">
+                    <p>{{row.start_date | date:'MM/dd/yyyy'}}</p>
+                  </td>
+                </ng-container>
+                 <ng-container matColumnDef="final_ranking">
+                  <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'final_ranking' | translate}}</th>
+                  <td mat-cell *matCellDef="let row">
+                    <p class="long-number-content">{{row.final_ranking > 0 ? row.final_ranking + getOrdinalNumber(row.final_ranking) : '--' }}</p>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="total_points">
+                  <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'total_points' | translate}}</th>
+                  <td mat-cell *matCellDef="let row">
+                    <p class="long-number-content" *ngIf="row.total_points">
+                      <app-numbers [value]="row.total_points"></app-numbers>
+                    </p>
+                    <p class="long-number-content" *ngIf="!row.total_points">0</p>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="games_played">
+                  <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'games_played' | translate}} </th>
+                  <td mat-cell *matCellDef="let row">
+                     <p class="long-number-content">
+                      <app-numbers [value]="row.games_played"></app-numbers>
+                    </p>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="time_played">
+                  <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'time_played' | translate}} </th>
+                  <td mat-cell *matCellDef="let row">
+                    <p class="long-number-content">{{globalService.secondsToHms(row.time_played)}}</p>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="completion">
+                  <th id="" mat-header-cell *matHeaderCellDef>{{ ('completion' | translate) + '%'}} </th>
+                  <td mat-cell *matCellDef="let row">
+                    <p class="long-number-content">{{row.completion + '%'}}</p>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsPlayerContestGame; sticky: true" class="header"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsPlayerContestGame;" (click)="showPlayerContestReport(row)">
+                </tr>
+              </table>
+              <mat-card-actions>
+                <mat-paginator #paginator [length]="totalContestGames" [pageSize]="noOfItemsPerPage" [id]="'cgames' + totalContestGames"
+                  [pageSizeOptions]="pageSizeOptions" (page)="getContestGamesOverPagination($event)">
+                </mat-paginator>
+              </mat-card-actions>
+            </div>
+          </mat-tab>
+          <mat-tab label="{{'shop_games' | translate}}" *ngIf="getDashboardFilter()['dashboard_by'] === dashboard.BY_PLAYER 
+            || getDashboardFilter()['dashboard_by'] === dashboard.BY_TEAM">
+            <div class="no_messages" *ngIf="(!shopGameHistory || shopGameHistory.length === 0)">
+              <mat-spinner [diameter]="40" *ngIf="is_loading"></mat-spinner>
+              <p>{{is_loading ? ('please_wait' | translate) :  ('no_records_found' | translate)}}</p>
+            </div>
+            <div class='tables-tab tab-section' *ngIf="shopGameHistory && shopGameHistory.length"> 
+              <table aria-describedby="" mat-table [dataSource]="dataSourceShopGames" class="responsive-table" matSort
+                (matSortChange)="sortData($event)" matSortActive="game" matSortDirection="asc" matSortDisableClear
+                *ngIf="dataSourceShopGames?.data.length" matSortStart="desc">
+        
+                <ng-container matColumnDef="game">
+                  <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'game' | translate}} </th>
+                  <td mat-cell *matCellDef="let row">
+                    <p>{{row.game_name}} <span *ngIf="row?.is_deleted" class="delete-game-text">(Deleted)</span></p>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="points">
+                  <th id="" mat-header-cell *matHeaderCellDef>{{'points' | translate}}</th>
+                  <td mat-cell *matCellDef="let row">
+                    <p class="small-number-content blur" *ngIf="row.points">
+                      <app-numbers [value]="row.points"></app-numbers>
+                    </p>
+                    <p class="small-number-content blur" *ngIf="!row.points">0</p>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="accuracy">
+                  <th id="" mat-header-cell *matHeaderCellDef>{{'accuracy' | translate}} </th>
+                  <td mat-cell *matCellDef="let row">
+                    <p class="medium-number-content blur">{{row.accuracy}}%</p>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="time_played">
+                  <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'time_played' | translate }} </th>
+                  <td mat-cell *matCellDef="let row">
+                    <p class="long-number-content">{{row.timeFormatted}}</p>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="played_on">
+                  <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'played_on' | translate }} </th>
+                  <td mat-cell *matCellDef="let row">
+                    <p class="long-number-content">{{row.playedOnFormatted}} {{row.tzAbbrevation}}</p>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsShopGame; sticky: true" class="header"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsShopGame;" class="shopgame">
+                </tr>
+              </table>
+              <mat-card-actions>
+                <mat-paginator #paginator [length]="totalShopGames" [pageSize]="noOfItemsPerPage" [id]="'shopgames' + totalShopGames"
+                  [pageSizeOptions]="pageSizeOptions" (page)="getShopGamesOverPagination($event)">
+                </mat-paginator>
+              </mat-card-actions>
+            </div>
+          </mat-tab>
+          <mat-tab label="{{'achievements' | translate}}">
+            <div style="width: 100%;height: 100%;">
+              <app-player-achivements [playerId]="playerId" [selectedTab]="selectedTab"></app-player-achivements>
+            </div>
+          </mat-tab>
+          <mat-tab disabled class="download-tab">
+            <ng-template mat-tab-label class="download-tab">
+              <div class="menu-options"
+                [ngClass]="{'disabled-style': (contestId && selectedTab) === 2 || (contestId && selectedTab) === 0 || (gameId && selectedTab) === 0 ||
+                  (selectedTab === 3 && getDashboardFilter()['dashboard_by'] !== dashboard.BY_PLAYER && getDashboardFilter()['dashboard_by'] !== dashboard.BY_TEAM) || 
+                  ((selectedTab === 0 || selectedTab === 6) && getDashboardFilter()['dashboard_by'] === dashboard.BY_PLAYER) ||
+                  (selectedTab === 4 && getDashboardFilter()['dashboard_by'] === dashboard.BY_TEAM)}">
+                <button mat-icon-button class="tab-button" [matMenuTriggerFor]="menu"
+                  matTooltip="{{'options' | translate}}" matTooltipPosition="left">
+                  <mat-icon [ngClass]="{'disabled-icon': (selectedTab === 3 && getDashboardFilter()['dashboard_by'] !== dashboard.BY_PLAYER && getDashboardFilter()['dashboard_by'] !== dashboard.BY_TEAM)
+                  || ((selectedTab === 0 || selectedTab === 6) && getDashboardFilter()['dashboard_by'] === dashboard.BY_PLAYER)
+                  || (contestId && selectedTab) === 2 || (gameId && selectedTab) === 0 
+                  || (selectedTab === 4 && getDashboardFilter()['dashboard_by'] === dashboard.BY_TEAM)}">cloud_download</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu" class="menu_status" y-position="below" overlapTrigger="false">
+                  <button mat-menu-item class="options-menu-item" (click)="downloadReport()"
+                    [ngClass]="{'disabled-style': shouldDisableMenuOptions()}">
+                    <mat-icon class="toolbar-icon-color">cloud_download</mat-icon>
+                    <span> {{'download' | translate}} </span>
+                  </button>
+                  <button mat-menu-item class="options-menu-item" (click)="openEmailRecipientsPicker()">
+                    <mat-icon class="toolbar-icon-color">email</mat-icon>
+                    <span> {{'send_by_email' | translate}} </span>
+                  </button>
+                </mat-menu>
+              </div>
+            </ng-template>
+          </mat-tab>
+        </mat-tab-group>
+        <div class="dangling-menu-options" [ngClass]="{'disabled-style': (selectedTab === 3 && getDashboardFilter()['dashboard_by'] !== dashboard.BY_PLAYER && getDashboardFilter()['dashboard_by'] !== dashboard.BY_TEAM) || 
+          (contestId && selectedTab) === 2 || (contestId && selectedTab) === 0 || (gameId && selectedTab) === 0 || ((selectedTab === 0 || selectedTab === 6) &&
+          getDashboardFilter()['dashboard_by'] === dashboard.BY_PLAYER)}">
+          <button mat-icon-button class="tab-button" [matMenuTriggerFor]="menu" matTooltip="{{'options' | translate}}"
+            matTooltipPosition="left">
+            <mat-icon [ngClass]="{'disabled-icon': (selectedTab === 3 && getDashboardFilter()['dashboard_by'] !== dashboard.BY_PLAYER && getDashboardFilter()['dashboard_by'] !== dashboard.BY_TEAM)
+            || (contestId && selectedTab) === 2 || (gameId && selectedTab) === 0 || ((selectedTab === 0 || selectedTab === 6) && (getDashboardFilter()['dashboard_by'] === dashboard.BY_PLAYER ||  getDashboardFilter()['dashboard_by'] === dashboard.BY_TEAM))}">
+            cloud_download</mat-icon>            
+          </button>
+          <mat-menu #menu="matMenu" class="menu_status" y-position="below" overlapTrigger="false">
+            <button mat-menu-item class="options-menu-item" (click)="downloadReport()"
+              [ngClass]="{'disabled-style': shouldDisableMenuOptions()}">
+              <mat-icon class="toolbar-icon-color">cloud_download</mat-icon>
+              <span> {{'download' | translate}} </span>
+            </button>
+            <button mat-menu-item class="options-menu-item" (click)="openEmailRecipientsPicker()">
+              <mat-icon class="toolbar-icon-color">email</mat-icon>
+              <span> {{'send_by_email' | translate}} </span>
+            </button>
+          </mat-menu>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

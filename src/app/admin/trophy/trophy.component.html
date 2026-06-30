@@ -1,0 +1,124 @@
+<div class="main-container">
+  <div class="wrapper">
+    <mat-card class="container-card"
+      [ngStyle]="{'max-height': trophy_info.trophy_type == 2 ? 'calc(100vh - 118px)' : ''}">
+      <mat-card-header>
+        <mat-toolbar class="toolbar">
+          <mat-toolbar-row class="trophyButtons">
+            <mat-tab-group class="custom-tab-label" (selectedIndexChange)="trophyTypeChanged($event)">
+              <mat-tab class="robotoRegular" label="{{'general' | translate}}"></mat-tab>
+              <mat-tab class="robotoRegular" label="{{'by_game' | translate}}"></mat-tab>
+            </mat-tab-group>
+            <div matTooltip="{{'how_to_add_trophies' | translate}}" (click)="showVideo()" class="open-video">
+              <mat-icon>play_circle_outline</mat-icon>
+            </div>
+          </mat-toolbar-row>
+          <mat-toolbar-row>
+            <app-search class="search-container" style="width:100%" 
+            [dataSource]="menuList" [filter_options]="filter_options"
+              [applied_filters]="defaultFilters" (getDataSource)="getDataSource($event)" 
+              (filtersUpdated)="refreshListOnFilterChange($event)" [shouldAllowAddMore]="trophiesData?.length"
+              [context]="context" (filterOptionUpdated)="filterOptionUpdated($event)">
+            </app-search>
+          </mat-toolbar-row>
+        </mat-toolbar>
+      </mat-card-header>
+      <mat-divider style="z-index: 2"></mat-divider>
+      <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+      <mat-card-content class="trophyWrapper" style="overflow:auto;"
+        [ngStyle]="{'height': trophy_info.trophy_type == 2 ? 'calc(100vh - 265px)' : 'calc(100vh - 214px)'}">
+        <div #trophyDetails class="trophy-container" [ngClass]="{'disabled-style': is_loading}">
+          <div class="grid-list-wrapper" *ngIf="trophiesData">
+            <mat-grid-list cols="{{breakpoint}}" *ngIf='trophiesData'
+              [rowHeight]="trophy_info.trophy_type == 2 ? '375px' : '350px'" [gutterSize]="'20px'"
+              style="margin-bottom: 10px;">
+              <mat-grid-tile *ngFor="let trophy of trophiesData" class="stats-section matGridTile">
+                <mat-icon class="menu-options" [matMenuTriggerFor]="menu" matTooltip="{{'options' | translate}}"
+                  matTooltipPosition="left">more_vert</mat-icon>
+                <mat-menu #menu="matMenu" class="menu_status" overlapTrigger="false" [xPosition]="'before'"
+                  overlapTrigger="false">
+
+                  <button mat-menu-item class="options-menu-item" *ngIf="trophy_info.trophy_type == 2 && trophyPermission?.edit &&
+                    trophy.is_editable" (click)="editGameTrophy(trophy,false)"
+                    [ngClass]="{'disabled-style':trophy.is_archived}">
+                    <mat-icon class="toolbar-icon-color" matTooltip="{{'edit' | translate}}" matTooltipPosition="left">
+                      edit
+                    </mat-icon>
+                    <span>{{'edit' | translate}}</span>
+                  </button>
+                  <button mat-menu-item class="options-menu-item" (click)="editGameTrophy(trophy,true)"
+                    *ngIf="trophyPermission?.view">
+                    <mat-icon class="toolbar-icon-color" matTooltip="{{'view_reports' | translate}}"
+                      matTooltipPosition="left">
+                      visibility
+                    </mat-icon>
+                    <span>{{'preview' | translate}}</span>
+                  </button>
+                </mat-menu>
+                <mat-card class="mat-card-item">
+                  <div class="items">
+                    <div class="image-section">
+                      <div>
+                        <img *ngIf="trophy_info.trophy_type == 1"
+                          [src]="trophy.logo_url ? trophy.logo_url : '/assets/img/default.png'" class="trophy-image"
+                          onError="this.src='/assets/img/default.png'">
+                        <div class="trophyLogo" *ngIf="trophy_info.trophy_type == 2">
+                          <img class="bgImg" src="/assets/img/outer_trophy_logo.png">
+                          <img class="innerImg"
+                            appSignedUrl [imgSelector]="'changeImageSrc'" [imgSrcValue]="trophy?.game_logo_url" 
+                            onError="this.src='/assets/img/default.png'" src="" alt=""/>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="profile-info">
+
+                      <mat-card-title *ngIf="trophy_info.trophy_type == 1" class="title margin-padding-0 robotoBold">
+                        {{trophy.trophies_name}}
+                      </mat-card-title>
+                      <mat-card-title *ngIf="trophy_info.trophy_type == 2" class="title margin-padding-0 robotoBold">
+                        {{trophy.game_name}}
+                      </mat-card-title>
+                      <mat-card-subtitle *ngIf="trophy_info.trophy_type == 1"
+                        class="sub-title margin-padding-0 robotoBold">
+                        {{trophy.description}}</mat-card-subtitle>
+                      <mat-card-subtitle *ngIf="trophy_info.trophy_type == 2" class="margin-padding-0 robotoMedium">
+                        <div class="gameTrophyDetails">
+                          <div style="width: 170px;">
+                            <dl style="width: 170px;">
+                              <dt>{{'total_points' | translate}}</dt>
+                              <dd>
+                                {{trophy.game_points ? '&nbsp;'+globalService.formatNumber(trophy.game_points) : '&nbsp;'+('not_available' | translate)}}
+                              </dd>
+                              <dt>{{'attempts' | translate}}</dt>
+                              <dd>{{trophy.attempts ? '&nbsp;'+trophy.attempts: '&nbsp;'+('not_available' | translate)}}
+                              </dd>
+                              <dt>{{'high_score' | translate}}</dt>
+                              <dd>
+                                {{trophy.high_score ? '&nbsp;'+trophy.high_score + '%' : '&nbsp;'+('not_available' | translate)}}
+                              </dd>
+                            </dl>
+                          </div>
+                        </div>
+                      </mat-card-subtitle>
+                      <span class="deletedText" *ngIf="trophy_info.trophy_type == 2 && trophy?.is_deleted" >(Deleted)</span>
+                    </div>
+                  </div>
+                </mat-card>
+              </mat-grid-tile>
+            </mat-grid-list>
+          </div>
+          <div class="no_messages" *ngIf="!trophiesData">
+            <p>{{is_loading ? ('please_wait' | translate) : ('no_record_found' | translate)}}</p>
+          </div>
+        </div>
+
+      </mat-card-content>
+      <mat-card-actions *ngIf="trophy_info.trophy_type == 2" style="background-color: white;">
+        <mat-paginator class="paginator" #paginator [length]="totalTrophies" [pageSize]="noOfItemsPerPage"
+          [pageSizeOptions]="pageSizeOptions" (page)="getTrophiesOverPagination($event)">
+        </mat-paginator>
+      </mat-card-actions>
+
+    </mat-card>
+  </div>
+</div>

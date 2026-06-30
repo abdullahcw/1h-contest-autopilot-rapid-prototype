@@ -1,0 +1,530 @@
+@import '../../../styles.scss';
+
+.main-wrapper {
+    height: calc(100vh - 92px);
+    display: flex;
+
+    .reset-form {
+        width: 100%;
+
+        .form-wrapper {
+            height: 100%;
+            display: flex;
+
+            .main-card {
+                padding: 0;
+                width: 570px;
+                margin: auto;
+                display: block;
+                max-height: calc(100vh - 150px);
+                overflow: auto;
+
+                @include media-breakpoint-down(xs) {
+                    width: 100%;
+                }
+
+                .leaderboard-wrapper {
+                    .main-card-holder {
+                        width: auto;
+                        height: auto;
+                        justify-content: center;
+
+                        label {
+                            font-size: 11px;
+                            margin-bottom: 0.1rem;
+                            margin-left: 2px;
+                        }
+
+                        input {
+                            color: $textColor;
+
+                            @include media-breakpoint-down(xs) {
+                                padding-right: 10px;
+                            }
+                        }
+
+                        .logo-holder {
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            width: 100%;
+                            margin-top: 15px;
+
+                            @media (max-width: 350px) {
+                                margin-top: 10px;
+                            }
+
+                            .main-name {
+                                margin: auto;
+                                width: 100%;
+                                padding: 20px 0 0;
+                                display: flex;
+                                justify-content: center;
+                                font-family: Roboto_Bold;
+
+                                @media (max-width: 350px) {
+                                    padding: 0;
+                                    font-size: 1rem;
+                                }
+                            }
+                        }
+
+                        .form-content {
+                            margin-top: 30px;
+
+                            @media (max-width: 350px) {
+                                margin-top: 0;
+                            }
+
+                            .start-date-container {
+                                margin: 35px 0px 5px;
+                            }
+
+                            .separator {
+                                border-top: 1px dashed #707070;
+                                margin: 5px 0px 25px 0px;
+                                opacity: 0.5;
+                            }
+
+                            .note {
+                                display: flex;
+                                align-items: center;
+                                background: #ffe26c;
+                                font-size: 13px;
+                                justify-content: center;
+                                height: 42px;
+                                font-family: $Roboto_Regular_font;
+                            }
+
+                            .date-picker {
+                                position: relative;
+
+                                .timezone-details {
+                                    margin-left: 94px;
+
+                                    span {
+                                        position: absolute;
+                                        top: 34px;
+                                        color: $textColor;
+                                        font-size: 14px;
+                                    }
+                                }
+
+                                &.end-date-container {
+                                    input {
+                                        color: $disable_color;
+                                        border: 1px solid $user-image-bg; // #e6e6e6
+                                    }
+
+                                    label {
+                                        color: #a2a2a2;
+                                    }
+
+                                    .timezone-details {
+                                        margin-left: 92px;
+
+                                        span {
+                                            color: #a2a2a2;
+                                        }
+                                    }
+
+                                    ::ng-deep .mat-icon-button[disabled] {
+                                        color: #cccccc45 !important;
+                                    }
+                                }
+
+                            }
+
+                            .date-container,
+                            .cycle-container {
+                                display: flex;
+                                justify-content: space-evenly;
+                                padding: 0 32px;
+
+                                @include media-breakpoint-down(xs) {
+                                    padding: 0 7px;
+                                }
+                            }
+
+                            .customleaderboard-container {
+                                display: flex;
+                                justify-content: space-evenly;
+                                margin-bottom: 14px;
+                                padding: 0 32px;
+                                position: relative;
+
+                                @include media-breakpoint-down(xs) {
+                                    padding: 0 7px;
+                                }
+                            }
+
+                            .customleaderboard-title {
+                                font-size: 12px;
+                                font-family: $Roboto_Black_font;
+                                margin-bottom: 17px;
+                                padding: 0 32px;
+                            }
+
+                            .item-container {
+                                display: flex;
+                                flex-direction: column;
+                                margin-bottom: 10px;
+                                height: 67px;
+
+                                .item-title {
+                                    font-size: 12px;
+                                    font-family: $Roboto_Regular_font;
+                                    min-width: 90px;
+                                    height: 21px;
+                                }
+
+                                .select-item {
+                                    font-size: 16px;
+                                    border: 1px solid #ccc;
+                                    padding: 10px;
+                                    width: 245px;
+                                    height: 46px;
+                                    border-radius: 4px;
+                                    font-family: $Roboto_Regular_font;
+
+                                    .freqency-option {
+                                        text-transform: capitalize;
+                                    }
+
+                                    @include media-breakpoint-down(xs) {
+                                        width: auto;
+                                    }
+
+                                }
+
+                                .optionSelected {
+                                    border: 1px solid #4B57C7;
+
+                                    ::ng-deep .mat-select-arrow {
+                                        color: #4456CC;
+                                    }
+                                }
+
+                                .optionUnselected { 
+                                    border: 1px solid #ccc;
+
+                                    ::ng-deep .mat-select-arrow {
+                                        color: #747474;
+                                    }
+                                }
+
+                                .disableWhenNeverSelected {
+                                    pointer-events: none;
+                                }
+
+                                .calendar-input-wrapper {
+                                    display: flex;
+                                    border: 1px solid #ccc;
+                                    height: 46px;
+                                    align-items: center;
+                                    overflow: hidden;
+                                    border-radius: 4px;
+                                    position: relative;
+                                    width: 245px;
+
+                                    @include media-breakpoint-down(xs) {
+                                        width: auto;
+                                    }
+
+                                    .calendar-input {
+                                        border: none;
+                                        margin: 0;
+                                        font-size: 16px;
+                                        background: none !important;
+                                        height: 46px;
+                                    }
+
+                                    .clear-icon {
+                                        color: #757575;
+                                        cursor: pointer;
+                                        width: 13px;
+                                        height: 13px;
+                                        position: absolute;
+                                        right: 45px;
+                                        bottom: 20px;
+                                    }
+
+                                    .calendar-icon,
+                                    .lock-icon {
+                                        position: absolute;
+                                        right: 12px;
+                                    }
+
+                                }
+
+                                .inputSelected {
+                                    border: 1px solid #4B57C7;
+                                }
+
+                                .inputUnselected {
+                                    border: 1px solid #ccc;
+                                }
+
+                                .dateSelected {
+                                    fill: #4456CC;
+                                }
+
+                                .unselected {
+                                    fill: #747474;
+                                }
+
+                                // .button-toggle-section {
+                                //     flex: 1;
+                                //     font-size: 14px;
+                                //     margin-left: 10px;
+                                //     height: 34px;
+
+                                //     font-weight: normal;
+
+                                //     mat-button-toggle {
+                                //         width: 100%;
+                                //     }
+
+                                //     ::ng-deep .mat-button-toggle-checked {
+                                //         background-color: $brand_color !important;
+                                //         color: $selected_bg_color;
+                                //     }
+                                // }
+
+                                // ::ng-deep .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+                                //     line-height: 30px !important;
+                                // }
+
+                                // ::ng-deep .mat-button-toggle-button {
+                                //     height: 32px !important;
+                                // }
+
+                                // @include media-breakpoint-down(xs) {
+                                //     width: 100%;
+                                // }
+
+                            }
+
+                            .customMargin {
+                                margin-left: 16px;
+
+                                @include media-breakpoint-down(xs) {
+                                    margin-left: 10px;
+                                }
+                            }
+
+                            .leaderboard-content {
+                                display: flex;
+                                flex-direction: row;
+                                align-items: center;
+                                // height: 67px;
+                                width: 100%;
+
+                                .leaderboard-count {
+                                    font-size: 16px;
+                                    font-family: $Roboto_Bold_font;
+                                    width: 30px;
+
+                                    @include media-breakpoint-down(xs) {
+                                        width: 29px;
+                                    }
+                                }
+
+                                .leaderboard-input-wrapper {
+                                    display: flex;
+                                    border: 1px solid #ccc;
+                                    height: 46px;
+                                    align-items: center;
+                                    overflow: hidden;
+                                    border-radius: 4px;
+                                    position: relative;
+                                    width: 100%;
+
+                                    .calendar-input {
+                                        border: none;
+                                        margin: 0;
+                                        font-size: 16px;
+                                        background: none !important;
+                                        height: 46px;
+                                        cursor: auto;
+                                    }
+
+                                    .lock-icon {
+                                        position: absolute;
+                                        right: 12px;
+                                    }
+                                }
+
+                                .select-field {
+                                    font-size: 16px;
+                                    border: 1px solid #ccc;
+                                    padding: 10px;
+                                    height: 46px;
+                                    border-radius: 4px;
+                                    font-family: $Roboto_Regular_font;
+
+                                    .freqency-option {
+                                        text-transform: capitalize;
+                                    }
+                                }
+
+                            }
+
+                            .criteria-container {
+                                margin: 0px 0px 0px 16px;
+                                width: 100%;
+
+                                @include media-breakpoint-down(xs) {
+                                    margin: 0 0 0 10px;
+                                }
+
+                                .cancel-icon {
+                                    position: absolute;
+                                    color: grey;
+                                    font-size: 20px;
+                                    right: 2px;
+                                    padding-top: 13px;
+                                    cursor: pointer;
+
+
+                                    @include media-breakpoint-down(xs) {
+                                        font-size: 22px;
+                                        right: 6px;
+                                        bottom: 0;
+                                        padding-top: 3px;
+                                    }
+                                }
+                            }
+
+                            .edit-leaderboard-field {
+                                display: flex;
+                                flex-direction: row;
+
+                                @include media-breakpoint-down(xs) {
+                                    margin-bottom: 22px;
+                                    display: flex;
+                                    flex-direction: column;
+                                }
+                            }
+
+                            .leaderboard-container {
+                                margin: 0px;
+                                width: 100%;
+                            }
+
+                            .customPadding {
+                                padding-left: 26px;
+
+                                @include media-breakpoint-down(xs) {
+                                    padding-left: 25px;
+                                }
+                            }
+
+                            .customHeight {
+                                height: 46px;
+                            }
+
+                            .readOnly {
+                                pointer-events: none;
+                            }
+
+                            .footer {
+                                height: 35px;
+                                margin: 20px 0;
+
+                                @media (max-width: 350px) {
+                                    margin: 10px 0;
+                                }
+                            }
+
+                            .footer-row {
+                                background: $secondary_bg_color;
+                                border-radius: 5px;
+                                padding: 0 10px;
+                                width: 100%;
+                                right: 0;
+                                height: 55px;
+                                flex: 1;
+                                display: flex;
+                                align-items: center;
+
+                                @media (max-width: 350px) {
+                                    height: 45px;
+                                }
+
+                                button {
+                                    align-content: center;
+                                    border-radius: 4px !important;
+                                    font-size: 16px;
+                                }
+
+                                .button-row {
+                                    width: 100%;
+                                    display: flex;
+                                    color: $brand_color;
+                                    font-family: $Roboto_Regular_font;
+
+                                    .right-button {
+                                        display: flex;
+                                        flex: 1;
+                                        justify-content: flex-end;
+
+                                        &:disabled {
+                                            background-color: #e6e6e6;
+                                            color: #c8c8c8;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    ::ng-deep .mat-select-value {
+        display: table-cell !important;
+        
+        // @include media-breakpoint-down(xs) {
+        //   display: none !important;
+        // }
+    }
+}
+
+::ng-deep .mat-calendar-table {
+    tr {
+        border-bottom: none;
+    }
+
+    th {
+        background-color: $secondary_bg_color;
+    }
+}
+
+
+.ng-custom-valid {
+    border-left: 5px solid #17b057 !important;
+
+    @include media-breakpoint-down(sm) {
+        border-left: 3px solid #17b057 !important;
+    }
+}
+
+.hideOption {
+    display: none;
+}
+
+.selectedOption {
+    color: $brand_color !important;
+    background: none !important;
+}
+
+::ng-deep .criteria-options.mat-option.mat-active {
+    background: none;
+
+    &:hover {
+        background: rgba(0,0,0,.04);
+    }
+}
+

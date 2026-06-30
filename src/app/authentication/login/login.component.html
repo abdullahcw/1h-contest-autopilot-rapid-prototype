@@ -1,0 +1,61 @@
+<section>
+  <div class="background-image"></div>
+  <div class="container">
+    <div class="row form-wrapper" >
+      <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+      <form class="loginForm" #loginForm="ngForm" (ngSubmit)="validateUser(loginForm)"
+        [ngClass]="{'disabled-style': is_loading}">
+        <div>
+          <img src="/assets/img/login-logo.png" alt="1huddle" class="logo">
+        </div>
+        <div class="email-input" *ngIf="ssoLogin">
+          <input type="text" class="secondary-input" autocapitalize="off" spellcheck="false" id="slug" name="slug"
+            [(ngModel)]="slug" #first="ngModel" placeholder="Company ID" required maxlength="50" minlength="1"
+            pattern="^(?!\s*$)[A-Za-z0-9\-]*" autofocus>
+          <button type="submit" class="submit_icon" mat-icon-button *ngIf="!is_loading" [disabled]="!first.valid">
+            <mat-icon>arrow_forward_ios</mat-icon>
+          </button>
+        </div>
+        <div class="email-input" [hidden]="ssoLogin">
+          <input type="text" class="secondary-input"
+            [ngClass]="{'slideDownReturn': enablePassword, 'white-border': enablePassword}" autocorrect="off"
+            autocapitalize="off" (input)="emailChanged()" spellcheck="false" id="user-email" name="useremail"
+            [(ngModel)]="user.email" placeholder="Email Address" email required #login_email pattern="\S+@\S+\.\S+">
+          <button type="submit" class="submit_icon" mat-icon-button *ngIf="!enablePassword && !is_loading"
+            [disabled]="!loginForm.valid">
+            <mat-icon>arrow_forward_ios</mat-icon>
+          </button>
+        </div>
+        <div *ngIf="enablePassword && !ssoLogin" [ngClass]="{'slideDown': enablePassword}" class="password-input">
+          <input type="password" class="secondary-input" autocomplete="off" autocorrect="off" maxlength="32"
+            minlength="4" autocapitalize="off" spellcheck="false" #login_password id="user-password" name="userpassword"
+            [(ngModel)]="user.password" placeholder="Password" [required]="enablePassword" (input)="passwordChanged()"
+            autofocus>
+          <button type="submit" class="submit_icon" *ngIf="!is_loading" mat-icon-button [disabled]="!loginForm.valid">
+            <mat-icon>arrow_forward_ios</mat-icon>
+          </button>
+        </div>
+        <p class="errorMsg" *ngIf="isError" [ngClass]="{'slideDown': isError}">{{errorMessage}}</p>
+        <div class="forgot_password_field">
+          <p class="forgot_password" *ngIf="enablePassword" (click)="forgotPassword()">
+            <mat-icon>lock</mat-icon>Forgot Password?
+          </p>
+        </div>
+      </form>
+    </div>
+    <div class="help-section">
+      <div class="sso-user" (click)="ssoLoginView(ssoLogin);">
+        {{ssoLogin ? 'Not an SSO User?' : 'SSO User?'}}
+      </div>
+      <div class="learn-more">
+        Not a Customer?
+        <a href="https://1huddle.co/" class="learn-more-bold">
+          &nbsp; Learn More
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    &copy; {{currentYear}}. 1Huddle, Inc. All Rights Reserved
+  </div>
+</section>

@@ -1,0 +1,16 @@
+<div class="main-container">
+  <mat-card class="report-container">
+    <div class="wrapper">
+      <div class="form-group suffix-spinner-wrapper">
+        <label>{{'report_by' | translate}}</label>
+        <app-search-select [shouldAllowSearch]="false" [items]="listOfReports" [selectedId]="selectedReport" 
+          placeholderText="{{('select_report_type' | translate)}}"
+          (change)="onReportSelectionChange($event)">
+        </app-search-select>
+      </div>
+      <div class="report-wrapper">
+        <app-game-accuracy-report #childReport></app-game-accuracy-report>
+      </div>
+    </div>
+  </mat-card>
+</div>

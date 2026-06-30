@@ -1,0 +1,139 @@
+@import '../../../styles.scss';
+@import "../../../assets/colors";
+
+.main-container-selectGame {
+  // max-height: 50vh;
+  // height: 50vh;
+  min-width: 500px;
+  position: relative;
+  overflow: hidden;
+
+  @include media-breakpoint-down(sm) {
+    min-width: 260px;
+  }
+
+  .small-toolbar {
+    height: 50px;
+    font-size: 16px;
+  }
+
+  .closeIcon {
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: row;
+    padding: 20px 20px;
+
+    @include media-breakpoint-down(sm) {
+      flex-direction: column;
+      padding: 10px 0;
+      align-items: center;
+    }
+
+    .gameType {
+      width: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      height: 240px;
+
+      @include media-breakpoint-down(sm) {
+        height: 180px;
+      }
+
+      .gameType_img,
+      .game-mode-img {
+        width: 200px;
+
+        @include media-breakpoint-down(sm) {
+          width: 160px;
+        }
+
+        cursor: pointer;
+        // border-radius: 50%;
+      }
+
+      .gameType_img:hover {
+        transform: scale(1.06);
+        // box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05), 0 1px 10px 0 rgba(0, 0, 0, 0.05), 0 3px 6px 3px rgba(0, 0, 0, 0.12) !important;
+        box-shadow: none;
+      }
+
+      .game-mode-img:hover {
+        transform: scale(1.06);
+        // box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05), 0 1px 10px 0 rgba(0, 0, 0, 0.05), 0 3px 6px 3px rgba(0, 0, 0, 0.12) !important;
+        box-shadow: none;
+      }
+
+    }
+
+    .checkMark {
+      position: absolute;
+      top: 33px;
+      left: 26px;
+
+      i {
+        color: white;
+        font-size: 40px;
+        background: black;
+        border-radius: 50%;
+      }
+
+      @include media-breakpoint-down(sm) {
+        bottom: 0;
+        right: 0;
+        top: auto;
+        left: auto;
+      }
+    }
+
+    .disabled-style {
+      cursor: progress;
+      pointer-events: none;
+      opacity: 1;
+    }
+  }
+
+  .spWrapperr {
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 460px;
+
+    div {
+      width: 350px;
+      height: 55px;
+      background: #3756d1;
+      color: #fff;
+      text-align: center;
+      margin: 30px 0;
+      border-radius: 5px;
+
+      span {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-family: Roboto_Bold;
+      }
+
+      &:hover {
+        transform: scale(1.06);
+        box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05), 0 1px 10px 0 rgba(0, 0, 0, 0.05), 0 3px 6px 3px rgba(0, 0, 0, 0.12) !important;
+      }
+    }
+  }
+}
+
+.hide-dialog {
+  display: none;
+}

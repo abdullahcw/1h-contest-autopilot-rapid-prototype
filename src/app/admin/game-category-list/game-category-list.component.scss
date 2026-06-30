@@ -1,0 +1,219 @@
+@import "../../../styles.scss";
+
+.search-input {
+  border: 1px solid transparent !important;
+}
+
+.wrapper {
+  padding: 20px 10px 0;
+  height: $header_height;
+  max-height: $header_height;
+  position: relative;
+
+  @include media-breakpoint-down(sm) {
+    padding: 10px 0px 0;
+  }
+
+  .container-card {
+    margin: 0 40px;
+    // padding: 0px;
+    height: $header_height;
+    max-height: $header_height;
+    padding: 0;
+    border-radius: 0;
+    @include i-pad-design-with-btn;
+
+    @include media-breakpoint-down(sm) {
+      margin: 0 10px;
+    }
+
+    .search-container {
+      margin-left: 15px;
+    }
+
+    .mat-card-header {
+      .mat-card-header-text {
+        display: none !important;
+      }
+
+      .mat-toolbar {
+        padding: 0;
+        padding-left: 0px;
+        padding-right: 0px;
+        border: none;
+
+        .mat-toolbar-row {
+          height: $row_height;
+          border-bottom: 1px solid $mat_border_color;
+          padding-left: 26px;
+          padding-top: 16px;
+          // padding-top: 30px;
+          // padding-bottom: 30px;
+
+          .toolbar-icon-color {
+            cursor: pointer;
+            color: $disable_color;
+          }
+
+          .filter-chip {
+            margin-left: 16px;
+          }
+
+          &:last-child {
+            border-top: 1px solid transparent;
+            border-bottom: 1px solid transparent;
+          }
+
+          .title {
+            margin-left: 14px;
+
+            font: {
+              family: Roboto_Regular;
+              size: $text_size_med;
+            }
+
+            .name {
+              font: {
+                family: Roboto_Medium;
+                size: $default_font_size;
+              }
+
+              color: $textMidGrey;
+            }
+
+            span {
+              color: $textColor;
+            }
+          }
+        }
+      }
+    }
+
+    .mat-card-content {
+      // max-height: calc
+      width: 100%;
+      min-height: $game_category_container_height;
+      height: $game_category_container_height;
+      max-height: $game_category_container_height;
+      overflow: auto;
+      margin: 0;
+      border-top: 1px solid $mat_border_color;
+      border-bottom: 1px solid $mat_border_color;
+
+      font-family: Roboto_Regular;
+      font-size: $text_size_med;
+
+      .no_messages {
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        padding-top: 20px;
+
+        font: {
+          family: Roboto_Regular;
+          size: $default_font_size;
+        }
+
+        @extend .center-align;
+      }
+    }
+
+    .mat-card-actions {
+      margin: 0;
+      padding: 0;
+
+      .mat-paginator {
+        width: 95%;
+        margin: 0 auto;
+
+        .mat-paginator-page-size {
+          flex: 1;
+        }
+      }
+    }
+  }
+
+  .add-group {
+    width: 50px;
+    height: 50px;
+    background-color: $add_icon_background;
+    color: $add_icon;
+    padding: 5px 20px;
+    border-radius: 30px;
+    z-index: 101 !important;
+    font-size: $default_font_size;
+    position: absolute;
+    left: -23px;
+    top: 39px;
+    @extend .center-align;
+    -webkit-transition: all 1s;
+    -moz-transition: all 1s;
+    -o-transition: all 1s;
+    -ms-transition: all 1s;
+    transition: all 1s;
+  }
+}
+
+.quick-nav-bar {
+  padding: 5px 40px;
+  background-color: $secondary_bg_color;
+  font-size: $text_size_med;
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05), 0 1px 10px 0 rgba(0, 0, 0, 0.05), 0 3px 5px -1px rgba(0, 0, 0, 0.05);
+}
+
+.toolbar {
+  background-color: $secondary_bg_color;
+  border-bottom: 1px solid $mat_border_color;
+  padding: 5px 20px;
+  font-size: $text_size_med;
+  width: 100%;
+}
+
+.header-style {
+  padding-left: 40px !important;
+
+  .player-name-style {
+    //  white-space: nowrap;
+    // overflow: hidden !important;
+    text-overflow: ellipsis;
+    width: 100%;
+  }
+}
+
+.spacer {
+  flex: 1;
+}
+
+.toolbar-button {
+  font-size: 12px;
+  color: $add-filter-icon-color;
+}
+
+.mat-sort-header-container {
+  align-items: center;
+}
+
+.delete-icon {
+  vertical-align: middle;
+  border-style: none;
+  padding-left: 40px;
+}
+
+td {
+
+  &:first-child {
+    padding: 5px 5px 5px 40px !important
+  }
+
+  @include media-breakpoint-down(sm) {
+    //  &:first-child {
+    //    padding: 5px;
+    //  }
+  }
+}
+ tr.header {
+    &:hover {
+      cursor: default !important;
+    }
+  }

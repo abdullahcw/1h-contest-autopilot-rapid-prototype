@@ -1,0 +1,150 @@
+<div class="add_edit_alerts_wrapper">
+  <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+  <form  #alertDetails="ngForm" (ngSubmit)="navigateToCreateAlert(alert)" [ngClass]="{'disabled-style': is_loading}">
+  <div class="add_edit_alerts">
+  <div class="alerts">
+    <div class="alertTypeRadioButton">
+      <label>{{ 'typeOfAlertTitle' | translate }}</label>
+      <mat-radio-group md-autofocus class="radio-btn-group" [disabled]="alert.alert_id != null"
+        aria-label="alert type" name="gameMode" (change)="playersRadioButtonCliked()"
+        [(ngModel)]="alert.selectedAlertType">
+        <mat-radio-button class="radio-btn"  [value]="ALERT_TYPE.GAME">{{ 'game_alerts_type' | translate }}
+        </mat-radio-button>
+        <mat-radio-button class="radio-btn"  [value]="ALERT_TYPE.GENERAL">{{ 'general_alerts_type' | translate }}
+        </mat-radio-button>                    
+      </mat-radio-group>
+    </div>
+
+    <div class="callToAction">
+      <label>{{ 'callToActionTitle' | translate }}</label>
+      <div class="callToActionOptions">
+        <app-search-select [items]="actionList"
+         [selectedId]="alert.selectedActionId"
+         [shouldAllowSearch]="false"
+         [disabled]="fetchingTypeAlerts"
+         [disabledArrow]="fetchingTypeAlerts"
+          placeholderText="{{('selectCallToActionTitle' | translate)}}" 
+          (change)="onActionSelectionChanged($event)"
+          [isRequired]="true">
+        </app-search-select>
+        <mat-spinner class="spinner" mode="indeterminate" *ngIf="fetchingTypeAlerts" diameter="20"></mat-spinner>
+      </div>
+    </div>
+
+
+
+    <div class="uploadPDFComponentWrapper">
+      <label>{{ 'bannerTitle' | translate }}</label>
+      <div class="uploadPDFComponent" appDragDrop (files)="filesDropped($event)" *ngIf="!alert.imageSrc">
+        <div class="uploadText">
+          <mat-icon class="uploadIcon" >image</mat-icon>
+          <span class="uploadTextWrapper" ><span style="text-decoration: underline;cursor: pointer;" (click)="imageInput && imageInput?.click()">{{ 'upload_alert_btn' | translate }}</span> <span>{{ 'upload_alert_image' | translate }}</span></span>
+          <span class="uploadTextSupport">{{ 'upload_alert_image_support' | translate }}</span>                      
+        </div>
+      </div>
+      <div *ngIf="alert.imageSrc" class="fileNameWrapper">
+        <img [src]="alert.imageSrc" />       
+        <div class="contest-icon-overlay" >          
+          <mat-icon style="margin-right: 5px;" (click)="imageInput && imageInput?.click()">edit</mat-icon>
+          <mat-icon style="padding-left: 5px;" (click)="deleteImg(alert)">delete</mat-icon>
+        </div>        
+      </div>
+    </div>
+
+
+    <div class="dateWrapper">
+      <div class="date-section">
+        <div class="form-group date-picker">
+          <label for="dob">{{ 'start_date'| translate }}</label>
+          <input  class="holder form-inputs calendar-input" (click)="startDatePicker.open()"
+          (dateChange)="startDateChange();"
+            (open)="isDatePickerOpen" name="start-date" (keydown)="$event.preventDefault(); isDatePickerOpen = true;"
+            [min]="today" [(ngModel)]="alert.start_date" [matDatepicker]="startDatePicker"
+            [disabled]="alert.is_processed"
+             placeholder="{{'date_format_mmddyyyy' | translate}}"
+            required readonly>
+          <mat-datepicker-toggle [disabled]="alert.is_processed" matPrefix  [for]="startDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker  [disabled]="alert.is_processed" [startAt]="alert.start_date" #startDatePicker [disabled]="false">
+          </mat-datepicker>
+        </div>
+        <div class="spacer"></div>
+        <div class="form-group date-picker">
+          <label for="dob">{{ 'end_date'| translate }}</label>
+          <input  class="holder form-inputs calendar-input" (click)="endDatePicker.open()"
+          (dateChange)="endDateChange();"
+            (open)="isDatePickerOpen" name="end-date" (keydown)="$event.preventDefault(); isDatePickerOpen = true;"
+            [min]="alert.start_date" [(ngModel)]="alert.end_date" [matDatepicker]="endDatePicker"
+            placeholder="{{'date_format_mmddyyyy' | translate}}" required readonly>
+          <mat-datepicker-toggle matPrefix [for]="endDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker [startAt]="alert.start_date" #endDatePicker [disabled]="false">
+          </mat-datepicker>
+        </div>
+      </div>
+      <div class="rulesWrapper">              
+        <mat-icon  style="color:#5F6367;">info</mat-icon> <span class="rules">{{endDateText}}</span>
+      </div>
+    </div>
+
+    <div class="form-group headerText">
+      <label for="title">{{ 'headerText' | translate }}</label>
+      <input type="text" class="form-inputs" placeholder="{{'headerTextPlaceholder' | translate}}"
+        name="headerText"  maxlength="25" minlength="1" 
+        [(ngModel)]="alert.header_text" appValidateInput required>
+    </div>
+
+    <div class="form-group body-text">
+      <label for="body-text">{{ 'bodyText'| translate }}</label>            
+        <textarea type="text" class="bodyText-description form-inputs" style="resize: none;"
+      placeholder="{{'bodyTextPlaceholder' | translate}}" id="body-text"
+      name="add_description" [(ngModel)]="alert.body_text" appValidateInput  minlength="1" maxlength="150"
+      required></textarea>                  
+    </div>
+
+    <div class="form-group callToActionBtn">
+      <label for="title">{{ 'callToActionBtnLable' | translate }}</label>
+      <input type="text" class="form-inputs" placeholder="{{'callToActionBtnLablePlaceholder' | translate}}"
+        name="callToActionBtn"  maxlength="15" minlength="1" 
+        [(ngModel)]="alert.callToActionBtnTxt" appValidateInput required>
+    </div>
+
+    
+    <div class="form-group companiesList" *ngIf="showCompanies">
+      <label for="company">{{'company' | translate}}</label>
+      <app-search-multiselect [items]="companiesToBeDisplayed" placeholderText="{{('select_companies' | translate)}}"
+        [disabled]="fetchingCompanies" [isRequired]="true" [shouldAllowSearch]="true" 
+        (selectedItems)="onCompanySelectionUpdated($event)">
+      </app-search-multiselect>
+      <mat-spinner class="spinner" mode="indeterminate" *ngIf="fetchingCompanies" diameter="20">
+      </mat-spinner>
+    </div>
+
+    <div class="form-group pushNotification">
+      <label for="company">{{'pushNotificationText' | translate}}</label>
+      <mat-slide-toggle  name="pushNotification" [(ngModel)]="alert.push_notification" 
+      (change)="toggleChange()"></mat-slide-toggle>
+    </div>
+  
+  </div>
+  </div>
+  <div class="footerWrapper">
+
+    <mat-card-actions class="footer">
+      <div class="button-row">
+        <div class="btn-right">
+          <button mat-button type="button" class="cancel-button" tabindex="-1"
+            (click)="closePopUp()">{{ 'cancel_uppercase'| translate }}</button>
+        </div>
+        <div>
+          <button mat-button type="submit" [disabled]="!alertDetails?.valid || shouldDisableAction()">
+            <span *ngIf="!alert.alert_id">{{ 'create_alert'| translate }}</span>
+            <span *ngIf="alert.alert_id">{{ 'update_uppercase'| translate }}</span>
+          </button>
+        </div>
+      </div>
+    </mat-card-actions>
+
+  </div>
+</form>
+</div>
+  <input type="file" onclick="this.value=null" #imageInput id="upload_image" [hidden]="true" accept="image/*"
+  (change)="fileChangeEvent($event)">

@@ -1,0 +1,319 @@
+@import '../../../../styles.scss';
+
+.add_edit_alerts_wrapper{
+
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 163px);    
+    overflow: hidden;
+
+.add_edit_alerts{ 
+    
+    width: 100%;
+    height: calc(100vh - 210px);
+    overflow-y: auto;
+    .alerts{
+        padding:20px;
+        width: 500px;  
+        @include media-breakpoint-down(xs) {
+            width: 100%;
+          }             
+    }
+    .alertTypeRadioButton{
+        display: flex;
+        flex-direction: column;
+        lable{
+            font-size: $Roboto_Medium_font;
+            margin-bottom: 14px;
+        }
+        .radio-btn {
+            margin-left: 10px;
+            font-size: $Roboto_Regular_font;
+            margin-bottom: 14px;
+            margin-bottom: 14px;
+            &:first-child{
+                margin-left: 0;
+            }
+            ::ng-deep label.mat-radio-label{
+                margin-bottom: 0px !important;
+            }
+        }
+        .radio-btn-group{
+            margin-top: 8px;
+        }
+    }
+
+    .callToAction{
+        label{
+            font-size: $Roboto_Medium_font;
+            font-size: 14px;
+        }
+        .callToActionOptions{
+            margin-top: 10px;
+            position: relative;
+            .spinner {
+                position: absolute;
+                top: 10px;
+                right: 8px;
+                z-index: 999;
+            }
+        }
+    }
+
+    .dateWrapper{
+
+        .date-section {
+            display: flex;
+            flex-direction: row;
+    
+            @include media-breakpoint-down(xs) {
+                display: block;
+            }
+    
+            .name-field {
+                width: 50%;
+    
+                @include media-breakpoint-down(xs) {
+                    width: 100%;
+                }
+            }
+    
+            .spacer {
+                margin: 5px;
+    
+                @include media-breakpoint-down(xs) {
+                    display: none;
+                }
+            }
+        }
+        
+        .date-picker {
+            position: relative;
+            flex: 1;
+            mat-datepicker-toggle {
+                position: absolute;
+                top: 21px;
+                right: 0;
+            }
+        }
+        .rulesWrapper{
+            display: flex;
+            flex-direction: row;
+            margin-top: 4px;
+            align-items: center;
+            .rules{
+                // padding-left: 5px;
+            }
+            mat-icon{
+                font-size: 20px;
+                display: flex;
+                align-items: center;
+            }
+        }
+    }
+
+    .uploadPDFComponentWrapper{
+        margin-top: 10px;
+        label{  
+            font-size: $Roboto_Medium_font;
+            font-size: 14px;
+        }
+        .uploadPDFComponent{
+            background-color: #F4F4F4CB;
+            width: 300px;
+            height: 140px;
+            border: 1px dashed;    
+            border-color: #707070;
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            .uploadIcon{
+                font-size: 40px;
+                width: 40px;
+                height: 40px;
+                color: #626262;
+            }
+
+            .uploadText{
+                font-family: $Roboto_Medium_font;
+                font-size: 14px;   
+                padding-top: 5px;
+                .uploadTextWrapper{
+                    
+                }
+
+            }
+            .uploadTextSupport{
+                font-family: $Roboto_Regular_font;
+                font-size: 12px;  
+                color: #757575;                                  
+            }
+            .uploadButton{
+                background-color: #000000;                            
+                border-radius: 5px;
+                padding: 3px 10px;
+                font-size: 14px;
+                color: white;
+                margin-left: 10px;
+                cursor: pointer;
+            }
+           
+
+            .uploadText{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        .fileNameWrapper{
+            position: relative;
+            img{
+                width: 300px;
+                // height: 100px;
+                border-radius: 8px;
+            }
+            // display: flex;
+            // flex-direction: row;
+            // align-items: center;
+            // .vertical-divider{
+            //     width: 3px;
+            //     height: 50px;
+            //     margin: 0 20px;
+            // }
+            // .fileNameWrapper{
+            //     position: relative;
+            //     .fileName{
+            //         min-width: 300px;
+            //         font-size: 14px;
+            //     }
+            //     .closeIcon{
+            //         right: 0;
+            //         position: absolute;
+            //         cursor: pointer;
+            //         font-size: 18px;
+            //         display: flex;
+            //         align-items: center;
+            //         justify-content: center;
+                
+            //     }
+            // }
+
+            .contest-icon-overlay {
+                align-items: center;
+                justify-content: center;
+                display: flex;
+                color: white;
+                position: absolute;
+                background: rgba(0, 0, 0, 0.5);
+                width: 300px;
+                height: 100%;
+                left: 0;
+                top: 0;
+                opacity: 0;
+                border-radius: 8px;            
+                // border-radius: 50%;
+              }
+      
+              &:hover .contest-icon-overlay {
+                opacity: 1;
+                cursor: pointer;
+                // pointer-events: none;
+              }
+        }
+        
+    }
+
+    .headerText{
+        label{
+            font-size: $Roboto_Medium_font;
+            font-size: 14px;
+        }                            
+    }
+
+    .body-text{
+
+        label{
+            font-size: $Roboto_Medium_font;
+            font-size: 14px;
+        }     
+        .bodyText-description {
+            height: 160px;
+            padding-left: 11px;
+            margin: 0;
+            ::placeholder {
+                color: #ccc;
+            }
+        }
+    }
+
+    .callToActionBtn{
+        label{
+            font-size: $Roboto_Medium_font;
+            font-size: 14px;
+        }  
+    }
+
+    .companiesList{
+        position: relative;
+        .spinner {
+                position: absolute;
+                top: 30px;
+                right: 8px;
+                z-index: 999;
+            }
+          
+    }
+
+    .pushNotification{
+        label{
+            font-size: $Roboto_Medium_font;
+            font-size: 14px;
+        }  
+        margin-top: 10px;
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+}
+
+
+.footerWrapper{
+    width: 100%;
+    height: 60px;
+    border-top: 1px solid #80808078;
+    position: absolute;
+    bottom: 0;
+    background: white;
+
+    .footer {
+        display: flex;
+        justify-content: flex-end;
+        padding: 6px 16px;
+        background-color: $secondary_bg_color;
+        position: sticky;
+        z-index: 5;
+
+        .button-row {
+            width: 100%;
+            display: flex;
+
+            .btn-right {
+                margin-left: auto;
+            }
+
+            .cancel-button {
+                border: 0px;
+                // margin-right: 10px;
+                background: white;
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+}

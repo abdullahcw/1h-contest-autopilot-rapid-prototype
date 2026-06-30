@@ -1,0 +1,62 @@
+@import "../../../../../../styles.scss";
+
+.contestCircleChartWrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+
+  .leftDiv {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 50%;
+    .canvasDiv {
+      position: relative;
+      width: 200px;
+      padding-left: 20px;
+
+      @include media-breakpoint-down(lg) {
+        width: 150px;
+      }
+
+      @include media-breakpoint-down(md) {
+        width: 200px;
+      }
+
+      @include media-breakpoint-down(xs) {
+        width: 200px;
+      }  
+    }
+  }
+
+  .rightDiv {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 50%;
+    
+    .contentText {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      margin-left: -15px;
+  
+      .percent{
+        font-family: $FaktPro_Black_font;
+        color: #3F55CA;
+        font-size: 28px;
+      }
+
+      .completeText {
+        font-family: $Roboto_Regular_font;
+        font-size: 16px;
+      }
+    }
+
+  }
+}

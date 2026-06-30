@@ -1,0 +1,31 @@
+<div class="main-container-showVideo">
+  <mat-toolbar class="small-toolbar" color="primary">
+    <div>
+      {{data.name}} 
+    </div>
+    <div class="closeIcon">
+      <i class="material-icons" (click)="closePopUp()">
+        close
+      </i>
+    </div>
+  </mat-toolbar>
+  <section class="content" [ngClass]="{'content_game_format': data?.isNewGameFormatNudge}" >
+    <video [src]="data.url" class="video_player" [ngClass]="{'video_player_game_format': data?.isNewGameFormatNudge}" autoplay controls preload="auto"></video>
+  </section>
+  <div class="education-info" *ngIf="data?.isNewGameFormatNudge">
+    <label class="heading" >
+      {{'Intro_game_format' | translate}}
+    </label>
+    <span class="text-container">
+      <ol>
+        <li>{{'list_1' | translate}}{{'sub_list_1' | translate}}</li>
+        <li>{{'list_2' | translate}}{{'sub_list_2' | translate}}</li>
+      </ol>  
+    </span>
+
+    <div class="btn-wrapper">
+      <button mat-button class="okay-btn" (click)="closePopUp()">{{'OKAY' | translate}}</button>
+    </div>
+  </div>
+</div>
+

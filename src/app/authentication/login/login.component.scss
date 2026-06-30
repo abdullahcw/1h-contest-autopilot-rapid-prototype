@@ -1,0 +1,277 @@
+@import '../../../assets/main.scss';
+
+section {
+    width: 100%;
+    min-height: 100vh;
+    height: 100%;
+    // background-image: url(../../../assets/img/shutter_pattern_login_screen.svg);
+    background-color: $brand_color;
+    // background-color: $secondary_bg_color;
+    // background-size: 26%;
+    // background-repeat: repeat-y;
+    // background-position-x: right;
+    @extend .center-align;
+
+    .background-image {
+        // width: 398px;
+        // min-height: 100%;
+        width: 502px;
+        min-height: 1162px;
+        background-image: url(../../../assets/img/1shutterpattern_login.svg);
+        // background-image: url(../../../assets/img/shutter_pattern_login_screen.svg);
+        background-repeat: repeat-y;
+        position: fixed;
+        // right: 0;
+        right: -41px;
+        top: -113px;
+    }
+
+    .container {
+        width: 60%;
+        min-width: 320px;
+        max-width: 500px;
+        // margin: 243px auto 0 150px;
+        // margin-left: 150px;
+        // margin-top: 243px;
+        font-family: Roboto_Regular;
+
+        .help-section {
+            display: flex;
+            color: $secondary_bg_color;
+            // margin-left: 14px;
+            font-family: Roboto_Bold;
+            font-size: 14px;
+            position: relative;
+            margin-top: 5px;
+
+            @include media-breakpoint-down(sm) {
+                font-size: 12px;
+            }
+
+            a {
+                display: inline-flex;
+                color: $secondary_bg_color;
+            }
+
+            // .customer{
+            //   }
+            .learn-more {
+
+                font-family: Roboto_Regular;
+                // margin-left: 8px;
+                margin-right: 2px;
+                justify-content: flex-end;
+                display: flex;
+                flex: 1;
+                color: #809FDD;
+
+                .learn-more-bold {
+                    color: #809FDD;
+                    font-family: Roboto_Bold;
+                }
+            }
+
+            .sso-user {
+                cursor: pointer;
+            }
+        }
+    }
+
+    .form-wrapper {
+        transition: 0.5s all;
+        position: relative;
+        // border: 1px solid rgb(232, 232, 232);
+        box-shadow: 0px 2px 5px 7px rgba(0, 0, 0, 0.05), 1px 4px 6px 0 rgba(0, 0, 0, 0.06), 1px 7px 2px -1px rgba(0, 0, 0, 0);
+
+        // .spacing{
+        //   margin: 10px 30px 50px 30px;
+        // }
+        // .spacing1{
+        //   margin: 10px 30px 27px 30px;
+        // }
+        .mat-progress-bar {
+            position: absolute;
+            border-radius: 8px 8px 0px 0px;
+        }
+
+        .loginForm {
+            padding: 50px;
+
+            @include media-breakpoint-down(sm) {
+                padding: 30px 30px 0px 30px;
+            }
+            
+            .email-input {
+                margin-top: 12px;
+            }
+
+            .password-input {
+                margin-top: 4px;
+            }
+        }
+
+        //  padding: 0 50px 50px 50px ;
+        background-color: $secondary_bg_color;
+        margin: 0 auto;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05),
+        0 1px 10px 0 rgba(0, 0, 0, 0.05),
+        0 3px 5px -1px rgba(0, 0, 0, 0.05);
+
+        @include media-breakpoint-down(sm) {
+            min-height: 230px;
+        }
+
+        .logo {
+            // margin-top: 50px;
+            width: 85%;
+            max-width: 320px;
+            margin-bottom: 20px;
+            margin-top: 14px;
+        }
+
+        form {
+            margin: 0;
+            // max-width: 500px;
+            width: 100%;
+
+            .forgot_password_field {
+                justify-content: flex-end;
+
+                .forgot_password {
+                    @extend .align-button;
+                    padding: 8px 4px;
+                    text-align: right;
+                    color: $forgot_password_text;
+                    outline: none;
+                    font-family: Roboto_Regular;
+                    font-size: 11px;
+                    -webkit-transition: all 0.3s;
+                    -moz-transition: all 0.3s;
+                    -o-transition: all 0.3s;
+                    -ms-transition: all 0.3s;
+                    transition: all 0.3s;
+                    cursor: pointer;
+
+                    mat-icon {
+                        padding: 4px 2px 2px 2px;
+                        font-size: 14px;
+                    }
+                }
+            }
+
+            div {
+                position: relative;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+
+                .submit_icon {
+                    position: absolute;
+                    right: -5px;
+                    vertical-align: middle;
+                    outline: none;
+                    border-radius: 50%;
+
+                    &:focus {
+                        color: $brand_color
+                    }
+
+                    cursor: pointer;
+
+                    mat-icon {
+                        color: $brand_color;
+                        font-size: 18px;
+                    }
+
+                    &:disabled {
+                        mat-icon {
+                            color: #eaeaea;
+                        }
+                    }
+                }
+            }
+
+            .mat-form-field-invalid .mat-input-element,
+            .mat-warn .mat-input-element {
+                color: yellow !important;
+            }
+
+            input:-webkit-autofill,
+            input:-webkit-autofill:active,
+            input:-webkit-autofill:focus,
+            input:-webkit-autofill:hover {
+                transition: background-color 5000s ease-in-out 0s;
+            }
+        }
+
+        .errorMsg {
+            text-align: start;
+            color: red;
+            height: 15px;
+            font-size: $text_size_small;
+            font-family: Roboto_Regular;
+            display: flex;
+            justify-content: flex-start;
+            margin: 0 10px;
+        }
+    }
+
+    .white-border {
+        border: 1px solid #fff;
+    }
+
+    .footer {
+        width: 100%;
+        position: fixed;
+        bottom: 4px;
+        text-align: center;
+        color: $secondary_bg_color;
+        font-family: Roboto_Regular;
+        font-size: 13px;
+    }
+
+    //Animation
+    .slideDown {
+        animation-name: slideDown;
+        animation-duration: 0.5s;
+    }
+
+    @keyframes slideDown {
+        0% {
+            transform-origin: 0 0;
+            transform: translateY(-50%);
+        }
+
+        100% {
+            transform-origin: 0 0;
+            transform: translateY(0%);
+        }
+    }
+
+    .slideDownReturn {
+        animation-name: slideDownReturn;
+        animation-duration: 0.5s;
+        z-index: 2;
+    }
+
+    @keyframes slideDownReturn {
+        0% {
+            transform-origin: 0 0;
+            transform: translateY(50%);
+        }
+
+        100% {
+            transform-origin: 0 0;
+            transform: translateY(0%);
+        }
+    }
+
+    .background-visibility {
+        opacity: 0.2;
+
+    }
+
+
+}

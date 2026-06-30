@@ -1,0 +1,159 @@
+<div class="sidenav" [ngClass]="{'isForSmallDevice': !toggleDrawer}" [ngStyle]="setSidenavStyle()">
+  <div class="content-wrapper" [ngStyle]="setScrollableDivHeight()">
+    <mat-accordion multi="true">
+      <div *ngFor="let listItem of matListItems" class="expansion-panel-styling">
+        <mat-expansion-panel *ngIf="childernCount(listItem?.children) > 0" class="mat-elevation-z0 " #panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title class="expand-style">
+
+              <mat-icon mat-list-icon *ngIf="listItem?.icon">{{listItem?.icon}}</mat-icon>
+
+              <img src="/assets/img/alerts.png" alt="alerts" style="width: 22px;margin-right: 1px;" *ngIf="!listItem.icon && listItem?.name === 'alerts'">              
+
+              <div class="space"></div>
+              <p mat-line>
+                {{listItem?.name | translate}}
+              </p>
+
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-divider></mat-divider>
+          <mat-list class="matList-child">
+            <a [routerLink]="child?.path" [queryParams]="child?.queryParams" *ngFor="let child of listItem.children">
+              <mat-list-item [hidden]="!child?.allow_access" class="childStyle"
+                [ngStyle]="{'padding-left': toggleDrawer ? '' : '5px'}"
+                [ngClass]="{'selectedMenu': isCurrentRouteSelected(child), 'tooltiptext': child?.name === 'game_library', 'highlighted-icon-list': child?.name === 'game_library' && !(companySettingPermissionForPinnedGames?.has_manager_pinned && companySettingPermissionForAddLimitsMlg?.has_manager_set_limits) 
+                  || child?.name === 'shop_report' && !companySettingPermissionForShopGames?.has_manager_shopped}"
+                (click)="redirectToRoute($event,child)">
+                <mat-icon mat-list-icon [matBadge]="showShortcuts ? child.shortcut : ''" matBadgePosition="before" [ngClass]="{'highlight-icon': child?.name === 'game_library' && !(companySettingPermissionForPinnedGames?.has_manager_pinned && companySettingPermissionForAddLimitsMlg?.has_manager_set_limits) && !toggleDrawer && !isHovered 
+                  || child?.name === 'shop_report' && !companySettingPermissionForShopGames?.has_manager_shopped}"
+                  matBadgeColor="primary" matBadgeSize="medium">{{child?.icon}}
+                  <svg xmlns="http://www.w3.org/2000/svg"  class="icon assets-icon" *ngIf="!child.icon && child?.name === 'layout'" height="18" width="22.704" height="18" viewBox="0 0 22.704 18">
+                    <g id="Group_3831" data-name="Group 3831" transform="translate(-1628 -163)">
+                      <g id="Group_3829" data-name="Group 3829" transform="translate(1628 163)">
+                        <path id="Path_3062" data-name="Path 3062"
+                          d="M17.942,5.276a.887.887,0,0,0-.214-.544L13.506.246A.907.907,0,0,0,12.352.18a.825.825,0,0,0,.008,1.154l2.968,3.15H.792a.792.792,0,0,0,0,1.583H15.328L12.36,9.217a.872.872,0,0,0-.008,1.154.9.9,0,0,0,1.154-.066L17.728,5.82a.762.762,0,0,0,.214-.544Z"
+                          transform="translate(0 17.942) rotate(-90)"  />
+                        <rect id="Rectangle_1273" data-name="Rectangle 1273" width="8" height="8" rx="2"
+                          transform="translate(1 10)" />
+                      </g>
+                      <g id="Group_3830" data-name="Group 3830" transform="translate(1640.15 163)">
+                        <path id="Path_3062-2" data-name="Path 3062"
+                          d="M17.942,5.279a.887.887,0,0,1-.214.544l-4.222,4.486a.907.907,0,0,1-1.154.066A.825.825,0,0,1,12.36,9.22l2.968-3.15H.792a.792.792,0,0,1,0-1.583H15.328L12.36,1.337A.872.872,0,0,1,12.352.183a.9.9,0,0,1,1.154.066l4.222,4.486a.762.762,0,0,1,.214.544Z"
+                          transform="translate(10.554 0.058) rotate(90)" />
+                        <rect id="Rectangle_1273-2" data-name="Rectangle 1273" width="8" height="8" rx="2"
+                          transform="translate(0.85 0)"  />
+                      </g>
+                    </g>
+                  </svg>
+
+                  <svg class="icon assets-icon"
+                    *ngIf="!child.icon && (child?.name === 'trophy_report' || child?.name === 'trophies')" height="18"
+                    viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M1023.688521 163.069182c-0.118455-6.478285-0.22772-12.073261-0.22772-16.785948L838.696919 146.283234c3.566937-79.126168 1.38266-140.4973 1.38266-140.4973-0.11335-3.181957-2.811274-5.785934-5.995273-5.785934L514.003507 0c-0.776087 0-1.53073 0.050037-2.287415 0.132752-0.754643-0.083736-1.516433-0.132752-2.287415-0.132752L188.517669 0c-3.184 0-5.881924 2.602955-5.996294 5.785934 0 0-2.188361 61.371132 1.380618 140.4973L6.319981 146.283234c-3.184 0-5.908474 0-6.054501 0s-0.265503 2.604998-0.265503 5.788997l0 35.390594c0 3.184 0 5.965659 0 6.182147 0 0.216487 0 2.998147 0 6.182147l0 13.814351c0 3.184 0.165429 5.788997 0.36762 5.788997l0 0c1.851376 59.648423 11.381931 139.426096 51.048152 221.094971 33.639293 69.271904 82.081426 127.230295 143.991735 172.26173 51.248301 37.289966 109.799991 64.145644 174.178461 80.19533 37.178658 39.676434 73.841627 61.555964 105.840925 70.351278l0 81.423794c-4.563597 24.191453-32.314839 106.100302-225.747409 106.100302l-24.458999 0c-3.184 0-5.788997 2.604998-5.788997 5.788997l0 61.56107c0 3.184 2.604998 5.788997 5.788997 5.788997l573.558006 0c3.184 0 5.788997-2.604998 5.788997-5.788997L804.567467 956.648912c0-3.184-2.604998-5.788997-5.788997-5.788997l-24.331353 0c-226.931963 0-225.929176-106.977484-225.929176-106.977484 0.029614-3.184 0.054122-8.393995 0.054122-11.577995L548.572062 763.321522c31.994192-8.781017 67.949492-30.572727 104.937192-70.042885 64.845144-16.009861 123.592897-42.972762 175.166951-80.489426 61.892949-45.037562 110.310574-102.994932 143.944761-172.271942C1026.751001 329.068093 1024.738281 221.081695 1023.688521 163.069182zM117.172795 408.557797c-33.055185-68.064884-41.707535-136.560701-43.602822-189.126308l115.397009 0c1.988213 20.373308 4.4962 40.457627 7.677136 59.377814 19.455279 115.90555 46.192502 218.273485 96.804616 308.59471C216.108587 548.227952 155.362409 487.202995 117.172795 408.557797zM906.824095 408.557797c-38.415292 79.105745-99.656736 140.397226-177.663705 179.543674 50.778564-90.493802 77.295215-193.080267 96.805637-309.291146 3.174809-18.920187 5.682796-39.004506 7.669987-59.377814l116.796008 0C948.527545 271.996075 939.87928 340.492913 906.824095 408.557797zM906.824095 408.557797" />
+                  </svg>
+                  <svg class="icon assets-icon" *ngIf="!child.icon && child?.name === 'accuracy'" height="18"
+                    viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="m76 240c12.101562 0 23.054688-4.855469 31.148438-12.652344l44.402343 22.199219c-.222656 1.808594-.550781 3.585937-.550781 5.453125 0 24.8125 20.1875 45 45 45s45-20.1875 45-45c0-6.925781-1.703125-13.410156-4.511719-19.277344l60.234375-60.234375c5.867188 2.808594 12.351563 4.511719 19.277344 4.511719 24.8125 0 45-20.1875 45-45 0-4.671875-.917969-9.089844-2.246094-13.328125l52.335938-39.242187c7.140625 4.769531 15.699218 7.570312 24.910156 7.570312 24.8125 0 45-20.1875 45-45s-20.1875-45-45-45-45 20.1875-45 45c0 4.671875.917969 9.089844 2.246094 13.328125l-52.335938 39.242187c-7.140625-4.769531-15.699218-7.570312-24.910156-7.570312-24.8125 0-45 20.1875-45 45 0 6.925781 1.703125 13.410156 4.511719 19.277344l-60.234375 60.234375c-5.867188-2.808594-12.351563-4.511719-19.277344-4.511719-12.101562 0-23.054688 4.855469-31.148438 12.652344l-44.402343-22.199219c.222656-1.808594.550781-3.585937.550781-5.453125 0-24.8125-20.1875-45-45-45s-45 20.1875-45 45 20.1875 45 45 45zm0 0" />
+                    <path
+                      d="m497 482h-16v-317c0-8.289062-6.710938-15-15-15h-60c-8.289062 0-15 6.710938-15 15v317h-30v-227c0-8.289062-6.710938-15-15-15h-60c-8.289062 0-15 6.710938-15 15v227h-30v-107c0-8.289062-6.710938-15-15-15h-60c-8.289062 0-15 6.710938-15 15v107h-30v-167c0-8.289062-6.710938-15-15-15h-60c-8.289062 0-15 6.710938-15 15v167h-16c-8.289062 0-15 6.710938-15 15s6.710938 15 15 15h482c8.289062 0 15-6.710938 15-15s-6.710938-15-15-15zm0 0" />
+                  </svg>
+                  <svg class="icon assets-icon" *ngIf="!child.icon && child?.name === 'more_reports'" height="18"
+                    version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 192.287 192.287"
+                    style="enable-background:new 0 0 192.287 192.287;" xml:space="preserve">
+                    <g>
+                      <path d="M122.901,0H19.699v192.287h152.889v-142.6L122.901,0z M146.981,45.299h-19.686V25.612L146.981,45.299z M34.699,177.287V15
+                                h77.596v37.799c0,4.142,3.357,7.5,7.5,7.5h37.793v116.988H34.699z" />
+                      <rect x="53.141" y="149.004" width="86.006" height="10" />
+                      <rect x="53.141" y="55.101" width="51.058" height="10" />
+                      <polygon points="121.248,86.935 126.79,86.935 105.371,108.353 88.623,91.605 51.597,128.634 58.667,135.706 88.623,105.748 
+                        105.371,122.495 133.861,94.005 133.861,99.535 143.861,99.535 143.861,76.935 121.248,76.935 	" />
+                      <rect x="53.141" y="33.283" width="51.058" height="10" />
+                    </g>
+                  </svg>
+                  <svg class="icon assets-icon" *ngIf="!child.icon && child?.name === 'game_categories'"
+                    xmlns="http://www.w3.org/2000/svg" width="17" height="21" viewBox="0 0 17 17">
+                    <g id="Group_848" data-name="Group 848" transform="translate(-2.5 -2.5)">
+                      <path id="Path_287" data-name="Path 287"
+                        d="M37.945,5.451a.449.449,0,0,1-.247.406.709.709,0,0,1-.265.053h-.707a.508.508,0,0,1-.318-.124.986.986,0,0,0-.654-.265.954.954,0,1,0,0,1.908.97.97,0,0,0,.654-.247.426.426,0,0,1,.318-.124h.724a.544.544,0,0,1,.23.053.462.462,0,0,1,.247.406v2.951h2.492v-.124a1.826,1.826,0,0,1-.389-1.131,1.855,1.855,0,1,1,3.322,1.131v.124h2.492V3.878A1.38,1.38,0,0,0,44.466,2.5h-6.52Z"
+                        transform="translate(-26.38)" />
+                      <path id="Path_288" data-name="Path 288"
+                        d="M2.5,10.434H5.451a.438.438,0,0,1,.371.194.406.406,0,0,1,.071.247v.742a.508.508,0,0,1-.124.318.986.986,0,0,0-.265.654.954.954,0,0,0,1.908,0,.97.97,0,0,0-.247-.654.426.426,0,0,1-.124-.318v-.724a.435.435,0,0,1,.177-.353.489.489,0,0,1,.283-.088h2.951V7.943H10.31a1.826,1.826,0,0,1-1.131.389A1.855,1.855,0,1,1,10.31,5.009h.141V2.5H3.878A1.38,1.38,0,0,0,2.5,3.878Z"/>
+                      <path id="Path_289" data-name="Path 289"
+                        d="M10.452,57.536a.725.725,0,0,1,.018-.194.458.458,0,0,1,.424-.3h.742a.508.508,0,0,1,.318.124.986.986,0,0,0,.654.265.954.954,0,0,0,0-1.908.907.907,0,0,0-.654.265.426.426,0,0,1-.318.124h-.742a.458.458,0,0,1-.424-.3.435.435,0,0,1-.018-.212V52.5H7.943v.141a1.826,1.826,0,0,1,.389,1.131,1.855,1.855,0,1,1-3.322-1.131V52.5H2.5v6.556a1.38,1.38,0,0,0,1.378,1.378h6.556v-2.9Z"
+                        transform="translate(0 -40.934)" />
+                      <path id="Path_290" data-name="Path 290"
+                        d="M60.534,37.928H57.583a.469.469,0,0,1-.406-.247.489.489,0,0,1-.053-.23v-.724a.508.508,0,0,1,.124-.318.986.986,0,0,0,.265-.654.954.954,0,0,0-1.908,0,.97.97,0,0,0,.247.654.426.426,0,0,1,.124.318v.689a.466.466,0,0,1-.159.406.391.391,0,0,1-.336.106H52.6v2.509h.124a1.826,1.826,0,0,1,1.131-.389,1.855,1.855,0,1,1-1.131,3.322H52.6v2.492h6.556a1.38,1.38,0,0,0,1.378-1.378Z"
+                        transform="translate(-41.034 -26.362)" />
+                    </g>
+                  </svg>
+                  <svg class="icon assets-icon" *ngIf="!child.icon && child?.name === 'accounts'" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 30.526 26.509">
+                    <g id="how_to_reg_black_24dp" transform="translate(-4.82 -6.427)">
+                      <g id="Group_557" data-name="Group 557" transform="translate(4.82 6.427)">
+                        <path id="Path_6001" data-name="Path 6001" d="M12.64,24.886l4.82-4.723a15.007,15.007,0,0,0-1.607-.1C11.563,20.066,3,22.219,3,26.493v3.213H17.46Zm3.213-8.033a6.427,6.427,0,1,0-6.427-6.427,6.425,6.425,0,0,0,6.427,6.427" transform="translate(-3 -4)"/>
+                        <path id="Path_6002" data-name="Path 6002" d="M17.575,25.353,12,19.73l2.249-2.265,3.326,3.342L25.817,12.5l2.249,2.265Z" transform="translate(2.46 1.156)"  />
+                      </g>
+                    </g>
+                  </svg>   
+                  <svg id="Layer_1" style="margin-bottom: 16px;" data-name="Layer 1" width="20" height="20" *ngIf="!child.icon && child?.name === 'pathway'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 88.9 64.8">
+                    
+                    <path class="cls-1" d="M50.55,27.69c3.5-7.07,8.79-11.93,14.7-16.2,1.01-.73,1.04-1.26.32-2.16-.98-1.23-1.93-2.51-2.78-3.84-1.57-2.44-.66-4.53,2.21-5.18C65.65.16,66.31,0,66.97,0c5.74.03,11.49,0,17.23.18,4.01.12,5.49,2.35,4.31,6.16-1.66,5.39-3.37,10.77-5.09,16.15-.25.78-.59,1.57-1.05,2.24-1.52,2.21-3.66,2.34-5.38.3-1.12-1.33-2.15-2.76-3.09-4.23-.69-1.06-1.27-1.21-2.35-.48-5.44,3.71-10.04,8.22-13.32,13.96-1.55,2.71-2.29,5.66-2.24,8.83.08,5.16.03,10.32.02,15.48,0,4.08-1.93,6.24-5.51,6.2-3.49-.04-5.33-2.12-5.34-6.09-.01-5.08-.08-10.16.03-15.23.08-3.8-.98-7.21-2.98-10.37-3.31-5.21-7.66-9.38-12.73-12.85-1.13-.77-1.75-.8-2.55.4-1.01,1.52-2.17,2.95-3.37,4.33-1.85,2.13-4.02,1.95-5.53-.41-.39-.62-.67-1.34-.87-2.04-1.56-5.6-3.1-11.2-4.61-16.81-.9-3.34.49-5.64,3.88-5.65,6.32-.02,12.66.14,18.95.63,3.97.31,4.82,2.87,2.44,6.06-.94,1.26-2.68,2.62-2.56,3.78.11,1.1,2.16,2.03,3.37,3.01,4.76,3.85,9.03,8.13,11.92,14.13Z"/>
+                  </svg>
+
+                    
+                </mat-icon>
+                <p mat-line>
+                  {{child?.name | translate}}
+                </p>
+
+                <!-- new button patch -->
+                <div *ngIf="child?.name === 'game_library'" class="newpatch" [ngClass]="{'hidePatch': companySettingPermissionForPinnedGames?.has_manager_pinned && companySettingPermissionForAddLimitsMlg?.has_manager_set_limits }">
+                  <span>{{ "new_txt" | translate }}</span>
+                  <div class="tooltiptext">
+                    <span>{{ "my_top_game_text" | translate }}</span>
+                    <span class="tooltext">{{ "use_text" | translate}} <img src="/assets/img/icon/moreVerticon.png" alt=""
+                      class="icon_moreVert">{{ "use_to_pin_text" | translate }}</span>
+                  </div>
+                </div>
+
+                <div *ngIf="child?.name === 'shop_report'" class="newpatch" [ngClass]="{'hidePatch': companySettingPermissionForShopGames?.has_manager_shopped }">
+                  <span>{{ "new_txt" | translate }}</span>
+                  <div class="tooltiptextShopReport">
+                    <span>{{ "shop_report" | translate }}</span>
+                    <span class="tooltext">{{ "shop_report_text" | translate}} </span>
+                  </div>
+                </div>
+
+              </mat-list-item>
+            </a>
+          </mat-list>
+        </mat-expansion-panel>
+        <mat-list>
+          <div class="matList " *ngIf="listItem?.children || (listItem['canHaveChild'] === false)">
+            <a [routerLink]="listItem?.path">
+              <mat-list-item [ngClass]="{'selectedMenu' : isCurrentRouteSelected(listItem)}" class="matListItem"
+                tabindex="-1" *ngIf="!listItem?.children" (click)="redirectToRoute($event,listItem)">
+                <mat-icon mat-list-icon [matBadge]="showShortcuts ? listItem.shortcut : ''" matBadgePosition="before"
+                  matBadgeColor="primary">{{listItem?.icon}}</mat-icon>
+                <p mat-line>
+                  {{listItem?.name | translate}}
+                </p>
+              </mat-list-item>
+            </a>
+          </div>
+        </mat-list>
+      </div>
+    </mat-accordion>
+
+  </div>
+
+
+  <div class="message" *ngIf="(toggleDrawer || isToggled)"
+    [ngStyle]="{'width': (toggleDrawer || isToggled) ? '100%' : '70px', 'left': (isToggled || !smallDevice) ? '0px': '-275px' }">
+    <span style="font-size:14px">&copy; {{currentYear}} &nbsp;<a href="https://1huddle.co/"
+        target="_blank">{{'1huddle' | translate}}</a>, {{'inc' | translate}}</span>
+  </div>
+</div>

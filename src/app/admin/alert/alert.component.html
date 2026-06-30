@@ -1,0 +1,13 @@
+<mat-toolbar color="primary" class="small-toolbar">
+  {{title}}
+  <mat-icon class="cancel-icon" (click)="cancel()" *ngIf="!showOKbtn">close</mat-icon>
+</mat-toolbar>
+<section class="content">
+  <div class="title" innerHtml={{message}}>
+    {{message}}
+  </div>
+  <div class="button-row" *ngIf="showOKbtn">
+    <button type="button" mat-button class="cancel-button" tabindex="-1"
+    (click)="cancel()">{{'ok_uppercase' | translate}}</button>
+  </div>
+</section>

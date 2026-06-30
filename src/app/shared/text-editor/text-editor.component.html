@@ -1,0 +1,46 @@
+<div class="help-faq-section">
+<mat-expansion-panel class="faq-expansion-list responsive-panel mat-elevation-z0 " 
+(opened)="panelOpenState = true" (closed)="panelOpenState = false" >
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+
+      <input (blur)="updateFaq(faq)" [disabled]="!contenteditable" #editorQs (click)="$event.stopPropagation()" placeholder="Enter Title"
+       (keydown)="handleSpacebar($event)" [(ngModel)]="faq.question" [ngClass]= "{'input-border': contenteditable }" />
+      
+
+       
+    </mat-panel-title>
+
+    <div *ngIf="faqPermission && faqPermission.edit && !faqPermission.edit_details">
+    <div class="edit-icon" *ngIf="panelOpenState" (click)="$event.stopPropagation()" >
+        <mat-slide-toggle (click)="$event.stopPropagation()" (change)="changeStatus(faq)"
+        [(ngModel)]="status" color="primary" *ngIf="contenteditable"></mat-slide-toggle>
+        <mat-icon *ngIf="contenteditable" matTooltip="Delete" matTooltipPosition="above" 
+        (click)="$event.preventDefault();toggleContenteditable();deleteDialog(faq?.faq_id);$event.stopPropagation()"
+        >delete</mat-icon>
+        <mat-icon (click)="addFaq(faq) && toggleContenteditable()  " *ngIf="contenteditable" 
+        matTooltip="Done" matTooltipPosition="above" >done</mat-icon>
+
+        <mat-icon (click)="toggleContenteditable()" *ngIf="!contenteditable" 
+        matTooltip="Edit" matTooltipPosition="above" >edit</mat-icon>
+        
+
+      </div>
+    </div>
+      
+    
+  </mat-expansion-panel-header>
+
+  <div class="answer-section" >
+    <div [hidden]="!contenteditable"  >
+        <ckeditor [editor]="Editor" #editor  [(ngModel)]="faq.answer"  *ngIf="contenteditable" (blur)="updateFaq(faq)" attachPlaceholder="Enter Description"
+        [config]="{ toolbar: [  'bold', 'italic', 'underline', '|', 'numberedList', 'bulletedList', '|',  'link' ] }">
+            </ckeditor>
+    </div>
+<div class="ans-sub-section" *ngIf="!contenteditable">
+    <div  [innerHTML]="faq?.answer" >
+    </div>
+  </div>
+  </div>
+</mat-expansion-panel>
+</div>

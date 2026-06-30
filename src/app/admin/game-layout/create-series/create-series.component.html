@@ -1,0 +1,37 @@
+<div class="main-container">
+    <mat-toolbar class="small-toolbar" color="primary">
+      {{ seriesDetails.edit_mode ? ( 'rename_a_games_series' | translate) : ( 'create_game_series' | translate)}}
+    </mat-toolbar>
+    <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+    <section class="add-series-content" [ngClass]="{'disabled-style': is_loading}">
+      <form #addSeries="ngForm">
+        <div class="container">
+          <div class="input-text">
+            <input type="text" class="holder form-inputs" placeholder="{{'enter_series_name' | translate}}"
+              name="series_name" (input)="seriesChanged()" [(ngModel)]="series.series_name" maxlength="50"
+              minlength="1" appValidateInput required>
+            <mat-error class="error-msg" *ngIf="seriesExist">
+              {{'series_already_exists' | translate}}
+            </mat-error>
+          </div>
+          <div class="button-row">
+            <div class="btn-right">
+              <button type="button" mat-button class="cancel-button" tabindex="-1"
+                (click)="cancel()">{{'cancel_uppercase' | translate}}</button>
+            </div>
+            <div>          
+              <button type="button" mat-button class="next-button" tabindex="-1" (click)="nextScreen()"
+                [disabled]="!addSeries.valid || !addSeries.dirty || seriesExist"
+                *ngIf="!seriesDetails.edit_mode" >{{'next_uppercase' | translate}}</button>
+            </div>
+            <div>          
+              <button type="button" mat-button class="next-button" tabindex="-1" (click)="updateSeries()"
+                [disabled]="!addSeries.valid || !addSeries.dirty || seriesExist"
+                *ngIf="seriesDetails.edit_mode">{{'save_uppercase' | translate}}</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </section>
+  </div>
+  

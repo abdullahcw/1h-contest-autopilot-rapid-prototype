@@ -1,0 +1,439 @@
+import { Injectable } from '@angular/core';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpResponse } from '@angular/common/http';
+import { of } from 'rxjs';
+import { delay } from 'rxjs/operators';
+import { ContestFactory } from '../faker/contest.factory';
+import { GameFactory } from '../faker/game.factory';
+
+@Injectable({ providedIn: 'root' })
+export class FakerInterceptor implements HttpInterceptor {
+  private contests = ContestFactory.list(16);
+  private games = GameFactory.list(20);
+  private nextId = 200;
+  private slgAssignments: Record<string, any[]> = {};
+
+  intercept(req: HttpRequest<any>, next: HttpHandler) {
+    const url = req.url;
+    const body = req.body || {};
+    const ok = (data: any) => of(new HttpResponse({ status: 200, body: { success: true, message_code: 0, data } })).pipe(delay(0));
+
+    // ── Auth / user ──────────────────────────────────────────────────────────
+    if (url.includes('users/get_user_information') || url.includes('get_user_info'))
+      return ok({ manager_id: 42, first_name: 'John', last_name: 'Doe', email: 'john.doe@1huddle.co', access_type: 'A', company_id: 1 });
+    if (url.includes('auth/get_permissions'))
+      return ok({ actions_permitted: {} });
+    if (url.includes('resources/config'))
+      return ok({});
+
+    // ── Games ─────────────────────────────────────────────────────────────────
+    if (url.includes('game/get_icon_game_list'))
+      return ok({ game_icon: [] });
+    if (url.includes('game/retrieve_games') || url.includes('game/retrieve_game'))
+      return ok({ game_list: this.games, total_game: this.games.length, pin_game_limit_reached: this.games.filter(g => g.is_pinned).length >= 6 });
+
+    // GET pinned games — returns live list
+    if (url.includes('game/get_pinned_games'))
+      return ok({ pinned_games: this.games.filter(g => g.is_pinned) });
+
+    // PIN / UNPIN — stateful mutation, enforces 6-game limit
+    if (url.includes('pinned_games/pin_unpin')) {
+      const gameId = body?.game_id;
+      const isPinned = body?.is_pinned;
+      if (isPinned && this.games.filter(g => g.is_pinned).length >= 6)
+        return of(new HttpResponse({ status: 200, body: { success: false, message_code: 'pin_game_limit_reached', data: null } })).pipe(delay(0));
+      const game = this.games.find(g => g.game_id === gameId);
+      if (game) { game.is_pinned = isPinned; }
+      return ok({ pinned_games: this.games.filter(g => g.is_pinned) });
+    }
+    if (url.includes('game/game_categories') || url.includes('game_categories'))
+      return ok({ game_category_list: [] });
+    if (url.includes('manager/retrieve_game_owners') || url.includes('retrieve_game_owners'))
+      return ok({ owner_list: [{ manager_id: 42, owner_id: 42, first_name: 'John', last_name: 'Doe' }] });
+    if (url.includes('get/help/videos') || url.includes('GET_VIDEOS'))
+      return ok({ videos: ['', '', '', '', '', '', '', '', '', ''] });
+    if (url.includes('game_schedule/get_limits'))
+      return ok({ game_schedule_list: [] });
+    if (url.includes('game_schedule/get_custom_managers'))
+      return ok({ manager_list: [{ manager_id: 42, first_name: 'John', last_name: 'Doe' }] });
+    // MOVE GAME STATE — stateful mutation
+    if (url.includes('game/update_game_state')) {
+      const g = this.games.find(g => g.game_id === body?.game_id);
+      if (g) {
+        g.game_state = body?.game_state;
+        if (body?.game_mode) { g.game_mode = body.game_mode; }
+        if (body?.game_state === 'LIVE') { g.game_mode = g.game_mode || 'CONTEST'; }
+      }
+      return ok({ game_state: body?.game_state });
+    }
+
+    // COPY GAME — stateful
+    if (url.includes('game/copy_game')) {
+      const src = this.games.find(g => g.game_id === body?.game_id) || this.games[0];
+      const id = this.nextId++;
+      const clone = { ...src, game_id: id, game_name: src.game_name + ' (Copy)', game_state: 'DRAFT', is_pinned: false, polling_identifier: `poll-${id}` };
+      this.games.unshift(clone);
+      return ok({ game_id: id, game_name: clone.game_name, polling_identifier: clone.polling_identifier });
+    }
+
+    // ADD GAME — stateful: push new game, return full game object
+    if (url.includes('game/add')) {
+      const id = this.nextId++;
+      const newGame: any = {
+        game_id: id, company_id: body?.company_id || 1,
+        game_name: '', game_state: 'DRAFT', game_type: body?.game_type || 1,
+        game_logo: '', game_category_id: 0, game_category_name: '',
+        is_pinned: false, owner_id: 42, polling_identifier: null,
+        is_default_game_category: false,
+      };
+      this.games.unshift(newGame);
+      return ok(newGame);
+    }
+
+    // UPDATE GAME — stateful: mutate matching game
+    if (url.includes('game/update')) {
+      const g = this.games.find(g => g.game_id === (body?.game_id || body?.game_id));
+      if (g) { Object.assign(g, body); }
+      return ok(null);
+    }
+
+    // DELETE GAME — stateful
+    if (url.includes('game/delete')) {
+      const gid = +(req.params.get('game_id') || body?.game_id);
+      this.games = this.games.filter(g => g.game_id !== gid);
+      return ok(null);
+    }
+
+    // ARCHIVE / UNARCHIVE — stateful
+    if (url.includes('game/archive')) {
+      const g = this.games.find(g => g.game_id === body?.game_id);
+      if (g) { g.game_state = 'ARCHIVED'; }
+      return ok(null);
+    }
+    if (url.includes('game/unarchive')) {
+      const g = this.games.find(g => g.game_id === body?.game_id);
+      if (g) { g.game_state = 'DRAFT'; }
+      return ok(null);
+    }
+
+    if (url.includes('game/pin'))
+      return ok(null);
+    if (url.includes('game_schedule/add_limits') || url.includes('game_schedule/edit_limits') ||
+        url.includes('game_schedule/delete_limits'))
+      return ok(null);
+
+    // VALIDATE GAME READINESS
+    if (url.includes('game/validate_game_readyness') || url.includes('game/validate_game_readiness'))
+      return ok({ is_ready: true, question_count: 5, error_list: [] });
+
+    // QUESTION CATEGORIES (must be before generic game_categories)
+    if (url.includes('game/game_question_categories'))
+      return ok({ question_categories: [] });
+
+    // CATEGORY CRUD (question categories & game categories share same URL patterns)
+    if (url.includes('category/add_category'))
+      return ok({ category_id: this.nextId++ });
+    if (url.includes('category/delete'))
+      return ok(null);
+    if (url.includes('category/update_category'))
+      return ok(null);
+    if (url.includes('category/move_questions'))
+      return ok(null);
+    if (url.includes('category/copy_questions_progress'))
+      return ok({ progress: 100 });
+    if (url.includes('category/copy_questions'))
+      return ok({ polling_identifier: `poll-${this.nextId++}` });
+
+    // QUESTION TIME/POINTS RESET
+    if (url.includes('question/reset_questions_points_and_time'))
+      return ok(null);
+
+    // MLG ADD — stub (multiplayer game builder)
+    if (url.includes('mlg/add'))
+      return ok({ mlg_id: this.nextId++, game_name: '', game_state: 'DRAFT', company_id: body?.company_id || 1 });
+
+    // Game detail / editor pages — return flat data; component reads res.data.question_categories
+    if (url.includes('game/game_details') || url.includes('retrieve_game_details')) {
+      const gid = req.params.get('game_id');
+      const found = gid ? this.games.find(g => String(g.game_id) === String(gid)) || this.games[0] : this.games[0];
+      return ok({ ...found, question_categories: (found as any).question_categories || [], pin_game_limit_reached: this.games.filter(g => g.is_pinned).length >= 6 });
+    }
+    if (url.includes('question/retrieve_question'))
+      return ok({ question_list: [], total_question: 0 });
+    if (url.includes('game/get_localisation_progress'))
+      return ok({ progress: 100, is_complete: true });
+    if (url.includes('game/get_lang_preference'))
+      return ok({ lang_id: 1, lang_name: 'English' });
+
+    // ── SLG (Schedule Game) — stateful per-game assignment storage ───────────
+    if (url.includes('slg/retrieve_game_limit')) {
+      if (req.params.has('game_id')) {
+        const gid = req.params.get('game_id');
+        return ok({ recipients: this.slgAssignments[gid] || [] });
+      }
+      return ok({ game_limit: 100, used_limit: this.games.length });
+    }
+    if (url.includes('slg/add_game_limit')) {
+      const gid = String(body?.game_id);
+      if (!this.slgAssignments[gid]) { this.slgAssignments[gid] = []; }
+      const recipientsIn: any[] = body?.recipients || [];
+      const lastId = `slg-${this.nextId}`;
+      recipientsIn.forEach((r: any) => {
+        const aid = `slg-${this.nextId++}`;
+        this.slgAssignments[gid].push({
+          assignment_id: aid,
+          attempt_details: { start_date: r.start_date, end_date: r.end_date, max_attempts: r.max_attempts, attempts_type: r.attempts_type },
+          players: r.players || [],
+          recipient_type: r.recipient_type || 'FIELDS_BASED',
+        });
+      });
+      return ok({ assignment_id: lastId });
+    }
+    if (url.includes('slg/edit_game_limit')) {
+      const gid = String(body?.game_id);
+      const assignments = this.slgAssignments[gid] || [];
+      const aid = body?.assignment_id;
+      const idx = assignments.findIndex((a: any) => a.assignment_id === aid);
+      const recipientsIn: any[] = body?.recipients || [];
+      if (idx >= 0 && recipientsIn.length) {
+        const r = recipientsIn[0];
+        assignments[idx] = { ...assignments[idx],
+          attempt_details: { start_date: r.start_date, end_date: r.end_date, max_attempts: r.max_attempts, attempts_type: r.attempts_type },
+          players: r.players || assignments[idx].players,
+          recipient_type: r.recipient_type || assignments[idx].recipient_type,
+        };
+      }
+      return ok({ assignment_id: aid });
+    }
+    if (url.includes('slg/edit_game_attempts')) {
+      const gid = String(body?.game_id);
+      const aids: string[] = body?.assignment_ids || [];
+      (this.slgAssignments[gid] || []).forEach((a: any) => {
+        if (aids.includes(a.assignment_id)) {
+          a.attempt_details = { ...a.attempt_details,
+            ...(body.start_date && { start_date: body.start_date }),
+            ...(body.end_date && { end_date: body.end_date }),
+            ...(body.max_attempts && { max_attempts: body.max_attempts }),
+            ...(body.attempts_type && { attempts_type: body.attempts_type }),
+          };
+        }
+      });
+      return ok(null);
+    }
+    if (url.includes('slg/delete_game_limit')) {
+      const gid = String(body?.game_id);
+      const aids: string[] = body?.assignment_ids || [];
+      if (this.slgAssignments[gid]) {
+        this.slgAssignments[gid] = this.slgAssignments[gid].filter((a: any) => !aids.includes(a.assignment_id));
+      }
+      return ok(null);
+    }
+
+    // ── Timezones ─────────────────────────────────────────────────────────────
+    if (url.includes('get_timezone'))
+      return ok({ timezone_list: [
+        { tz_id: 'America/New_York', tz_name: 'Eastern Time', tz_unit: 'UTC-5' },
+        { tz_id: 'America/Chicago', tz_name: 'Central Time', tz_unit: 'UTC-6' },
+        { tz_id: 'America/Denver', tz_name: 'Mountain Time', tz_unit: 'UTC-7' },
+        { tz_id: 'America/Los_Angeles', tz_name: 'Pacific Time', tz_unit: 'UTC-8' },
+      ]});
+
+    // ── Locations / Departments / Audiences ───────────────────────────────────
+    if (url.includes('location/retrieve_location'))
+      return ok({ location_list: [
+        { location_id: 1, location_name: 'New York Office', manager_id: 42 },
+        { location_id: 2, location_name: 'Los Angeles Office', manager_id: 42 },
+        { location_id: 3, location_name: 'Chicago Office', manager_id: 42 },
+      ], total_location: 3 });
+
+    if (url.includes('department/get_department_by_locations') || url.includes('department/retrieve_department'))
+      return ok({ department_list: [
+        { department_id: 1, department_name: 'Sales', location_id: 1 },
+        { department_id: 2, department_name: 'Marketing', location_id: 1 },
+        { department_id: 3, department_name: 'Operations', location_id: 2 },
+      ], total_department: 3 });
+
+    if (url.includes('custom_audience/retrieve_audience'))
+      return ok({ audiences: [
+        { audience_id: 1, audience_name: 'Q2 Sales Team', audience_count: 45 },
+        { audience_id: 2, audience_name: 'New Hires 2026', audience_count: 12 },
+      ], total_count: 2 });
+
+    // ── Contests — specific patterns first (ordering matters) ─────────────────
+
+    // assignment ops (must be before contest/add)
+    if (url.includes('contest/add_assignment'))
+      return ok({ assignment_id: `fa-${body?.contest_id || 1}` });
+    if (url.includes('contest/update_assignment'))
+      return ok({ assignment_id: `fa-${body?.contest_id || 1}` });
+    if (url.includes('contest/get_assignment'))
+      return ok({ recipients: [] });
+
+    // game-in-contest operations (before contest/add_game catches contest/add)
+    if (url.includes('contest/add_game_to_contest'))
+      return ok(null);
+    if (url.includes('contest/remove_games'))
+      return ok(null);
+    if (url.includes('contest/update_games_in_contest'))
+      return ok(null);
+
+    // read-only contest sub-resources — fixed response keys
+    if (url.includes('contest/retrieve_contest_reward_category'))
+      return ok({ categories: [
+        { category_id: 1, category_name: 'Gift Cards' },
+        { category_id: 2, category_name: 'Experiences' },
+        { category_id: 3, category_name: 'Company Swag' },
+      ]});
+    if (url.includes('contest/retrieve_contest_rewards'))
+      return ok({ rewards: [
+        { reward_id: 1, reward_name: '$25 Amazon Gift Card', reward_desc: '', category_id: 1 },
+        { reward_id: 2, reward_name: '$50 Amazon Gift Card', reward_desc: '', category_id: 1 },
+        { reward_id: 3, reward_name: 'Team Lunch', reward_desc: '', category_id: 2 },
+      ]});
+    if (url.includes('contest/retrieve_contest_games'))
+      return ok({ contest_game_list: ContestFactory.games() });
+    if (url.includes('contest/get_games_for_filter'))
+      return ok({ games: this.games, total_games: this.games.length });
+
+    if (url.includes('custom_audience/audience_exists'))
+      return ok({ audience_exists: false });
+
+    // list — returns current mutable state
+    if (url.includes('contest/retrieve_contests'))
+      return ok({ contest_list: this.contests, total_contest: this.contests.length });
+
+    // details — look up by contest_id so clicking different cards shows real data
+    if (url.includes('contest/contest_details')) {
+      const id = req.params.get('contest_id');
+      const found = this.contests.find(c => String(c.contest_id) === String(id)) || this.contests[0];
+      return ok({ contest_description: { ...found, game_details: [] } });
+    }
+
+    if (url.includes('get_valid_contest_date'))
+      return ok({ valid_start_date: new Date().toISOString(), tz_id: 'America/New_York' });
+
+    // CREATE — stateful: pushes new contest, returns real id/name
+    if (url.includes('contest/add')) {
+      const id = this.nextId++;
+      const newContest: any = {
+        contest_id: id,
+        company_id: body.company_id || 1,
+        contest_name: body.contest_name || 'New Contest',
+        contest_start_date: body.contest_start_date || '',
+        contest_end_date: body.contest_end_date || '',
+        contest_state: 'DRAFT',
+        is_editable: true, is_authorized: true, can_clone: true,
+        is_autopilot: false, is_new: true,
+        owner_firstname: 'John', owner_lastname: 'Doe',
+        contest_image_url: '', tz_id: body.tz_id || 'America/New_York',
+        force_closed_on: null, polling_identifier: null,
+      };
+      this.contests.unshift(newContest);
+      return ok({ contest_id: id, contest_name: newContest.contest_name });
+    }
+
+    // DELETE — stateful: removes from array (params sent as raw query string, not HttpParams)
+    if (url.includes('contest/delete')) {
+      const match = url.match(/contest_id=(\d+)/);
+      const id = match ? +match[1] : 0;
+      this.contests = this.contests.filter(c => c.contest_id !== id);
+      return ok(null);
+    }
+
+    // MOVE TO DRAFT — stateful
+    if (url.includes('contest/ready_to_draft')) {
+      const c = this.contests.find(c => c.contest_id == body?.contest_id);
+      if (c) { c.contest_state = 'DRAFT'; }
+      return ok(null);
+    }
+
+    // FORCE CLOSE — stateful
+    if (url.includes('contest/forced_close')) {
+      const c = this.contests.find(c => c.contest_id == body?.contest_id);
+      if (c) { c.contest_state = 'CLOSED'; }
+      return ok(null);
+    }
+
+    // CLONE — stateful: push copy to top of list
+    if (url.includes('contest/copy_contest')) {
+      const src = this.contests.find(c => c.contest_id == body?.contest_id) || this.contests[0];
+      const id = this.nextId++;
+      const clone = { ...src, contest_id: id, contest_name: src.contest_name + ' (Copy)',
+        contest_state: 'DRAFT', is_new: true, polling_identifier: `poll-${id}` };
+      this.contests.unshift(clone);
+      return ok({ contest_details: clone, polling_identifier: clone.polling_identifier });
+    }
+
+    // CLONE PROGRESS — always instant complete
+    if (url.includes('mlg/copy_mlg_progress'))
+      return ok({ question_copy_progress: 100 });
+
+    // PUBLISH
+    if (url.includes('contest/publish')) {
+      const c = this.contests.find(c => c.contest_id == body?.contest_id);
+      if (c) { c.contest_state = 'READY'; }
+      return ok(null);
+    }
+
+    // generic contest updates
+    if (url.includes('contest/update'))
+      return ok(null);
+
+    // ── Company / settings ────────────────────────────────────────────────────
+    if (url.includes('company/get_company_branding'))
+      return ok({ image: [], sound: [], theme: { background_color: '#ffffff', text_color: '#000000' } });
+
+    // company_details — must be before generic retrieve_compan catch
+    if (url.includes('company/company_details'))
+      return ok({ company_details: {
+        company_id: 1, company_name: '1Huddle Demo', company_logo: '',
+        is_custom: false, is_sso_company: false, is_company_with_custom_fields: false,
+        scheduling_filters: false, paywall_status: 'ACTIVE',
+      }});
+
+    if (url.includes('retrieve_compan') || url.includes('company/get_company'))
+      return ok({ company_list: [{ company_id: 1, company_name: '1Huddle Demo', company_logo: '' }], total_companies: 1 });
+    if (url.includes('company/company_settings') || url.includes('company/settings') || url.includes('company/get_settings') || url.includes('get_company_settings'))
+      return ok({ settings: { permission: {
+        games: { has_manager_pinned: false },
+        shop_games: { has_manager_shopped: false },
+      }, role: [] } });
+
+    // custom fields — provides Location + Department options for Add Player in Create Contest
+    if (url.includes('company/get_company_custom_fields'))
+      return ok({ fields: [
+        { key_id: 'location_ids', title: 'Location', filter_key: 'location_ids', allow_multiselection: true },
+        { key_id: 'department_ids', title: 'Department', filter_key: 'department_ids', allow_multiselection: true },
+      ]});
+    if (url.includes('company/get_company_custom_field_values'))
+      return ok({ values: [] });
+
+    if (url.includes('game_schedule/get_fields'))
+      return ok({ fields: [] });
+
+    if (url.includes('category/retrieve_game_category'))
+      return ok({ game_category_list: [] });
+    if (url.includes('pathways/get'))
+      return ok({ pathways: [] });
+
+    // ── Managers / locations / dashboard ─────────────────────────────────────
+    if (url.includes('manager/get_managers_locations_and_departments'))
+      return ok({ location_list: [], department_list: [], manager_list: [] });
+    if (url.includes('reportee/get_reportee_hierarchy'))
+      return ok({ hierarchy: [] });
+    // ── Dashboard pinned games (Feature #5) ──────────────────────────────────
+    if (url.includes('team/get_company_pinned_games'))
+      return ok({ company_pinned_games: {
+        overall_win_rate: 72,
+        company_pinned_game_list: this.games.filter(g => g.is_pinned).map((g, i) => ({
+          ...g, position: i + 1, win_rate: g.win_rate || Math.round(50 + Math.random() * 40),
+        })),
+      }});
+    if (url.includes('team/save_company_pinned_game'))
+      return ok(null);
+
+    if (url.includes('report/'))
+      return ok({ data: [], total: 0, game_list: [], player_list: [] });
+
+    return next.handle(req);
+  }
+}

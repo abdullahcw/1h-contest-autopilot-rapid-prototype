@@ -1,0 +1,46 @@
+<div class="modal-header">
+  <h1 class="heading">Confirmation</h1>
+</div>
+<div class="modal-body">
+  <form #addEditQuestion="ngForm">
+
+    <div class="question-container">
+      <textarea class="question-title" [(ngModel)]="question.question_title" name="question_title" mdInput placeholder="Question"
+        rows="3">{{question.question_title}}</textarea>
+      <div class="question-footer">
+        <div class="image-container" *ngIf="question?.question_image || question?.is_editing">
+          <mat-icon (click)="question?.question_image ? openImage(question) : imgInput.click()"> {{question?.question_image
+            ? 'image' : 'add_a_photo'}}</mat-icon>
+        </div>
+        <div class="time-container align-center">
+          <mat-icon>timer</mat-icon>
+          <select matNativeControl [(ngModel)]="question.time" class="select" name="question_timer">
+            <option *ngFor="let timer_option of timer_options">{{timer_option}}</option>
+          </select>
+        </div>
+        <div class="points-container align-center">
+          <mat-icon>monetization_on</mat-icon>
+          <select matNativeControl [(ngModel)]="question.points" class="select" name="question_points">
+            <option value="0" selected>Random</option>
+            <option *ngFor="let points_option of points_options">{{points_option}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="answer-options">
+      <span *ngFor="let option of question.answer.options;last as isLast">
+        <div class="answer-option align-center">
+          <mat-checkbox class="spacing" color="primary" name="is_correct" [(ngModel)]="option.is_correct" [disabled]="!question.is_editing"></mat-checkbox>
+          <div [ngClass]="{'is-correct': (option.is_correct === true)}" style="width: 100%;">
+            <input type="text" name="answer" class="holder form-inputs" maxlength="150" placeholder="Answer Option" [(ngModel)]="option.option">
+          </div>
+        </div>
+      </span>
+    </div>
+
+  </form>
+</div>
+<div class="modal-footer">
+  <button mat-flat-button class="form-control confirmMessage" color="primary" (click)="closeModal(false)" tabindex="-1">CANCEL</button>
+  <button mat-flat-button class="form-control confirmMessage" color="primary" tabindex="-1" (click)="closeModal(true)">PROCEED</button>
+</div>

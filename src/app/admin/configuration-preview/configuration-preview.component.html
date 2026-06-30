@@ -1,0 +1,66 @@
+<div class="uploader-container">
+  <mat-toolbar class="small-toolbar" color="primary">
+    <div>
+      {{'contest_created' | translate}}
+    </div>
+
+  </mat-toolbar>
+  <section class="content">
+    <div class="container">
+
+      <div class="content-validation">
+        <div style="padding: 5px 0;">
+          <span class="title">{{'contest_created_congrats_title' | translate}}</span>
+        </div>
+        <ul class="preview-bullet-list">
+          <li>
+            <div class="config-message">
+              <span> {{'date' | translate}}:</span>{{data?.contest_start_date | date:'M/d/yyyy'}}
+              {{'to' | translate | lowercase}}
+              {{data?.contest_end_date | date:'M/d/yyyy'}}
+            </div>
+          </li>
+          <li>
+            <div class="config-message">
+              <span> {{'games' | translate}}:</span> {{data?.game_details?.length}}
+            </div>
+          </li>
+          <li>
+            <div class="config-message">
+              <span> {{'reward' | translate}}:</span>
+              <p>{{data?.rewards?.reward_desc}} </p>
+            </div>
+          </li>
+          <li>
+            <div class="config-message">
+              <span> {{'trophy' | translate}}</span>
+              <mat-icon>done</mat-icon>
+            </div>
+          </li>
+          <li>
+            <div class="config-message">
+              <span> {{'location' | translate}}</span>
+              <mat-icon>done</mat-icon>
+            </div>
+          </li>
+          <li>
+            <div class="config-message">
+              <span> {{'department' | translate}}</span>
+              <mat-icon>done</mat-icon>
+            </div>
+          </li>
+
+        </ul>
+      </div>
+
+      <mat-card-actions class="footer">
+        <div>
+          <button mat-button type="submit" color="primary" tabindex="-1" (click)="done()">
+            {{'ok_uppercase' | translate}}
+          </button>
+        </div>
+      </mat-card-actions>
+    </div>
+  </section>
+
+</div>

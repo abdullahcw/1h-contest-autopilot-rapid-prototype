@@ -1,0 +1,49 @@
+<div class="wrapper">
+    <div class="top-header">
+        <mat-toolbar class="small-toolbar" color="primary">
+            <div class="title">{{ 'Translations Status' | translate}}</div>
+            <div class="closeIcon">
+                <mat-icon (click)="cancel()">close</mat-icon>
+            </div>
+        </mat-toolbar>
+
+        <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+        <div class="progress-wrapper">
+            <span>% of Game Translated</span>
+            <mat-progress-bar class="progress" mode="determinate" value="{{quesData?.completed}}"></mat-progress-bar>
+            <span>{{quesData?.completed}}%</span>
+        </div>
+        <div class="spinner-wrpper" *ngIf="!is_loading">
+            <div class="basic-container" *ngFor="let lang  of quesData?.lang_progress; let i = index">
+                <div class="spinner-container">
+                    <div class="spinner-background">
+                        <img [src]="lang.img">
+                    </div>
+                    <mat-progress-spinner #spinner color="primary" diameter="35" mode="determinate"
+                        value="{{lang.completed}}">
+                    </mat-progress-spinner>
+                </div>
+                <div class="line" *ngIf="(quesData.total_lang - 1) > i "></div>
+            </div>
+        </div>
+
+        <div class="header">
+            <span class="left-header">{{ 'Languages' | translate}}</span>
+            <span class="right-header">{{ 'Game Questions (By Card Numbers)' | translate}}</span>
+        </div>
+    </div>
+    <div class="content-wrapper">
+        <div class="content" *ngFor="let lang  of quesData?.lang_progress">
+            <div class="left-content">
+                <span>{{ lang.text}} </span>
+            </div>
+            <div class="right-content-wraper">
+                <div *ngFor="let data of lang.question_progress" class="right-content">
+                    <span [class]="data.is_complete ? 'content-color-complted' : 'content-color-incomplted'"
+                    matTooltip="{{data.is_complete ? 'Complete' : 'Incomplete'}}" [matTooltipShowDelay]="500"  matTooltipPosition="above">
+                        {{data.card_number}} </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

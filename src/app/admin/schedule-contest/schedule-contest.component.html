@@ -1,0 +1,47 @@
+<section class="master-wrapper">
+  <mat-toolbar class="small-toolbar" color="primary">
+    <div *ngIf="contestService.isContestEditable">{{'add_players' | translate}}</div>
+    <div *ngIf="!contestService.isContestEditable">{{'players' | translate}}</div>
+    <mat-icon class="cancel-icon" (click)="cancel()" *ngIf="!contestService.isContestEditable">close</mat-icon>
+  </mat-toolbar>
+  <div class="wrapper" [ngClass]="{'disabled-style': is_loading }" *ngIf="allowViewAssignment()">
+    <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+
+    <div class="main-container">
+      <div class="search-container">
+        <div class="label-container">
+          <label *ngIf="contestService.isContestEditable">{{'select_players_for_contest' | translate}}</label>
+          <label *ngIf="!contestService.isContestEditable">{{'players_for_contest' | translate}}</label>
+          <label class="updating-message" *ngIf="is_updating">{{ 'saving_changes' | translate }}</label>
+        </div>
+        <div class="search-wrapper">
+          <app-search class="filter-chip name" [ngClass]="{'search-input-hide': !contestService.isContestEditable}"
+            placeholder_text="{{ 'add' | translate}}" [shouldAllowMultiline]="true" style="width:100%" [isFossilCustomField]="true"
+            [filter_options]="filter_options" [dataSource]="menuList" [viewMode]="!contestService.isContestEditable"
+            (getDataSourceWithFilterDetails)="getDataSource($event)" [applied_filters]="appliedFilters"
+            (getDataSourceWithSearchKey)="getDataSourceWithSearchKey($event)" [shouldAllowAddMore]="contestService.isContestEditable"
+            (filtersUpdated)="refreshListOnFilterChange($event)" [context]="context"></app-search>
+        </div>
+      </div>
+    </div>
+
+    <div class="scheduling-filters" *ngIf="storedCompany.scheduling_filters">
+      <app-scheduling-filters (scheduling_filters_value)="radioBtnChanged($event)" [isCustomAudianceFilterApplied]="isCustomAudianceFilterApplied" [state]="contestService.contest.contest_state" [isEditable]="contestService.isContestEditable" [radioBtnValue]="disjunction_filter_value"></app-scheduling-filters>
+    </div>
+    
+    <div class="button-row" *ngIf="contestService.isContestEditable">
+      <div class="btn-right">
+        <button type="button" mat-button class="cancel-button" tabindex="-1"
+          (click)="cancel()">{{'cancel_uppercase' | translate}}</button>
+      </div>
+      <div>
+        <button type="submit" mat-button (click)="save()" [disabled]="shouldDisable()">
+          {{'done_uppercase' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="not-assigned" *ngIf="!allowViewAssignment()">
+    {{'no_players_assigned' | translate}}
+  </div>
+</section>

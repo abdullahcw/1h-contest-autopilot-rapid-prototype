@@ -1,0 +1,55 @@
+<section class="change_game_postion">
+
+  <mat-toolbar class="change_game_postion_toolbar" color="primary">
+    {{'chang_game_position' | translate}}
+    <div class="closeIcon">
+      <i class="material-icons" (click)="close()">
+        close
+      </i>
+    </div>
+  </mat-toolbar>
+  <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+  <div class="game_positioning">
+    <div class="positioning_text">
+      <span>{{'game'| translate}}:</span>
+      <span >&nbsp;{{ cardData?.game_name }}</span>
+    </div>
+
+    <div class="positioning_text padding_top">
+      <span>{{'current_position'| translate}}:</span>
+      <span
+        *ngIf="!reorderingGames">&nbsp;
+        <app-numbers [value]="cardData?.mlg_id ? cardData?.level : cardData?.shop_current_position"></app-numbers>
+      </span>
+      <span *ngIf="reorderingGames">&nbsp;
+        <app-numbers [value]="cardData?.position"></app-numbers>
+      </span>
+    </div>
+
+    <div class="positioning_text position_padding_top position_input_wrapper">
+      <span>{{'move_to'| translate}}:</span>
+      <div class="position_number">&nbsp;
+        <form #position="ngForm">
+          <input type="text" class="positionNumber" (focus)="errorMessage = false" (keypress)="numberOnly($event)"
+            [(ngModel)]="changed_position" name="position" pattern="^[0-9]*$" minlength="1" appValidateInput required>
+        </form>
+        <span>&nbsp;/</span>
+         <span>
+            &nbsp;
+            <app-numbers [value]="total_count"></app-numbers>
+          </span>
+      </div>
+    </div>
+    <span class="error_msg_styling" *ngIf="errorMessage">{{'game_position_error' | translate}}</span>
+  </div>
+  <div class="button-row">
+    <div class="btn-right">
+      <button mat-button class="cancel-button" (click)="close()"
+        tabindex="-1">{{'cancel_uppercase' | translate }}</button>
+    </div>
+    <div>
+      <button mat-button [disabled]="!position.valid || !position.dirty"
+        (click)="saveChanges()">{{'save_uppercase' | translate}}</button>
+    </div>
+  </div>
+</section>

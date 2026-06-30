@@ -1,0 +1,73 @@
+<div class="main_container">
+  <div class="wrapper">
+    <mat-card class="container-card">
+      <mat-card-header>
+        <mat-toolbar class="toolbar">
+          <mat-toolbar-row>
+            <span class="title"><span
+                class="">{{ 'showing_all_Ips' | translate}}</span></span>
+            <span class="spacer"></span>
+            <button class="add-group addEntity"
+              matTooltip="{{'add_ips' | translate}}" matTooltipPosition="below"
+              (click)="addNewipDetails()" mat-fab>
+              <mat-icon>add</mat-icon>
+            </button>
+          </mat-toolbar-row>
+          <mat-toolbar-row>
+            <div (click)="editAssignment(ipAllDetails)" class="ip-assignment">
+              <app-search class="filter-chip name" [context]="context" 
+                placeholder_text="{{ 'add_exclusion' | translate}}"
+                style="width:100%; pointer-events: none;"
+                [filter_options]="filter_options" [dataSource]="menuList"
+                [applied_filters]="appliedFilters">
+              </app-search>
+            </div>
+          </mat-toolbar-row>
+        </mat-toolbar>
+
+      </mat-card-header>
+      <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+      <mat-card-content>
+        <div class="no_messages" *ngIf="!dataSource?.data.length">
+          <p>{{is_loading ? ('please_wait' | translate) : ('no_record_found' | translate)}}</p>
+        </div>
+        <table aria-describedby="" mat-table [dataSource]="dataSource" class="responsive-table" matSort
+          (matSortChange)="sortData($event)" matSortActive="ipDetails" matSortDirection="asc" matSortDisableClear
+          *ngIf="dataSource?.data?.length" [ngClass]="{'disabled-style': is_loading}">
+
+          <ng-container matColumnDef="ip_address">
+            <th id="" mat-header-cell *matHeaderCellDef class="ip-address">{{'ip_address' | translate}} </th>
+            <td mat-cell *matCellDef="let ipDetails"><label>{{'ip_address' | translate}}</label>
+              <p>{{ipDetails?.ip_address}}</p>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="ip_desc">
+            <th id="" mat-header-cell *matHeaderCellDef class="ip-desc">{{'desc' | translate}} </th>
+            <td mat-cell *matCellDef="let ipDetails"><label>{{'desc' | translate}}</label>
+              <span class="span-desc" matTooltip="{{ipDetails?.ip_desc}}" matTooltip="{{ipDetails?.ip_desc}}" matTooltipPosition="below"> {{ipDetails?.ip_desc}}</span>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="Action">
+            <th mat-header-cell *matHeaderCellDef class="action-cell"></th>
+            <td mat-cell *matCellDef="let ipDetails" (click)="$event.stopPropagation();"><label>{{'Action' | translate}}</label>
+              <mat-icon class="toolbar-icon-color"
+              matTooltip="{{'delete_ip_address' | translate}}" matTooltipPosition="left" (click)="confirmDeletion(ipDetails)">
+              delete</mat-icon>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header "></tr>
+          <tr mat-row *matRowDef="let ipDetails; columns: displayedColumns;"
+            (click)="uodateIpDetails(ipDetails)"
+            [ngClass]="{'selected-row': (selection && selection.selected.indexOf(ipDetails) > -1) }">
+          </tr>
+        </table>
+        <span class="spacer"></span>
+      </mat-card-content>
+      <mat-card-actions>
+        <mat-paginator #paginator [length]="totalIps" [pageSize]="noOfItemsPerPage" [pageSizeOptions]="pageSizeOptions"
+          (page)="getipDetailssOverPagination($event)">
+        </mat-paginator>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

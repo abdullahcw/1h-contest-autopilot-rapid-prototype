@@ -1,0 +1,483 @@
+@import "../../../styles.scss";
+@import "../../../assets/main.scss";
+
+.search-input {
+  border: 1px solid transparent !important;
+}
+
+.wrapper {
+  padding: 20px 10px 0;
+  height: $header_height;
+  max-height: $header_height;
+  position: relative;
+
+  @include media-breakpoint-down(sm) {
+    padding: 10px 0px 0;
+  }
+
+  .container-card {
+    margin: 0 40px;
+    height: $header_height;
+    max-height: $header_height;
+    padding: 0;
+    @include i-pad-design-with-btn;
+
+    @include media-breakpoint-down(sm) {
+      margin: 0 10px;
+    }
+
+    .search-container {
+      margin-left: 15px;
+    }
+
+    .toolbar {
+      background-color: $secondary_bg_color;
+      border-bottom: 1px solid $mat_border_color !important;
+      font-size: $text_size_med;
+      width: 100%;
+
+      .mat-form-field {
+        text-align: right;
+      }
+
+      .search-toolbar-row {
+        @include media-breakpoint-down(xs) {
+          padding-right: 2px;
+        }
+
+        .range {
+          max-width: 100px;
+          height: 60px;
+
+          .calender-icon {
+            display: none;
+
+            @include media-breakpoint-down(xs) {
+              display: block !important;
+              position: absolute;
+              top: -8px;
+              left: -2px;
+            }
+          }
+
+          @include media-breakpoint-down(xs) {
+            max-width: 34px;
+            padding: 0 8px;
+            height: 50px;
+            margin-top: 2px;
+            box-shadow: -2px 1px 2px 0px rgba(0, 0, 0, 0.28), -2px 0px 2px 2px rgba(0, 0, 0, 0),
+              0px 0px 0px 0px rgba(0, 0, 0, 0.12);
+
+            ::ng-deep .mat-select-value {
+              display: none;
+            }
+
+            ::ng-deep .mat-select-arrow-wrapper {
+              display: none !important;
+            }
+          }
+        }
+
+        .filter-chip {
+          margin-left: 8px;
+        }
+      }
+    }
+
+    .mat-card-header {
+      .mat-card-header-text {
+        display: none !important;
+      }
+
+      .mat-toolbar {
+        padding: 0;
+        padding-left: 0px;
+        padding-right: 0px;
+        border: none;
+
+        .mat-toolbar-row {
+          height: $row_height;
+          border-bottom: 1px solid $mat_border_color;
+          justify-content: space-between;
+
+          .toolbar-icon-color {
+            cursor: pointer;
+            color: $disable_color;
+          }
+
+          .filter-chip {
+            margin-left: 16px;
+          }
+
+          &:last-child {
+            border-bottom: 1px solid transparent;
+            border-top: 1px solid transparent;
+          }
+
+          .title {
+            margin-left: 14px;
+
+            font: {
+              family: Roboto_Regular;
+              size: $text_size_med;
+            }
+
+            .name {
+              font: {
+                family: Roboto_Medium;
+                size: $default_font_size;
+              }
+
+              color: $textMidGrey;
+            }
+
+            span {
+              color: $textColor;
+            }
+          }
+
+          .add-contest {
+            width: 50px;
+            height: 50px;
+            background-color: $add_icon_background;
+            color: $add_icon;
+            padding: 5px 20px;
+            border-radius: 30px;
+
+            font-size: $default_font_size;
+            position: absolute;
+            left: -23px;
+            top: 24px;
+            @extend .center-align;
+            transition: all 1s;
+          }
+        }
+      }
+    }
+
+    .mat-card-content {
+      width: 100%;
+      min-height: $company_content_height;
+      height: $company_content_height;
+      max-height: $company_content_height;
+      overflow: auto;
+      margin: 0;
+      border-bottom: 1px solid $mat_border_color;
+
+      font-family: Roboto_Regular;
+      font-size: $text_size_med;
+      padding: 20px;
+
+      .no_messages {
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        padding-top: 20px;
+
+        font: {
+          family: Roboto_Regular;
+          size: $default_font_size;
+        }
+
+        @extend .center-align;
+      }
+      .click-disabled{
+        pointer-events: none;
+      }
+      .contest-list-container {
+        .contest-container {
+          cursor: pointer;
+          border-radius: 10px;
+          box-shadow: 0 1px 1px 0 #ababab, 0 1px 10px 0 #d0d0d0, 0 3px 5px -1px #ffffff;
+          transition: transform 0.2s;
+
+          .contest-mode {
+            z-index: 1;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            border-radius: 20px;
+            padding: 2px 8px 1px 8px;
+            font-size: 9px;
+            color: #fff;
+            font-family: Roboto_Regular;
+            box-shadow: 1px 1px 1px 0px #8080807d;
+            background: red;
+          }
+
+          .editable-position {
+            right: 30px;
+          }
+
+          .draft-color {
+            background: #c4c4c4;
+          }
+
+          .ready-color {
+            background: #1ba0f4;
+          }
+
+          .live-color {
+            background: #59d721;
+          }
+
+          .closed-color {
+            background: red;
+          }
+
+          .contest-option {
+            display: block;
+            z-index: 1;
+            position: absolute;
+            top: 0;
+            right: 0;
+
+            .more-options-icon {
+              line-height: 0;
+            }
+          }
+
+          .image-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+
+            .contest-image {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+          }
+
+          .contestCopy {
+            top: 10px;
+            position: absolute;
+            right: 10px;
+            font-size: 12px;
+            font-style: italic;
+            z-index: 1;
+          }
+  
+          .contestModeSelected {
+            background: #6edc0b;
+            color: #fff;
+            border-radius: 20px;
+            padding: 0px 8px;
+  
+            @include media-breakpoint-down(md) {
+              font-size: 9px;
+            }
+          }
+
+          .contest-wrapper {
+            width: 100%;
+            height: 100%;
+
+            .contest-stats {
+              height: 100%;
+              width: 100%;
+              z-index: 0;
+              position: relative;
+              color: $secondary_bg_color;
+              display: flex;
+              flex-direction: column;
+              flex: 2;
+
+              .stats-section {
+                display: flex;
+                flex: 1;
+                justify-content: space-between;
+
+                .status-indicator {
+                  background: red;
+                  color: $secondary_bg_color;
+                  border-radius: 10px;
+                  width: 40px;
+                  height: 18px;
+                  line-height: 18px;
+                  text-align: center;
+                  justify-content: flex-start;
+                  margin: 10px auto 0 10px;
+
+                  font: {
+                    family: Roboto_Bold;
+                    size: 10px;
+                  }
+                }
+              }
+
+              .info-section {
+                display: flex;
+                flex: 0.6;
+                justify-content: space-between;
+                background: #00000080;
+
+                .contest-info {
+                  color: $secondary_bg_color;
+                  white-space: nowrap;
+                  display: flex;
+                  flex-direction: column;
+                  flex: 2;
+                  margin: 6px auto 0 8px;
+                  overflow: hidden;
+
+                  .contest-title {
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+
+                    font: {
+                      family: Roboto_Bold;
+                      size: 14px;
+                    }
+                  }
+
+                  .contest-end-date {
+                    overflow: hidden;
+                    white-space: nowrap;
+                    width: 50%;
+
+                    font: {
+                      family: Roboto_Regular;
+                      size: 11px;
+                    }
+                  }
+
+                  .contest-owner {
+                    width: 50%;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+
+                    font: {
+                      family: Roboto_Regular;
+                      size: 11px;
+                    }
+                  }
+                }
+
+                .trophy {
+                  display: flex;
+                  align-items: flex-end;
+                  margin: 0 10px 10px auto;
+
+                  .reward-info {
+                    border-radius: 16px;
+                    min-width: 45px;
+                    min-height: 22px;
+                    display: flex;
+                    flex-direction: column;
+                    background: black;
+                    color: #ffffff;
+                    text-align: center;
+                    justify-content: center;
+                    .reward-title {
+                      font: {
+                        family: Roboto_Bold;
+                        size: 8px;
+                      }
+                    }
+
+                    .reward {
+                      overflow: hidden;
+
+                      font: {
+                        family: Roboto_Bold;
+                        size: 10px;
+                      }
+                    }
+                  }
+
+                  .trophy-icon {
+                    display: flex;
+                    align-items: center;
+                    height: 24px;
+                    width: 24px;
+                    border-radius: 50%;
+                    background: $brand_color;
+
+                    .assets-icon {
+                      fill: $secondary_bg_color;
+                      margin-left: 6px;
+                      height: 12px;
+                      display: flex;
+                      width: 12px;
+                    }
+                  }
+                }
+
+                .text_wrapper {
+                  display: flex;
+                  flex-direction: row;
+                  width: 100%;
+                }
+
+                .divider {
+                  width: 2px;
+                  height: 12px;
+                  background: #d7d7d7;
+                  margin: 2px 6px 0 0;
+                }
+              }
+            }
+          }
+        }
+
+        .contest-container:hover,
+        .tile-hovered {
+          transform: scale(1.06);
+          box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05), 0 1px 10px 0 rgba(0, 0, 0, 0.05),
+            0 3px 6px 3px rgba(0, 0, 0, 0.12) !important;
+        }
+      }
+    }
+
+    .mat-card-actions {
+      margin: 0;
+      padding: 0;
+
+      .mat-paginator {
+        width: 95%;
+        margin: 0 auto;
+
+        .mat-paginator-page-size {
+          flex: 1;
+        }
+      }
+    }
+  }
+}
+
+.spacer {
+  flex: 1;
+}
+
+.contest-container,
+.mat-icon-button,
+.mat-menu {
+  transition: transform 0.2s;
+  /* Animation */
+  box-shadow: none;
+}
+
+.tileFocus {
+  transform: scale(1.06);
+  background: red;
+
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05), 0 1px 10px 0 rgba(0, 0, 0, 0.05), 0 3px 6px 3px rgba(0, 0, 0, 0.12) !important;
+}
+
+.tileCopying {
+  border: 1px solid #6edc0b !important;
+  animation: blinker 1s linear infinite;
+  padding: 0;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0.5;
+  }
+}

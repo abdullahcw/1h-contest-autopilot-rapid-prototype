@@ -1,0 +1,215 @@
+@import '../../../styles.scss';
+
+.main-container {
+    max-height: 95vh;
+    height: 94vh;
+    min-width: 500px;
+    position: relative;
+    overflow: hidden;
+
+    @include media-breakpoint-down(xs) {
+        max-height: 82vh;
+        height: 82vh;
+    }
+
+    @include media-breakpoint-down(sm) {
+        min-width: 260px;
+    }
+
+    .small-toolbar {
+        height: 50px;
+        font-size: 16px;
+    }
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        padding: 0 0;
+
+        .container {
+            padding: 15px 15px 0;
+            height: calc(95vh - 160px);
+
+            @include media-breakpoint-down(xs) {
+                height: calc(95vh - 250px);
+            }
+
+            .user-name {
+                display: flex;
+                flex-direction: row;
+                margin-top: 15px;
+
+                @include media-breakpoint-down(xs) {
+                    display: block;
+                }
+
+                .name-field {
+                    width: 50%;
+
+                    @include media-breakpoint-down(xs) {
+                        width: 100%;
+                    }
+                }
+
+                .spacer {
+                    margin: 5px;
+
+                    @include media-breakpoint-down(xs) {
+                        display: none;
+                    }
+                }
+            }
+
+            .company-inline-holder {
+                display: flex;
+                width: 100%;
+
+                .logo-holder {
+                    position: relative;
+                    padding: 10px 0;
+                    display: flex;
+                    margin: 0 auto;
+
+                    label {
+                        margin: 0;
+                    }
+
+                    .image-overlay {
+                        opacity: 0;
+                        position: absolute;
+                        right: 0;
+                        bottom: 10px;
+                        width: 100px;
+                        height: 100px;
+                        background: rgba(0, 0, 0, 0.67);
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        flex-direction: column;
+                        cursor: pointer;
+
+                        .edit-icon {
+                            width: 100%;
+                            height: 50%;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+
+                            mat-icon {
+                                color: $secondary_bg_color;
+                                font-size: 35px;
+                                width: 35px;
+                                height: 35px;
+                            }
+                        }
+
+                        .delete-icon {
+                            width: 100%;
+                            height: 50%;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            border-top: 1px solid white;
+
+                            mat-icon {
+                                color: $secondary_bg_color;
+                                font-size: 20px;
+                                width: 18px;
+                                height: 18px;
+                            }
+                        }
+                    }
+
+                    .company_logo {
+                        height: 100px;
+                        width: 100px;
+                        border-radius: 50%;
+                        border: 1px solid $midGrey;
+                    }
+
+                    &:hover .image-overlay {
+                        position: absolute;
+                        opacity: 1;
+                    }
+                }
+
+            }
+
+            .date-picker {
+                position: relative;
+
+                mat-datepicker-toggle {
+                    position: absolute;
+                    top: 27px;
+                    right: 0;
+                }
+            }
+
+            .department-container {
+                margin-bottom: 0px;
+            }
+
+            .multi-select {
+                width: 350px;
+            }
+        }
+
+        .footer {
+            display: flex;
+            justify-content: flex-end;
+            padding: 6px 16px;
+            background-color: $secondary_bg_color;
+            position: sticky;
+            z-index: 5;
+
+            .button-row {
+                width: 100%;
+                display: flex;
+
+                .btn-right {
+                    margin-left: auto;
+                }
+
+                .cancel-button {
+                    border: 0px;
+                    background: white;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+
+    .container>* {
+        width: 100%;
+    }
+    .sec-dept{
+        min-height: 64px;
+    }
+    .add-sec{
+        color: #3956d1;
+        font-size: 13px;
+        font-family: 'Roboto_Regular';
+        text-align: right;
+        margin-top: 5px;
+        margin-bottom: 1px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        height: 0;
+
+        .add-loc-dept{
+            width: auto;
+        }
+    }
+    .remove{
+        position: absolute;
+        right: 0;
+        top: -5px;
+    }
+    .sec-dept-spinner{
+        top: 10px;
+        background: #ffffff;
+    }
+}

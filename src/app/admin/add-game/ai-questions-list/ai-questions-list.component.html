@@ -1,0 +1,219 @@
+<div class="main-container-create-aiAssistQuestionList">
+  <section class="content" >
+    <form class="aiAssist-info" #aiAssistDetails="ngForm">
+      <div class="aiAssist-container">
+        <div class="aiAssistHeader" [ngClass]="{'disabled-style-ai-assist': is_question_adding}">
+
+        
+        <div class="categories_wrapper" *ngIf="aiAssist.categories_count > 0">
+          <div class="categorie" [ngClass]="{ 'background-color-all': selectedChip == -1}"
+            (click)="filterQuestionList(-1)">
+            {{'all_uppercase' | translate}}
+            <span class="">({{questionList.length}})
+            </span>
+          </div>
+          <div *ngFor="let cat of categories;let i = index" class="categorie" [ngStyle]="{'color': categoryColors[i],'border' : '1.2px solid categoryColors[i] !important','border-color': categoryColors[i] ,
+          'background-color': selectedChip == i ? categoryColors[i] : '#fff'}"
+            [ngClass]="{'chip-active': selectedChip == i}" (click)="filterQuestionList(i)">
+            {{cat.name}}
+            <span class="">
+              ({{getQuestionCount(cat) || '0'}})
+            </span>
+          </div>
+          
+        </div>
+        
+        <div class="categories_wrapper" *ngIf="aiAssist.categories_count < 0">
+          <span *ngIf="!selectCategory" class="selectCategory"
+            [matMenuTriggerFor]="menu">{{'aiAssist_category_placeholder' | translate}}</span>
+          <div *ngIf="selectCategory" class="selectedCategory chip-active"
+            [ngStyle]="{'color': categoryColors[selectCategory.index],'border' : '1.2px solid categoryColors[0] !important','border-color': categoryColors[selectCategory.index],'background-color':  categoryColors[selectCategory.index]}">
+            <span class="catText">{{selectCategory.name}}</span>            
+            <span class="questionCount"> ({{selection.selected.length || '0'}})</span>
+            <mat-icon class="closeIcon" 
+              (click)="setSelectCategory(null)">cancel </mat-icon>
+          </div>
+
+        </div>
+        <div class="addMoreQuestionWrapper" *ngIf="aiAssist_type == 'AI_ASSIST_PLUS'">
+          <div class="divider"></div>
+          <div class="addQuestionBtn" (click)="showRetryBox = false;aiAddMoreQuestionsSubscription = false;addMoreQuestion();"  [ngClass]="{'disabledAddQuestions': isAddMoreQuestionDisabled() }">
+            <span *ngIf="!isMobile">{{'addQuestionBtn' | translate}}</span>
+            <span *ngIf="isMobile">{{'add_uppercase' | translate}}</span>
+            <!-- <mat-icon *ngIf="isMobile">add</mat-icon> -->
+          </div>
+          <div class="questionNumber" [matMenuTriggerFor]="questionMenu" (menuOpened)="menuOpened()"[ngClass]="{'disabledAddQuestions': isAddMoreQuestionDisabled() }">
+            <span>{{numberOfquestionTogenerate}}</span>
+            <mat-icon>keyboard_arrow_down</mat-icon>
+          </div>
+        </div>
+      </div>
+      <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_question_adding"></mat-progress-bar>
+        <div *ngIf="is_loading" class="messageForLoading">
+          <div class="leftSide aiAssistSpinner">
+            <mat-spinner class="spinner" mode="indeterminate" diameter="20">
+            </mat-spinner>
+            <span> {{messageForLoading}}</span>
+          </div>
+          <div class="rightSide">
+            <div class="stopButton" (click)="stopGenerating()" >
+              {{'stopGenerating' | translate}}
+              <mat-icon>close</mat-icon>
+            </div>            
+          </div>
+        </div>
+
+        <div *ngIf="showRetryBox" class="messageForLoading">
+          <div class="leftSide aiAssistSpinner">
+            <!-- <mat-spinner class="spinner" mode="indeterminate" diameter="20">
+            </mat-spinner> -->            
+            <img src="assets/img/aiAssist/ai_error.png"  style="width: 20px;" alt="ai_error" />
+            <span> {{'messageForAIRetry' | translate}}</span>
+          </div>
+          <div class="rightSide">            
+            <div class="stopButton" (click)="retryBtn()" style="margin-right:10px">
+              {{'retryBtn' | translate}}              
+            </div>  
+            <div class="stopButton" (click)="closeRetry()" >
+              <mat-icon >close</mat-icon>          
+            </div>            
+          </div>
+        </div>
+        
+        <div *ngIf="noMoreQuestionToGenerate" class="messageForLoading">
+          <div class="leftSide aiAssistSpinner">
+            <img src="assets/img/aiAssist/ai_error.png"  style="width: 20px;" alt="ai_error" />
+            <span> {{noMoreQuestionToGenerateMessage}}</span>
+          </div>    
+          <div class="rightSide">                 
+            <div class="stopButton" (click)="closeError()" >
+              <mat-icon >close</mat-icon>          
+            </div>       
+          </div>
+        </div>
+
+
+        <div *ngIf="is_addMoreAPICompleted" class="messageForLoading messageForLoadingCompletion">
+          <div class="leftSide">
+            <img src="assets/img/completed.png"  style="width: 20px;" alt="completed" />
+            <span> {{messageForLoadingCompletion}}</span>
+          </div>          
+        </div>
+        <div *ngIf="messageForMaxQuestionsGenerated" class="messageForLoading messageForLoadingCompletion">
+          <div class="leftSide" style="width: 100%;">
+            <img src="assets/img/completed.png"  style="width: 20px;" alt="completed" />
+            <span> {{messageForLoadingCompletion}}</span>
+          </div>          
+        </div>
+        <div class="tableWrapper" [ngClass]="{'disabled-style-ai-assist': is_question_adding}" >
+         
+          <!-- <div *ngIf="is_loading">
+            <ngx-skeleton-loader count="1" appearance="line" [animation]="animation" 
+              [theme]="{ 'border-radius': '0' , height: '140px', 'margin-bottom': '0px' }" >
+            </ngx-skeleton-loader>
+            <ngx-skeleton-loader count="1" appearance="line" [animation]="animation" 
+              [theme]="{ 'border-radius': '0' , height: '140px', 'margin-bottom': '0px' }" >
+            </ngx-skeleton-loader>
+            <ngx-skeleton-loader count="1" appearance="line" [animation]="animation" 
+              [theme]="{ 'border-radius': '0' , height: '140px', 'margin-bottom': '0px' }" >
+            </ngx-skeleton-loader>
+          </div>           -->
+          <table mat-table [dataSource]="dataSource" class="tableWrapper"  matSort aria-describedby=""
+          >
+            <ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef class="checkboxes select-all-checkbox">
+                <mat-checkbox (change)="$event ? toggleAllRows() : null"
+                  [checked]="selection.hasValue() && isAllSelected()"
+                  [indeterminate]="selection.hasValue() && !isAllSelected()" 
+                  [disabled]="selectedChip != -1">
+                </mat-checkbox>
+              </th>
+              <td mat-cell *matCellDef="let element" (click)="$event.stopPropagation();"
+                class="checkboxes checkboxes-colors">
+                <mat-checkbox color="primary" (click)="$event.stopPropagation()"
+                  (change)="$event ? selection.toggle(element) : null" [checked]="selection.isSelected(element)">
+                </mat-checkbox>
+              </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="question">
+              <th mat-header-cell *matHeaderCellDef >Questions</th>
+              <td mat-cell *matCellDef="let element">
+                <div class="questionWrapper">
+                  <div class="questionTextWrapper"><span>{{element.question}}</span></div>
+
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="answer">
+              <th mat-header-cell *matHeaderCellDef ></th>
+              <td mat-cell *matCellDef="let element">
+                <div class="questionWrapper">
+                  <div class="answerOptionsWrapper">
+                    <div class="answer-option" *ngFor="let option of element.options; last as isLast;let i = index;">
+
+                      <mat-checkbox class="spacing" color="primary" name="is_correct"
+                        [checked]="i == element.correctAnswer" [disabled]="true">
+                      </mat-checkbox>
+                      <span class="answerText">{{option}}</span>
+
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header"></tr>
+            <tr mat-row *matRowDef="let element; columns: displayedColumns;" (click)="selection.toggle(element)">
+            </tr>
+          </table>
+        </div>
+
+
+      </div>
+
+
+      <mat-card-actions class="footer">
+
+        <div class="button-row">
+          <div class="btn-left">
+            <button mat-button type="button" class="cancel-button" tabindex="-1" (click)="backToAIFormPopUp()">{{
+              'back_uppercase'| translate }}</button>
+          </div>
+          <div class="btn-right">
+
+            <button mat-button type="button" class="cancel-button" tabindex="-1" (click)="closePopUp()">{{
+              'cancel_uppercase'| translate }}</button>
+          </div>
+          <div>
+            <button mat-button type="button" (click)="addToGame()" *ngIf="aiAssist.categories_count > 0" [disabled]="disableButton()">
+              {{ 'addToGame'| translate }}
+            </button>
+            <button mat-button type="button" (click)="addToGame()" *ngIf="aiAssist.categories_count < 0" [disabled]="disableButtonNoCategory()">
+              {{ 'addToGame'| translate }}
+            </button>
+          </div>
+        </div>
+      </mat-card-actions>
+    </form>
+  </section>
+</div>
+<mat-menu #menu="matMenu" class="categoryList">
+  <button mat-menu-item *ngFor="let cat of gameObj.categories;let i = index" (click)="setSelectCategory(cat,i)">
+    {{cat.name}}
+  </button>
+
+</mat-menu>
+
+
+<mat-menu #questionMenu="matMenu" class="maxQuestionsList" >
+
+  <button mat-menu-item *ngFor="let question of maxQuestions;let i = index" (click)="addQuestionSelected(question)">
+    <div class="aiAssistqQuestionCount">
+      <span class="plusIcon">+</span><span>{{question.title}}</span>
+      </div>
+  </button>
+
+</mat-menu>

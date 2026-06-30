@@ -1,0 +1,61 @@
+<mat-toolbar color="primary" class="small-toolbar">
+  {{'vip_title' | translate}}
+</mat-toolbar>
+<mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+<section class="vip-content" [ngClass]="{'disabled-style': is_loading}">
+    
+  <div class="title">    
+    <form #addVipcode="ngForm">
+        <div class="form-group">
+            <label for="user-email">{{'code' | translate}}</label>
+            <input type="text" class="holder form-inputs" autocorrect="off" (keypress)="inputChanged($event)"
+              autocapitalize="off" spellcheck="false"  placeholder="{{'vip_code_lable_placehoder' | translate}}" name="vipcode"
+              [(ngModel)]="vipcodeobj.vip_code" autocomplete="off" required>
+              <mat-error *ngIf="errorMessage">{{errorMessage}}</mat-error>
+          </div>
+      <div class="form-group suffix-spinner-wrapper">
+        <label for="location">{{'location' | translate}}</label>
+        <app-search-select [items]="locationList" [selectedId]="vipcodeobj.location_id"
+          placeholderText="{{'vip_location_placehoder' | translate}}" (change)="onLocationChange($event)" [disabled]="fetchLoc"
+          [isRequired]="true">
+        </app-search-select>
+        <mat-spinner class="spinner" mode="indeterminate" *ngIf="fetchLoc" diameter="20">
+        </mat-spinner>
+      </div>
+      <div class="form-group suffix-spinner-wrapper">
+        <label for="department">{{'department' | translate}}</label>
+        <app-search-select [items]="preparedDepartmentList" [selectedId]="vipcodeobj.department_id"
+          placeholderText="{{'vip_department_placehoder' | translate}}" [isRequired]="true" (change)="onDepartmentChange($event)"
+          [disabled]="fetchDept">
+        </app-search-select>
+        <mat-spinner class="spinner" mode="indeterminate" *ngIf="fetchDept" diameter="20">
+        </mat-spinner>
+      </div>
+      
+      <div class="form-group">
+          <label for="startDate">{{'expiration_date_label' | translate}}</label>
+          <div class="calendar-input-wrapper">
+              <input matInput class="holder form-inputs calendar-input" [matDatepicker]="futureDatePicker"
+                [placeholder]="datePlaceHolder" name="enddate" [(ngModel)]="vipcodeobj.expiry_set_on"
+                (click)="futureDatePicker.open()" (open)="isDatePickerOpen" [min]="today"
+                (keydown)="isDatePickerOpen = true;" required readonly>
+              <mat-datepicker-toggle matPrefix [for]="futureDatePicker">
+              </mat-datepicker-toggle>
+              <mat-datepicker #futureDatePicker>
+              </mat-datepicker>
+            </div>
+        </div>      
+    </form>
+
+  </div>
+  <div class="button-row">
+    <div class="btn-right">
+      <button mat-button class="cancel-button" tabindex="-1" (click)="cancel()">{{'cancel_uppercase' | translate}}</button>
+    </div>
+    <div>
+      <button mat-button tabindex="-1" (click)="actionConfirmed()" [disabled]="!addVipcode?.valid || !addVipcode?.dirty || shouldDisable()">
+      {{'add_uppercase' | translate}}
+      </button>
+    </div>
+  </div>
+</section>

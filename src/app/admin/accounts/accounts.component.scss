@@ -1,0 +1,135 @@
+@import "../../../styles.scss";
+
+.wrapper {
+    padding: 20px 10px 0;
+    height: $header_height;
+    max-height: $header_height;
+    position: relative;
+
+    @include media-breakpoint-down(sm) {
+        padding: 10px 0px 0;
+    }
+
+    .user-logo {
+        width: 50px !important;
+
+        img {
+            margin-right: 0 !important;
+        }
+    }
+
+    .container-card {
+        margin: 0 40px;
+        height: $header_height;
+        max-height: $header_height;
+        padding: 0;
+        @include i-pad-design-with-btn;
+
+        @include media-breakpoint-down(sm) {
+            margin: 0 10px;
+        }
+
+        .msg_toolbar {
+            height: 49px;
+            background-color: white;
+            padding: 0px 15px;
+
+            .title {
+                font-size: 13px;
+                margin-left: 10px;
+                font-family: $Roboto_Regular_font;
+                margin-right: 5px;
+                align-items: center;
+            }
+        }
+
+        .mat-card-content {
+            width: 100%;
+            font-size: 14px;
+            min-height: calc(100vh - 219px);
+            height: calc(100vh - 219px);
+            max-height: calc(100vh - 219px);
+            overflow: auto;
+            margin: 0;
+            border-top: 1px solid $mat_border_color;
+            border-bottom: 1px solid $mat_border_color;
+            font-family: $Roboto_Regular_font;
+
+            @include media-breakpoint-down(sm) {
+                height: calc(100vh - 217px);
+                max-height: calc(100vh - 217px);
+            }
+
+            .no_messages {
+                padding: 0;
+                width: 100%;
+                height: 100%;
+                text-align: center;
+                padding-top: 20px;
+
+                font: {
+                    family: Roboto_Regular;
+                    size: $default_font_size;
+                }
+
+                @extend .center-align;
+            }
+
+            .account-status {
+                width: 300px;
+            }
+        }
+
+        .mat-card-actions {
+            margin: 0;
+            padding: 0;
+
+            .mat-paginator {
+                width: 95%;
+                margin: 0 auto;
+
+                .mat-paginator-page-size {
+                    flex: 1;
+                }
+            }
+        }
+    }
+}
+
+.action-cell {
+    width: 50px;
+}
+
+td.mat-cell:last-of-type,
+td.mat-footer-cell:last-of-type,
+th.mat-header-cell:last-of-type {
+    padding-right: 0px;
+}
+
+::ng-deep .mat-menu-panel.customeMenu {
+    max-height: 300px !important;
+    max-width: 300px !important;
+    min-width: 200px;
+
+    .inputSearch {
+        width: 100%;
+        @extend .form-inputs;
+        border: none !important;
+        border-bottom: 1px solid #ccc !important;
+        margin-bottom: 0;
+        height: 48px;
+        min-width: 250px;
+    }
+}
+
+.menu_container {
+    height: auto;
+    max-height: 200px;
+    overflow-y: auto;
+
+    mat-list-item {
+        font-size: 14px;
+        font-family: $Roboto_Regular_font;
+    }
+
+}

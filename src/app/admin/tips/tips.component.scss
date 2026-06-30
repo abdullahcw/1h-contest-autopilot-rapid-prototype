@@ -1,0 +1,130 @@
+@import '../../../styles.scss';
+
+.wrapper {
+    padding: 20px 10px 0; 
+    height: $notifications_height;   
+    max-height: $notifications_height;   
+    position: relative; 
+    @include media-breakpoint-down(sm) {
+        padding: 10px 0px 0;        
+    }
+    .container-card {
+        margin:0 40px;
+        border-radius: 0;
+        height: $notifications_height;   
+        max-height: $notifications_height;
+        padding: 0;
+        color: rgb(19, 19, 19);
+        @include i-pad-design;
+        @include media-breakpoint-down(sm){
+            margin: 0 10px;
+        }
+        .mat-card-content{
+            // max-height: calc 
+            width: 100%;
+            min-height: $notifications_height;
+            height: $notifications_height;
+            max-height: $notifications_height;
+            overflow: auto;
+            margin: 0;
+            border-top: 1px solid $mat_border_color;
+            border-bottom: 1px solid $mat_border_color;
+
+            font-family: Roboto_Regular;
+            font-size: $text_size_med;
+            .mat-tab-group.tabs-container {
+                height: 100% !important;
+                ::ng-deep .mat-tab-body-wrapper {
+                    flex: 1 1 auto !important;
+                }
+            }
+            .no_messages{
+                padding: 0;
+                width: 100%;
+                height: 100%;
+                text-align: center;
+                // padding-top: 20px;
+                font: {
+                    family: Roboto_Regular;
+                    size: $default_font_size;
+                }
+                @extend .center-align;
+                .mat-spinner {
+                    margin-bottom: 10px;
+                }
+            }
+            .tips-container {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                .toolbar {
+                    height: 55px;
+                    border-bottom: 1px solid #efefef;
+
+                    .label {
+                        color: #555;
+                        margin: 0 10px;
+                        font-family: Roboto_Medium;
+                        font-size: 14px;
+                        min-width: 35px; 
+                    }
+                }  
+                .body-container {
+                    display: flex;
+                    flex-direction: column;
+                    width: 100%;
+                    // flex: 0.5;
+                    min-height: 200px;
+                    padding: 20px;
+                    @include media-breakpoint-down(sm) {
+                        padding: 10px;        
+                    }
+                    .body-wrapper{
+                        height: 100%;
+                    .body {
+                        width: 100%;
+                        height: 100%;
+                        resize: none;
+                        padding: 10px;
+                        font-size: 14px;
+                        background: #f7f7f7;
+                        border: 1px solid #ddd;
+                    }
+                }
+                    .disclaimer{
+                        color: $brand_color;
+                        background-color: $secondary_bg_color;
+                        font-size: 12px;
+                        // text-align: right;
+                        margin-top: 4px;
+                    }
+                    .answer-section{
+                        line-height: 1em;
+                        height: 100%;
+                        .tips-heading{
+                            margin-bottom: 14px;
+                        }
+                        ::ng-deep .ck.ck-editor__editable_inline {
+                            height: 260px;
+                            @include media-breakpoint-down(sm) {
+                            height: 180px;                                        
+                            }
+                        }
+                    }
+                }
+                .footer {
+                    display: flex;
+                    margin-right: 20px;
+                    // margin: 20px 20px 0px;
+                    .spacer {
+                        flex: 1;
+                    }
+                }
+            }
+            .disabled-tab {
+                opacity: 0.5;  
+                pointer-events: none;
+            }
+        }
+    }
+}

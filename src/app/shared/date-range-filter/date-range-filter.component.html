@@ -1,0 +1,15 @@
+<mat-form-field class="range" *ngIf="showRange">
+  <mat-icon class="calender-icon">calendar_today</mat-icon>
+  <mat-select id="range" [(ngModel)]="selectedRange" (selectionChange)="setRange($event.value)" #dateRange>
+    <mat-option class="range-option" [value]="range.CLEAR">{{ 'all' | translate }}</mat-option>
+    <mat-option class="range-option" [value]="range.THIS_WK">{{ 'this_week' | translate }}</mat-option>
+    <mat-option class="range-option" [value]="range.THIS_MONTH">{{ 'this_month' | translate }}</mat-option>
+    <mat-option class="range-option" [value]="range.NEXT_90_DAYS">{{ 'next_90_days' | translate }}</mat-option>
+    <mat-option class="range-option" [value]="range.THIS_YEAR">{{ 'this_year' | translate }}</mat-option>
+    <mat-option class="range-option" [value]="range.NEXT_YEAR">{{ 'next_year' | translate }}</mat-option>
+    <mat-option class="range-option" [value]="range.CUSTOM"
+      (click)="openCustomDateRange('Send by Email'); dateRange.close()" *ngIf="showCustom"
+      [ngClass]="{'disabled-style': !isCustomRequired}">{{ 'custom' | translate }}</mat-option>
+  </mat-select>
+</mat-form-field>
+

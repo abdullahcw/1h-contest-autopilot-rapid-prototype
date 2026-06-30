@@ -1,0 +1,106 @@
+@import '../../../../src/assets/main.scss';
+@import '../../../styles.scss';
+.container {
+  padding: 0;
+  min-height: 350px;
+  min-width: 500px;
+  @include media-breakpoint-down(sm) {
+    min-width: 350px;
+}
+  @include media-breakpoint-down(xs) {
+    min-width: 275px;
+}
+.mat-toolbar-single-row{
+  height: 50px;
+}
+  .content {
+    padding: 20px;
+    .top-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100px;
+    }
+
+    .image-container {
+      // background: #efefef;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 1px solid #e6e6e6;
+
+      img {
+        height: 100px;
+        width: 100px;
+        @include media-breakpoint-down(sm) {
+          height: 70px;
+          width: 70px;
+      }
+        @include media-breakpoint-down(xs) {
+          height: 60px;
+          width: 60px;
+      }
+      }
+
+      mat-icon {
+        position: absolute;
+        top: 0;
+        right: 0;
+        color: white;
+        // background: green;
+        font-size: 15px;
+        text-align: center;
+        width: 17px;
+        height: 17px;
+      }
+    }
+
+    .add-image-container {
+      // background: #efefef;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 1px solid $brand_color;
+      border-style: dashed;
+
+      mat-icon {
+        color: $brand_color;
+        font-size: 32px;
+        height: 32px;
+        width: 32px;
+        // background: #4b4b4b;
+      }
+    }
+
+    .selected-container {
+      // background: rgba(0, 128, 0, 0.2);
+      border: 2px solid $brand_color;
+    }
+
+    .button-row {
+      width: auto;
+      display: flex;
+      margin-top: 30px;
+      // margin-bottom: -12px;
+
+      .btn-right {
+        margin-left: auto;
+        background: #fff !important;
+        button{
+          font-family: Roboto_Bold;
+          width: 74px !important;
+          border-radius: 2px;
+          height: 34px;
+        }
+        &:hover{
+          background: #e6e6e6;
+        }
+      }
+
+      .cancel-button {
+        border: 0px;
+        // margin-right: 10px;
+        background: white;
+        cursor: pointer;
+      }
+    }
+  }
+}

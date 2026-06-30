@@ -1,0 +1,22 @@
+<div class="search-wrapper" [matMenuTriggerFor]="menu" [ngClass]="{'disabled-style': gameStatus}">
+    <img class="img-flag" [src]="selectedItem?.img" alt="">
+    <span  class="selected-item-input-lang handCursor" [ngClass]="{'hide-mobile': !langDialog}" >{{selectedItem.text}}</span>
+    <mat-icon class="arrow-drop-icon">arrow_drop_down</mat-icon>
+  </div>
+  <mat-menu class="dropdown drop-down-lang" #menu="matMenu">
+    <div class="options-wrapper">
+      <mat-option class="option" [ngClass]="{'seleted-option': selectedItem?.id === item.id}" [value]="option"
+        *ngFor="let item of items" (click)="itemClicked(item); searchInput?.blur(); search?.blur()">
+        <div class="option-container">
+        <img class="arrow-right-icon" [src]="item?.img" alt="">
+          <span class="title" >
+            {{item.text}}
+            <span class="default-title">
+              {{defaultLangId == item.id ? ' (Default)' : ''}}
+            </span>
+          </span>
+        </div>
+      </mat-option>
+    </div>
+  </mat-menu>
+  

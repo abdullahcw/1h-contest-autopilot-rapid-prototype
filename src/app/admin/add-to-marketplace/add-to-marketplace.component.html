@@ -1,0 +1,69 @@
+<div class="main-container-add-marketplace" [hidden]="!hideAddToShop">
+  <mat-toolbar class="small-toolbar" color="primary">
+    <div>
+      {{data.name}}
+    </div>
+  </mat-toolbar>
+  <div class="wrapper">
+    <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+    <section class="content" [ngClass]="{'disabled-style': is_loading}">
+      <form #addToShop="ngForm">
+        <div class="marketplace-container">  
+          <div class="form-group">
+            <div>
+              <label class="label" for="upload_image">Game Banner</label> <span class="required">*</span>
+            </div>
+            <img class="company_logo" [src]="gameLogoURL" alt="" onError="this.src='/assets/img/Placeholder-game.png'">
+            <input type="file" class="company_logo" onclick="this.value=null" #imgInput id="upload_image"
+            [hidden]="true" accept="image/*" (change)="fileChangeEvent($event)" />
+            <div class="image-overlay" (click)="imgInput && imgInput?.click()" [ngClass]="{'show-image-overlay': gameLogoURL != null}">
+              <mat-icon>
+                add_a_photo
+              </mat-icon>
+            </div>
+            <div class="edit-image" (click)="imgInput && imgInput?.click()" *ngIf="gameLogoURL">
+              <mat-icon>
+                add_a_photo
+              </mat-icon>
+            </div>
+          </div>
+        </div>
+        <div class="marketplace-container name-field">
+          <label class="label" for="game_category">{{'game_category' | translate}}</label> <span class="required">*</span>
+          <mat-form-field class="game-category-wrapper" floatLabel="never">
+            <mat-select id="game_category" [(ngModel)]="newShopGame.game_category_id" name="game_category"
+              placeholder="{{ newShopGame.game_category_id ? '' : ('select_game_category' | translate)}}">
+              <mat-option class="category-options" *ngFor="let marketplaceGameCategory of marketplaceGameCategories"
+                [value]="marketplaceGameCategory.game_category_id" required>
+                {{marketplaceGameCategory.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-group marketplace-container name-field">
+          <label class="label" for="author_name">{{'author_name' | translate}}</label> <span class="required">*</span>
+          <input type="text" class="author-name form-inputs" placeholder="{{'enter_author_name' | translate}}" id="author_name"
+            name="author_name" [(ngModel)]="newShopGame.author_name" appValidateInput maxlength="35" minlength="1" required>
+        </div>
+        <div class="form-group marketplace-container name-field">
+          <label class="label" for="add_description">{{'description' | translate}}</label> <span class="required">*</span>
+          <textarea type="text" class="add-description form-inputs" style="resize: none;"
+            placeholder="Up to 70 characters" id="add_description"
+            name="add_description" [(ngModel)]="newShopGame.game_description" appValidateInput maxlength="70" minlength="1"
+            required></textarea>
+        </div>
+        <div class="button-row">
+          <div class="btn-right">
+            <button type="button" mat-button class="cancel-button" tabindex="-1"
+              (click)="cancel()">{{'cancel_uppercase' | translate}}</button>
+          </div>
+          <div>
+            <button type="button" mat-button [disabled]="!addToShop?.valid || !addToShop?.dirty || shouldDisable()" (click)="save()">
+              {{gameEditInShop ? ('save_uppercase' | translate) : ('add_uppercase' | translate)}}
+            </button>
+          </div>
+        </div>
+      </form>
+    </section>
+  </div>
+</div>

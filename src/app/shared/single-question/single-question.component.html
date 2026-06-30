@@ -1,0 +1,631 @@
+<tr *ngIf="!question?.isOpen && !question?.is_new && !question?.is_editing"
+  [ngClass]="{'collapsed': !question.isOpen && !question?.is_editing}" [ngStyle]="{'background-color': selectedQuestionsList?.includes(isfeedback ? question?.question_feedback_id :
+question?.question_id) ? '#c2dbff' :''}">
+  <td class="small-width header-title">
+    <div class="checkbox-wrapper checkboxes-colors" (click)="$event.stopPropagation();" *ngIf="!hideEdit">
+      <mat-checkbox #selectQs [disabled]="question.is_shop_game || question.is_archived"
+        [checked]="selectedQuestionsList?.includes(isfeedback ? question?.question_feedback_id : question?.question_id)"
+        (change)="getSelectedQuestion(question,$event)"></mat-checkbox>
+    </div>
+  </td>
+  <td class="small-width header-title right-align" (click)="!isMobile ? toggleExpansion(true) : ''" *ngIf="!isfeedback">
+    <mat-icon class="mat-icon-flag question-active-icon"
+      [ngStyle]="{'color': question.is_active ? '#809fdd' : '#e8e8e8'}" *ngIf="isGame"
+      matTooltip="{{question.is_active ? ('active' | translate): ('inactive' | translate)}}" matTooltipPosition="above">
+      lens</mat-icon>
+    <span>{{question?.card_number}}</span>
+  </td>
+  <td colspan="2" class="header-title" (click)="!isMobile ? toggleExpansion(true) : ''" *ngIf="!isfeedback">
+    <div class="text-space" [textContent]="question.question_title"  *ngIf="!question.is_system_generated"></div>
+    <div class="text-space" *ngIf="question.is_system_generated" #questionTitleDefault [textContent]="question?.default_language?.question_title">
+    </div>
+  </td>
+
+
+  <td class="small-width header-title-date" (click)="toggleExpansion(true)" *ngIf="isfeedback"
+    (click)="!isEditingQuestion ? !question.isOpen = !!question.isOpen : $event.stopPropagation()">
+    <mat-icon class="mat-icon-flag" [ngStyle]="{'color': question.feedback == 'QUESTION IS CORRECT. BUT, I HAVE A SUGGESTION' ? 'orange' :
+question.feedback == 'QUESTION IS WRONG' ? 'red' : 'green'}" [matTooltip]="question?.feedback"
+      matTooltipPosition="above">feedback</mat-icon>&nbsp; {{getDate(question?.created_on)}}
+  </td>
+  <td class="header-title" (click)="toggleExpansion(true)" *ngIf="isfeedback">
+    <div class="text-space-feedback" [textContent]="question.question_title"></div>
+  </td>
+  <td class="header-title" (click)="toggleExpansion(true)" *ngIf="isfeedback">
+    <div class="text-space-feedback"> {{question?.comments}}</div>
+  </td>
+</tr>
+
+<!-- Feedback -->
+<tr *ngIf="(!!question.isOpen || question?.is_new) && isfeedback"
+  class="feedback-comment-row feedback-comment-row-bgcolor" [ngStyle]="{'background-color': selectedQuestionsList?.includes(isfeedback ? question.question_feedback_id :
+question.question_id) ? '#c2dbff' :''}">
+  <td class="small-width header-title">
+    <div class="checkbox-wrapper checkboxes-colors" (click)="$event.stopPropagation();">
+      <mat-checkbox #selectQs [disabled]="question.is_shop_game || question.is_archived"
+        [checked]="selectedQuestionsList?.includes(question.question_feedback_id)"
+        (change)="getSelectedQuestion(question,$event)"></mat-checkbox>
+    </div>
+  </td>
+  <td class="small-width header-title right-align-date"
+    (click)="!isEditingQuestion ? !question.isOpen = !!question.isOpen : $event.stopPropagation()"
+    (click)="toggleExpansion(true)">
+    <mat-icon class="mat-icon-flag" [ngStyle]="{'color': question.feedback == 'QUESTION IS CORRECT. BUT, I HAVE A SUGGESTION' ? 'orange' :
+    question.feedback == 'QUESTION IS WRONG' ? 'red' : 'green'}">feedback</mat-icon>&nbsp;
+    {{getDate(question?.created_on)}}
+  </td>
+  <td colspan="2" class="header-title" (click)="toggleExpansion(true)">
+    <div class="text-space no-ellipsis feedback-space-full" [textContent]="question.comments"></div>
+  </td>
+
+</tr>
+<tr *ngIf="(!!question.isOpen || question?.is_new) && isfeedback" class="feedback-comment-row-bgcolor">
+  <td colspan="3" style="padding: 0 !important;">
+    <mat-tab-group class="feedback-tab" (selectedIndexChange)="feedbackTabChange($event)"
+      [selectedIndex]="feedbackTabIndex">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span [ngClass]="{'active': feedbackTab}">
+            <mat-icon class="mat-icon-tab">border_color</mat-icon>
+            {{'modified' | translate}}
+          </span>
+        </ng-template>
+      </mat-tab>
+      <mat-tab [disabled]="question.is_editing">
+        <ng-template mat-tab-label>
+          <span [ngClass]="{'active': !feedbackTab}">
+            <mat-icon class="mat-icon-origional">stars</mat-icon> {{'original' | translate}}
+          </span>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </td>
+  <td class="player-name">
+    <div class="feeedback-player-name">
+      <a [href]="'mailto:'+question.players_email" class="mail-icon">
+        <mat-icon class="mat-icon-mail">
+          email</mat-icon>
+        <p> {{'player_name' | translate}}: {{question?.player_name}} </p>
+      </a>
+    </div>
+  </td>
+</tr>
+<!-- Feedback view Finished -->
+
+<tr class="members question-rows" width="99%" [ngClass]="{'isActive': question?.is_editing ,'is-feedback': feedbackTab}"
+  *ngIf="(!!question.isOpen || question?.is_new || question?.is_clone) && feedbackTab" (mouseenter)="isRowHover = true"
+  (mouseleave)="isRowHover = false">
+  <td class="small-width align-top-checkbox" [ngClass]="!question?.is_editing ? 'is_disabled':''"
+    [ngStyle]="{style: expression}">
+    <div class="checkbox-wrapper align-checkbox" (click)="$event.stopPropagation();" *ngIf="!hideEdit"
+      [ngClass]="{'disable-for-shop-pointer': question?.is_shop_game || question.is_archived}">
+      <mat-checkbox #selectQs [checked]="selectedQuestionsList?.includes(question?.question_id)" class="inner-checkbox"
+        [ngClass]="{'disable-for-shop': question?.is_shop_game || question.is_archived}"
+        [hidden]="(question.is_editing && question?.is_editable) || isfeedback"
+        (change)="getSelectedQuestion(question,$event)"></mat-checkbox>
+    </div>
+  </td>
+  <td class="small-width align-top-checkbox right-align"
+    (click)="!(question.is_editing && question?.is_editable) ? toggleExpansion(true) :$event.stopPropagation()"
+    [ngClass]="question.is_editing ? 'is-editing' : 'is_disabled'">
+    <mat-icon class="mat-icon-flag question-active-icon"
+      [ngStyle]="{'color': question.is_active ? '#809fdd' : '#e8e8e8'}" *ngIf="isGame && !question.is_editing"
+      matTooltip="{{question.is_active ? ('active' | translate): ('inactive' | translate)}}">lens</mat-icon>
+    <span class="card-number">{{question.card_number}}</span>
+  </td>
+  <td class="fixed-width top-aligned position-relative"
+    (click)="!(question.is_editing && question?.is_editable) ? toggleExpansion(true) :$event.stopPropagation()"
+    [ngClass]="question.is_editing ? 'is-editing' : 'is_disabled'">
+    <div>
+      <div class="question_container">
+        <div class="question-wrapper half-height" [ngClass]="{'full-height' : questionAnswerOptionLength >= 4 , 'three-ans-height': questionAnswerOptionLength == 3}">
+          <div class="question-with-img">
+            <span class="question-image" for="questionnTitle" *ngIf="question?.question_image && question.is_editing">
+              <img #quesImage  [ngClass]="{'queImg' : questionAnswerOptionLength >= 4}" alt="question_image"
+                (click)="question?.question_image ? image(question) : imgInput.click()"
+                onError="this.src='/assets/img/default.png'" src="/assets/img/contest-banner-image.png" 
+                appSignedUrl [imgSelector]="'changeImageSrc'"
+                [imgSrcValue]="question?.question_image" *ngIf="!question.isimageAssetsBase64">
+              
+              <img #quesImage  [ngClass]="{'queImg' : questionAnswerOptionLength >= 4}" [src]="question?.question_image"
+                alt="question_image" (click)="question?.question_image ? image(question) : imgInput.click()"
+                onError="this.src='/assets/img/default.png'" *ngIf="question.isimageAssetsBase64">
+            
+            </span>
+           <textarea class="question" name="question" id="questionnTitle" [(ngModel)]="question.question_title"
+              *ngIf="question.is_editing" placeholder="{{question.is_system_generated ? question?.default_language?.question_title : 'enter_question_here' | translate}}"
+              rows="5" minlength="1" maxlength="2000" >
+              {{question.title}}
+            </textarea>
+            <span class="question-icon-titile" *ngIf="question?.is_editing && !question?.is_new && question.show_place_holder" 
+            [matTooltip]="question?.default_language?.question_title" 
+            matTooltipPosition="left" id="questionTitleDefault" matTooltipClass="primary-tooltip" >
+              <mat-icon class="mat-icon-suggestion">help</mat-icon>
+            </span>
+          </div>
+          <span class="question-image" *ngIf="question?.question_image && !question.is_editing"
+            (click)="$event.stopPropagation();question?.question_image ? image(question) : imgInput.click()">
+            <img #quesImage appSignedUrl [imgSelector]="'changeImageSrc'" src="/assets/img/contest-banner-image.png" [imgSrcValue]="question?.question_image"
+              alt="question_image" onError="this.src='/assets/img/default.png'">
+          </span>
+        
+          
+          <div class="is-truncated old" *ngIf="!question.is_editing && !question.is_system_generated" #questionTitle [textContent]="question.question_title">
+          </div>
+          <div class="is-truncated new" *ngIf="!question.is_editing && question.is_system_generated" #questionTitleDefault [textContent]="question?.default_language?.question_title">
+          </div>
+        </div>
+        
+        <div class="actions"
+          [ngClass]="{'actions-option-four': questionAnswerOptionLength >= 4,'actions-option-one': isAbsoluteRequired }">
+          <!-- feeedback game and category  display start-->
+        <div class="options has-icon points-width is-viewing lang-code" (click)="$event.stopPropagation();" *ngIf="question?.game_type != 2">
+          <mat-icon>translate</mat-icon>
+          <img [src]="gameModeLanguage?.img" style="width: 18px; padding-right: 2px;">
+          <span>{{gameModeLanguage?.code | uppercase}}</span>
+        </div>
+
+        <div class="options has-icon points-width"
+          [ngClass]="{'is-viewing': !question.is_editing, 'is-editing': question.is_editing}">
+          <mat-icon>quiz</mat-icon>
+          <div>
+            <p class="text-options" *ngIf="!question?.is_editing" matTooltip=" {{question?.answer_option_type | translate}} "
+              matTooltipPosition="above">
+              {{(question?.answer_option_type == 'RANDOM' ? 'ai_gamegenius' : question?.answer_option_type)| translate}} 
+            </p>
+            <select matNativeControl [(ngModel)]="question.answer_option_type" class="select" name="timer"
+            *ngIf="question?.is_editing" (ngModelChange)="onAnswerOptionTypeSelection(question,$event)">
+            <option class="range-option" value="RANDOM">{{'ai_gamegenius' | translate}}</option>
+            <option class="range-option" value="SHORT_ANSWER">{{'SHORT_ANSWER' | translate}}</option>
+            <option class="range-option" value="TWO_ANSWER_OPTION">{{'TWO_ANSWER_OPTION' | translate}}</option>
+            <option class="range-option" value="THREE_ANSWER_OPTION">{{'THREE_ANSWER_OPTION' | translate}}</option>
+            <option class="range-option" value="FOUR_ANSWER_OPTION" >{{'FOUR_ANSWER_OPTION' | translate}}</option>
+          </select>
+          
+          </div>
+        </div>
+
+
+
+          <div class="options has-icon points-width"
+            [ngClass]="{'is-viewing': !question.is_editing, 'is-editing': question.is_editing}"
+            *ngIf="isfeedback && feedbackTab">
+            <mat-icon>videogame_asset</mat-icon>
+            <div>
+              <p class="text-options is-viewing text-ellipses" [ngClass]="{'game-name': question.is_editing}"
+                *ngIf="isfeedback && feedbackTab" matTooltip="{{question?.game_name}}" matTooltipPosition="above">
+                {{question?.game_name}}</p>
+              <select *ngIf="(question?.is_new || question?.is_clone) && isGame" name="game_name"
+                class="game-change select">
+                <option [ngValue]="question?.game_id" selected>{{question?.game_name}}</option>
+              </select>
+            </div>
+          </div>
+         
+
+          <div class="options has-icon points-width"
+            [ngClass]="{'is-viewing': !question.is_editing, 'is-editing': question.is_editing}"
+            *ngIf="isfeedback && feedbackTab">
+            <mat-icon>dns</mat-icon>
+            <div matTooltip="{{'category' | translate}}" matTooltipPosition="above">
+              <p class="text-options" [ngClass]="{'game-name': question.is_editing}" *ngIf="isfeedback && feedbackTab"
+                matTooltip="{{'category' | translate}}" matTooltipPosition="above">
+                {{question.category_name}}</p>
+              <select *ngIf="(question?.is_new || question?.is_clone) && isGame" name="category_name"
+                class="game-change select">
+                <option [value]="question?.category_id" selected>{{question.category_name}}</option>
+              </select>
+            </div>
+          </div>
+          <!-- feeedback game and category display end-->
+
+          <div class="options has-icon points-width"
+            [ngClass]="{'is-viewing': !question.is_editing, 'is-editing': question.is_editing}"
+            *ngIf="isGame && !hideEdit">
+            <mat-icon>videogame_asset</mat-icon>
+            <div>
+              <p class="text-options is-viewing text-ellipses"
+                [ngClass]="{'game-name': question.is_editing && !question?.is_new}" *ngIf="isGame"
+                [hidden]="question.is_new" matTooltip="{{customQuestionPlaceholder}}" matTooltipPosition="above">
+                {{customQuestionPlaceholder}}</p>
+              <select *ngIf="(question?.is_new) && isGame" [(ngModel)]="customQuestion" name="game_name"
+                class="game-change select" (ngModelChange)="onGameSelection($event)">
+                <option selected disabled value="">{{'game' | translate}}</option>
+                <option *ngFor="let game of games" [ngValue]="game">{{game?.game_name}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="options has-icon points-width"
+            [ngClass]="{'is-viewing': !question.is_editing, 'is-editing': question.is_editing}"
+            [hidden]="isfeedback && feedbackTab">
+            <mat-icon>dns</mat-icon>
+            <div>
+              <p class="text-options" *ngIf="!question?.is_editing" matTooltip="{{'category' | translate}}"
+                matTooltipPosition="above">
+                {{customCategory?.name}}</p>
+              <select *ngIf="question?.is_editing" matNativeControl [(ngModel)]="customCategory" name="category_name"
+                class="game-change select" (ngModelChange)="categorySelection($event)">
+                <option selected [value]="customCategory" [hidden]="question.categories">
+                  {{question.category_name || ('category' | translate)}}</option>
+                <option [hidden]="!question.categories" *ngFor="let category of question.categories"
+                  [ngValue]="category">{{category.name}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="options has-icon"
+            [ngClass]="{'is-viewing': !question.is_editing, 'is-editing': question.is_editing}">
+            <mat-icon>access_alarm</mat-icon>
+            <div>
+              <p class="text-options" *ngIf="!question?.is_editing" matTooltip="{{'timer' | translate}}"
+                matTooltipPosition="above">
+                {{question.time}}</p>
+              <select matNativeControl [(ngModel)]="question.time" class="select" name="timer"
+                *ngIf="question?.is_editing">
+                <option *ngFor="let timer_option of timer_options">{{timer_option}}</option>
+              </select>
+            </div>
+          </div>
+
+
+        
+
+          <div class="options has-icon points-width"
+          [ngClass]="{'is-viewing': !question.is_editing, 'is-editing': question.is_editing}">
+          <mat-icon>monetization_on</mat-icon>
+          <div>
+            <p class="text-options" *ngIf="!question?.is_editing" matTooltip="{{'points' | translate}}"
+              matTooltipPosition="above">
+              {{ question?.points || ('ai_gamegenius' | translate)}}</p>
+            <select matNativeControl [(ngModel)]="question.points" class="select" name="monetization"
+              *ngIf="question?.is_editing">
+              <option value="0" [selected]="hideSingleChoice" *ngIf="hideSingleChoice">{{'ai_gamegenius' | translate}}
+              </option>
+              <option *ngFor="let points_option of points_options" [value]="points_option">
+                {{points_option}}
+              </option>
+            </select>
+          </div>
+        </div>
+          <mat-icon class="asset-icon" [ngClass]="{'active-icon': question?.question_image}"
+            *ngIf="question?.is_editing" (click)="question?.question_image ? image(question) : imgInput.click()">
+            {{question?.question_image ? 'wallpaper' : 'add_photo_alternate'}}</mat-icon>
+          <mat-icon class="asset-icon" [ngClass]="{'active-icon': question?.question_audio}"
+            *ngIf="question?.is_editing" (click)="question?.question_audio ? audio(question) : audioInput.click()">
+            {{question?.question_audio ? 'queue_music' : 'music_video'}}</mat-icon>
+          <mat-icon class="asset-icon audio-view" *ngIf="question?.question_audio && !question.is_editing"
+            (click)="$event.stopPropagation(); question?.question_audio ? audio(question) : $event.stopPropagation();">
+            queue_music</mat-icon>
+          <mat-icon class="asset-icon" [ngClass]="{'active-icon': question.tag_keywords}" *ngIf="question.is_editing"
+            matTooltip="{{question.tag_keywords}}" (click)="tags(question)" matTooltipPosition="above">
+            {{question?.tag_keywords? 'beenhere' : 'label'}} </mat-icon>
+        </div>
+      </div>
+    </div>
+  </td>
+  <td style="position:relative;vertical-align: top;"
+    (click)="!(question.is_editing && question?.is_editable) ? toggleExpansion(true) :$event.stopPropagation()"
+    [ngClass]="question.is_editing ? 'is-editing' : 'is_disabled'" class="fixed-width td-ans-align">
+    <div>
+      <div class="answer-container">
+        <div *ngIf="!questionAnswerOptionLength && question?.is_editing" class="choices">
+          <button *ngFor="let options of manage_options" class="handCursor"
+            [hidden]="(hideSingleChoice && (question?.is_new || question?.is_clone) && options.key === 2) || !(question?.question_type !== 2)"
+            (click)="activateAnswers(question, options.key, options.count)">
+            <div *ngIf="options?.isEmpty" class="single-icon"></div>
+            <mat-icon *ngIf="!options?.isEmpty">drag_handle</mat-icon> {{options?.text}}
+          </button>
+        </div>
+        <div class="answer" *ngIf="questionAnswerOptionLength">
+          <div class="answer-container" *ngIf="questionAnswerOptionLength">
+            <div class="theme" [ngClass]="{'greyed-theme': !question.is_editing}">
+              <div class="answer-options" #ansOptionFour>
+                <span *ngFor="let option of question.answer.options;let i = index; ">
+                   <div class="answer-option" [ngClass]="{'multiple-choice-css': !question.is_editing && questionAnswerOptionLength > 1}" *ngIf="!option?.is_deleted">
+                        <mat-checkbox class="spacing" color="primary" name="is_correct" [(ngModel)]="option.is_correct"
+                          [disabled]="!question.is_editing "
+                          *ngIf="questionAnswerOptionLength > 1" (change)="isSelected(i)"></mat-checkbox>
+                              <div class="options" [ngClass]="{'is-correct': (option.is_correct === true)}" >
+                                  <input *ngIf="questionAnswerOptionLength > 1" minlength="1" maxlength="500"
+                                  [ngClass]="{'is-red': optionNotValid && option?.option?.length > 15 && option.is_correct && question?.game_type == 1}" type="text"
+                                    class="holder form-inputs" placeholder="{{ question.is_system_generated ? question?.default_language.answer.options[i]?.option : 'option' | translate}} {{question.is_system_generated ? '' : i+1}}"
+                                    [(ngModel)]="option.option">
+
+                                    <span *ngIf="question?.is_editing && 
+                                    ((question?.question_type == 2 && questionAnswerOptionLength > 1) || 
+                                      (question?.game_type == 1 && questionAnswerOptionLength > 1) || 
+                                      question?.game_type == 2 && questionAnswerOptionLength > 1 ||
+                                      ((question?.is_new || question?.is_clone) &&
+                                      ((hideSingleChoice && questionAnswerOptionLength > 2) ||
+                                      !hideSingleChoice && questionAnswerOptionLength > 1)))" 
+
+                                      (click)="removeAnswer(i,option,question)"
+                                      [hidden]="question?.show_place_holder && question.game_state !== 'DRAFT'">
+                                        <mat-icon class="mat-icon-cancel">cancel</mat-icon>                
+                                   </span>
+                                  <textarea *ngIf="questionAnswerOptionLength === 1 && question.is_editing && question?.game_type != 1" class="question"
+                                    name="option" id="" [(ngModel)]="option.option" 
+                                    placeholder="{{'answer_option' | translate}}"
+                                    rows="4" minlength="1" maxlength="2000">
+                                    {{option.option}}
+                                  </textarea>
+                                  <textarea *ngIf="questionAnswerOptionLength === 1 && question?.game_type == 1" class="question"
+                                    name="option" id="" [(ngModel)]="option.option" 
+                                    placeholder="{{ question.is_system_generated ? question?.default_language.answer.options[i]?.option : 'answer_option' | translate}}"
+                                    rows="4" minlength="1" maxlength="15">
+                                    {{option.option}}
+                                  </textarea>
+
+                                <div class="is-truncated" #ansOptionOne
+                                    *ngIf="questionAnswerOptionLength === 1 && !question.is_editing && question?.game_type != 1"
+                                    [textContent]="option.option">
+                                  </div>
+                                
+    
+                           </div>  
+                              <span class="question-suggestion-icon" *ngIf="question?.is_editing && !question.is_new && question.show_place_holder" #ansOptionFourDefault>
+                                <mat-icon class="question-suggestion-icon mat-icon-suggestion" 
+                                [matTooltip]="question?.default_language?.answer.options[i]?.option" 
+                                matTooltipPosition="left"   matTooltipClass="primary-tooltip"> help</mat-icon>
+                              </span>
+                     </div>
+                     </span>
+                     <!-- </div> -->
+                        <div class="editing-options" 
+                          [ngStyle]="{'margin-top':  questionAnswerOptionLength > 2 ? '5px' : '10px'}">
+                          <p class="edit" [hidden]="!question.is_editing || question.show_place_holder && question.game_state !== 'DRAFT'"
+                            (click)="questionAnswerOptionLength < 10 ? addMore(question) : $event.stopPropagation()"
+                            *ngIf="questionAnswerOptionLength < 10">+
+                            {{'add_more' | translate}}</p>
+                        </div>
+                        <div class="editing-options char-limit-validation" *ngIf="question?.answer_option_type == 'SHORT_ANSWER' && question.is_editing && question?.game_type == 1">
+                          <p>{{'max_15_char_error_and_note'| translate}}</p>
+                        </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="save-cancel-qs" *ngIf="question.is_editing">
+      <div class="divider"></div>
+      <mat-icon class="edit" [ngClass]="!questionAnswerOptionLength  || isCheckClicked ? 'buttonActive' : 'save'"
+        (click)="!questionAnswerOptionLength ? $event.stopPropagation : save(question)">check</mat-icon>
+      <div class="divider"></div>
+      <mat-icon class="edit cancel" (click)="cancel(question)">close</mat-icon>
+      <div class="divider"></div>
+    </div>
+    <div class="action" [hidden]="(question.is_editing || selectedChip === -2) || !isRowHover || (!question?.is_editable && isGame) ||
+      question?.is_shop_game || question?.is_archived"
+      *ngIf="!(!question.isOpen && (!question?.is_new || !question?.is_clone) && !question.is_editing) && !isEditingQuestion && questionPermission?.edit ">
+      <div class="divider" *ngIf="!isfeedback"></div>
+        <div class="action-clone" (click)="$event.stopPropagation();clone()" *ngIf="!isfeedback && !question.is_system_generated"
+      [hidden]="question.show_place_holder && question.game_state !== 'DRAFT'">
+        <mat-icon>layers</mat-icon>
+         <span>{{'duplicate' | translate}}</span>
+      </div>
+      <div class="divider" *ngIf="!isfeedback"></div>
+      <div class="action-edit" [hidden]="question?.is_shop_game || question?.is_archived" (click)="((!question.is_editing && selectedChip !==-2) || (question.is_editing && selectedChip !==-2)) &&
+        question?.is_editable ? edit(question) : ''">
+        <mat-icon>edit</mat-icon> <span>{{'edit' | translate}}</span>
+      </div>
+    </div>
+  </td>
+</tr>
+
+
+
+
+<!-- @@@@@@@@ feedback view  @@@@@@@@-->
+<tr class=" members question-rows" width="99%" [ngClass]="{'isActive': question.is_editing}"
+  *ngIf="!!question.isOpen && isfeedback && !feedbackTab" (mouseenter)="isRowHover = true"
+  (mouseleave)="isRowHover = false">
+  <td class="small-width align-top-checkbox" [ngClass]="!question.is_editing ? 'is_disabled':''">
+    <div class="checkbox-wrapper align-checkbox" (click)="$event.stopPropagation();">
+    </div>
+  </td>
+  <td class="small-width align-top-checkbox right-align"
+    (click)="!(question.is_editing && question?.is_editable) ? toggleExpansion(true) :$event.stopPropagation()"
+    [ngClass]="question.is_editing ? 'is-editing' : 'is_disabled'">{{question?.card_number}}</td>
+  <td class="fixed-width top-aligned position-relative"
+    (click)="!(question.is_editing && question?.is_editable) ? toggleExpansion(true) :$event.stopPropagation()"
+    [ngClass]="question.is_editing ? 'is-editing' : 'is_disabled'">
+    <div>
+      <div class="question_container">
+        <div class="question-wrapper half-height" [ngClass]="{'full-height' : questionAnswerOptionLength >= 4 , 'three-ans-height': questionAnswerOptionLength == 3}">
+          <div class="question-with-img">
+            <span class="question-image" for="questionnTitle" *ngIf="question?.question_image && question.is_editing">
+              <!-- <img [ngClass]="{'queImg' : questionAnswerOptionLength >= 4}" [src]="question?.question_image" alt="question_image"> -->
+              <img #quesImage  [ngClass]="{'queImg' : questionAnswerOptionLength >= 4}"  src="/assets/img/contest-banner-image.png"
+              appSignedUrl  [imgSelector]="'changeImageSrc'" [imgSrcValue]="question?.question_image" alt="question_image"
+                *ngIf="!question.isimageAssetsBase64">
+
+              <img #quesImage  [ngClass]="{'queImg' : questionAnswerOptionLength >= 4}" [src]="question?.question_image"
+                alt="question_image"
+                onError="this.src='/assets/img/default.png'" *ngIf="question.isimageAssetsBase64">
+            
+            </span>
+            <textarea class="question" name="question" id="questionnTitle" [(ngModel)]="question.actual_question_title"
+              *ngIf="question.is_editing" 
+              placeholder="{{'enter_question_here' | translate}}" rows="5" minlength="1" maxlength="500">
+            {{question.actual_question_title}}
+          </textarea>
+
+
+          </div>
+      
+          <span class="question-image" *ngIf="question?.question_image && !question.is_editing"
+            (click)="$event.stopPropagation();question?.question_image ? image(question) : imgInput.click()">
+            <!-- <img [src]="question?.question_image" alt="question_image" onError="this.src='/assets/img/default.png'"> -->
+            <img #quesImage appSignedUrl [imgSelector]="'changeImageSrc'" [imgSrcValue]="question?.question_image" 
+              alt="question_image" onError="this.src='/assets/img/default.png'">
+          </span>
+          <div class="is-truncated" *ngIf="!question.is_editing" #questionTitle
+            [textContent]="question.actual_question_title"></div>
+        </div>
+        <div class="actions"
+          [ngClass]="{'actions-option-four': questionAnswerOptionLength >= 4,'actions-option-one': isAbsoluteRequired }">
+          <!-- feeedback game and category  display start-->
+
+          <div class="options has-icon points-width is-viewing lang-code" (click)="$event.stopPropagation();" *ngIf="question?.game_type != 2">
+            <mat-icon>translate</mat-icon>
+            <img [src]="gameModeLanguage?.img" style="width: 18px; padding-right: 2px;">
+            <span>{{gameModeLanguage?.code | uppercase}}</span>
+          </div>
+
+          <div class="options has-icon points-width"
+            [ngClass]="{'is-viewing': !question.is_editing, 'is-editing': question.is_editing}"
+            *ngIf="isfeedback && !feedbackTab">
+            <mat-icon>quiz</mat-icon>
+            <div>
+              <p class="text-options" *ngIf="!question?.is_editing" matTooltip=" {{question?.answer_option_type | translate}} "
+                matTooltipPosition="above">
+                {{question?.answer_option_type | translate}}
+              </p>
+          
+            </div>
+          </div>
+
+          <div class="options has-icon points-width"
+            [ngClass]="{'is-viewing': !question.is_editing, 'is-editing': question.is_editing}"
+            *ngIf="isfeedback && !feedbackTab">
+            <mat-icon>videogame_asset</mat-icon>
+            <div>
+              <p class="text-options is-viewing text-ellipsis" [ngClass]="{'game-name': question.is_editing}"
+                *ngIf="isfeedback && !feedbackTab" matTooltip="{{question?.game_name}}" matTooltipPosition="above">
+                {{question?.game_name}}</p>
+              <select *ngIf="question?.is_new && isGame" name="game_name">
+                <option [ngValue]="question?.game_id" selected>{{question?.game_name}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="options has-icon points-width"
+            [ngClass]="{'is-viewing': !question.is_editing, 'is-editing': question.is_editing}"
+            *ngIf="isfeedback && !feedbackTab">
+            <mat-icon>dns</mat-icon>
+            <div>
+              <p class="text-options" *ngIf="isfeedback && !feedbackTab" matTooltip="{{'category' | translate}}"
+                matTooltipPosition="above">{{question.category_name}}</p>
+              <select *ngIf="question?.is_new && isGame" name="category_name" class="game-change select">
+                <option [value]="question?.category_name" selected>{{question.category_name}}</option>
+              </select>
+            </div>
+          </div>
+
+          
+          <!-- feeedback game name display end-->
+          <div class="options has-icon"
+            [ngClass]="{'is-viewing': !question.is_editing, 'is-editing': question.is_editing}">
+            <mat-icon>access_alarm</mat-icon>
+            <div>
+              <p class="text-options" *ngIf="!question?.is_editing" matTooltip="{{'timer' | translate}}"
+                matTooltipPosition="above">
+                {{question.time}}</p>
+              <select matNativeControl [(ngModel)]="question.time" class="select" name="timer"
+                *ngIf="question?.is_editing">
+                <option *ngFor="let timer_option of timer_options">{{timer_option}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="options has-icon points-width"
+            [ngClass]="{'is-viewing': !question.is_editing, 'is-editing': question.is_editing}">
+            <mat-icon>monetization_on</mat-icon>
+            <div>
+              <p class="text-options" *ngIf="!question?.is_editing" matTooltip="{{'points' | translate}}"
+                matTooltipPosition="above">
+                {{ question?.points || ('ai_gamegenius' | translate)}}</p>
+              <select matNativeControl [(ngModel)]="question.points" class="select" name="monetization"
+                *ngIf="question?.is_editing">
+                <option value="0" [selected]="hideSingleChoice" *ngIf="hideSingleChoice">{{'ai_gamegenius' | translate}}
+                </option>
+                <option *ngFor="let points_option of points_options">{{points_option}}</option>
+              </select>
+            </div>
+          </div>
+          <mat-icon class="asset-icon" [ngClass]="{'active-icon': question?.question_image}"
+            *ngIf="question?.is_editing" (click)="question?.question_image ? image(question) : imgInput.click()">
+            {{question?.question_image ? 'photo_size_select_actual' : 'add_photo_alternate'}}</mat-icon>
+          <mat-icon class="asset-icon" [ngClass]="{'active-icon': question?.question_audio}"
+            *ngIf="question?.is_editing" (click)="question?.question_audio ? audio(question) : audioInput.click()">{{question?.question_audio
+            ? 'queue_music' : 'music_video'}}</mat-icon>
+          <mat-icon class="asset-icon audio-view" *ngIf="question?.question_audio && !question.is_editing"
+            (click)="$event.stopPropagation(); question?.question_audio ? audio(question) : $event.stopPropagation();">
+            queue_music</mat-icon>
+          <mat-icon class="asset-icon" [ngClass]="{'active-icon': question.tag_keywords}" *ngIf="question.is_editing"
+            matTooltip="{{question.tag_keywords}}" (click)="tags(question)">
+            {{question?.question_audio? 'beenhere' : 'label'}} 
+          </mat-icon>
+
+        </div>
+      </div>
+    </div>
+  </td>
+  <td style="position:relative;vertical-align: top;"
+    (click)="!(question.is_editing && question?.is_editable) ? toggleExpansion(true) :$event.stopPropagation()"
+    [ngClass]="question.is_editing ? 'is-editing' : 'is_disabled'" class="fixed-width td-ans-align">
+    <div>
+      <div class="answer-container">
+        <div *ngIf="!actualQuestionAnswerOptionLength && question?.is_editing" class="choices">
+          <button *ngFor="let options of manage_options" class="handCursor"
+            [hidden]="(hideSingleChoice && question?.is_new && options.key === 2) || !(question?.question_type !== 2)"
+            (click)="activateAnswers(question, options.key, options.count)">
+            <div *ngIf="options?.isEmpty" class="single-icon"></div>
+            <mat-icon *ngIf="!options?.isEmpty">drag_handle</mat-icon> {{options?.text}}
+          </button>
+        </div>
+        <div class="answer" *ngIf="actualQuestionAnswerOptionLength">
+          <div class="answer-container" *ngIf="actualQuestionAnswerOptionLength">
+            <div class="theme" [ngClass]="{'greyed-theme': !question.is_editing}">
+              <div class="answer-options" #ansOptionFour>
+                <span *ngFor="let option of question.actual_question_answer.options; last as isLast;let i = index;">
+                  <div class="answer-option" [ngClass]="{'multiple-choice-css': !question.is_editing && actualQuestionAnswerOptionLength > 1}">
+                    <mat-checkbox class="spacing" color="primary" name="is_correct" [(ngModel)]="option.is_correct"
+                      [disabled]="!question.is_editing || (actualQuestionAnswerOptionLength === 3 && i === 2)"
+                      *ngIf="actualQuestionAnswerOptionLength > 1" (change)="isSelected(i)">
+                    </mat-checkbox>
+                    <div class="options" [ngClass]="{'is-correct': (option.is_correct === true)}" *ngIf="!option.is_deleted">
+                      <input *ngIf="actualQuestionAnswerOptionLength > 1" minlength="1" maxlength="500"
+                        [ngClass]="{'is-greyed': (actualQuestionAnswerOptionLength === 3 && i === 2)}"
+                        type="text" class="holder form-inputs" placeholder="{{'option' | translate}} {{i+1}}"
+                        [(ngModel)]="option.option">
+                      <span
+                        *ngIf="question?.is_editing && ((question?.question_type == 2 && actualQuestionAnswerOptionLength > 1) || 
+                        ((question?.question_type == 3 || question?.question_type == 1) && question?.game_type == 1 && actualQuestionAnswerOptionLength > 2) || 
+                         question?.game_type == 2 && questionAnswerOptionLength > 1 || (question?.is_new && ((hideSingleChoice && actualQuestionAnswerOptionLength > 2) || !hideSingleChoice && questionAnswerOptionLength > 1)))"
+                        (click)="removeAnswer(i,option)"
+                        [hidden]="question?.show_place_holder && question?.game_state !== 'DRAFT'">
+                        <mat-icon>cancel</mat-icon>
+                      </span>
+
+                      <div class="is-truncated" #ansOptionOne
+                        *ngIf="actualQuestionAnswerOptionLength === 1 && !question.is_editing"
+                        [textContent]="option.option"></div>
+                    </div>
+                  </div>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </td>
+</tr>
+<!-- @@@@@@@@ feedback for view end @@@@@@@@-->
+
+<!-- Feedback Again -->
+<tr *ngIf="(!!question.isOpen || question.is_new) && isfeedback" class="feedback-bottom-row">
+  <td colspan="3" class="content-align">
+    <div style="display: flex;flex: 1;">
+      <p class="feedback-p">{{'date_closed' | translate}}: {{getDate(question?.resolved_on, true)}} </p>
+      &nbsp;&nbsp; &nbsp;
+      <p class="feedback-p">{{'closed_by' | translate}}: {{question?.resolved_by || ('not_available' | translate)}}
+      </p>
+    </div>
+  </td>
+  <td class="content-align">
+    <div class="right-align">
+      <p class="feedback-p">{{'question_creation_date' | translate}}: {{getDate(question?.created_on, true)}}</p>
+    </div>
+  </td>
+</tr>
+<!-- Feedback Finished -->

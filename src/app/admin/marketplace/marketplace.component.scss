@@ -1,0 +1,688 @@
+@import "../../../styles.scss";
+
+.main-container {
+  height: calc(100vh - 103px);
+  position: relative;
+  .search-input {
+    border: 1px solid transparent !important;
+  }
+
+  .progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 998;
+    padding: 0 28px;
+  }
+  .mat-toolbar-row.header-title {
+    background-color: white;
+    padding: 0px 47px;
+    height: 54px !important;
+    @include media-breakpoint-down(sm) {
+      padding: 0px 22px;
+    }
+    .title {
+      font: {
+        family: Roboto_Bold;
+        size: 18px;
+      }
+    }
+    .spacer {
+      flex: 0;
+      padding: 5px;
+    }
+    .info-icon {
+      height: 18px;
+      width: 18px;
+      font-size: 18px;
+    }
+  }
+  .wrapper {
+    // padding: 20px 10px 0;
+    overflow: auto;
+    @include media-breakpoint-down(sm) {
+      padding: 0px !important;
+      .banner-image {
+        height: auto !important;
+      }
+    }
+
+    // height: $header_height;
+    // max-height: $header_height;
+    position: relative;
+
+    .container-card {
+      padding: 20px 0px !important;
+      padding-top: 26px;
+      // height: calc(100vh - 158px);
+      height: calc(100vh - 93px);
+      background: $primary_bg_color;
+      border: none;
+      box-shadow: none;
+      overflow: hidden;
+      @include i-pad-design-with-btn;
+
+      @include media-breakpoint-down(sm) {
+        margin: 0px;
+        padding: 0px;
+      }
+      .scroll-content{
+        // height: 4500px;
+        height: calc(100vh - 112px);
+        padding-bottom: 20px;
+      }
+      .toolbar{
+        padding: 0;
+        border: 1px solid transparent;
+        overflow: hidden;
+        height: 47px;
+        border-top: 1px solid #e8e8e8;
+        .divider {
+          width: 2px;
+          height: 20px;
+          background: #d7d7d7;
+          margin: 6px 4px 6px 6px;
+        }
+      }
+      .btn-all{
+        cursor: default;
+        width: 60px;
+        height: 32px;
+        margin: 8px 4px 8px 8px;
+      }
+      .sticky {
+        height: 64px;
+        opacity: 1;
+        transition: opacity .25s ease-out, height .15s ease;
+      }
+      mat-toolbar {
+        --default-height: 100px;
+      }
+      mat-card-header[sticky="yes"] {
+        position: sticky;
+        top: 0px;
+        z-index: 997;
+      }
+     .search-toolbar-row {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        flex-direction: column;
+        padding: 0 25px;
+      .serarch-wrapper{
+        position: relative;
+      }
+          .search-icon {
+            position: absolute;
+            right: 34px;
+            top: 18px;
+            color: #3956d1;
+          }
+            .chip-form-field {
+              flex: 1;
+            }
+            .list-wrapper{
+              position: absolute;
+              max-height: 230px;
+              background: #fff;
+              box-shadow: 0px 2px 4px #52525266;
+              width: 100%;
+              z-index: 1;
+              .text-game{
+                font-family: Roboto_Bold;
+                font-size: 14px;
+                padding: 8px 0px 6px 16px;
+                display: flex;
+                width: 100%;
+                background: white;
+              }
+            }
+            .list-wrapper-msg{
+                position: absolute;
+                height: 192px;
+                background: #fff;
+                box-shadow: 0px 2px 4px #52525266;
+                width: 100%;
+                z-index: 1;
+
+              .lottie-animation{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 51px;
+                flex-direction: row;
+                margin-top: 40px;
+                // background-color: #fff;
+              }
+             
+            }
+            
+              .list-content{
+                max-height: 194px;
+                overflow-y: scroll;
+                box-shadow: 0px 3px 6px #00000029;
+                .game-name{
+                  color: #444444;
+                  font-size: 14px;
+                  font-family: 'Roboto_Regular';
+                  padding-right: 6px;
+                }
+                .category-name{
+                  color: #707070;
+                  font-size: 14px;
+                  font-family: 'Roboto_Regular';
+                  padding-left: 6px;
+                }
+              }
+              .list-item{
+                padding: 0;
+                position: relative;
+                cursor: pointer;
+                border-top: 1px solid #eeeeee;
+              }
+            .no-record-msg{
+              font-size: 14px;
+              font-family: 'Roboto_Regular';
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              flex-direction: column;
+              height: 100px;
+              a {
+                color: #3956d1;
+                text-decoration: underline;
+                cursor: pointer;
+                font-family: 'Roboto_Medium';
+              }
+            }
+            .list-item-divider{
+              padding: 0;
+              border: 1px solid #EFEFEF;
+            }
+            .search-item {
+              height: 50px;
+              font-size: 14px;
+              font-family: "Roboto_Regular";
+              display: flex;
+              align-items: center;
+              width: 100%;
+              border-bottom: 1px solid #ccc;
+              background: rgb(255, 255, 255);
+              border: none;
+              outline: none;
+              padding: 0px 20px;
+      
+              @include media-breakpoint-down(md) {
+                // margin-left: 10px;
+              }
+            }
+          .example-chip-list {
+            width: 100%;
+            height: 50px;
+            }
+        ::ng-deep .mat-chip-list-wrapper {
+          flex-wrap: nowrap;
+         }
+        .mat-chip.mat-standard-chip {
+          background-color: #ffffff;
+          word-break: break-word;
+          height: auto;
+          border: 1px dashed gray;
+          cursor: pointer;
+          }
+          .scrollable {
+            overflow-x: scroll !important;
+            scrollbar-width: none; // hide scroll area for mozilla
+            overflow-x: overlay;
+            overflow-y: hidden;
+            padding-top: 6px;
+        
+            ::ng-deep .mat-chip-list-wrapper {
+              flex-wrap: nowrap;
+        
+              .mat-chip {
+                overflow: hidden;
+                min-width: fit-content;
+              }
+            }
+            }
+    }
+      
+      .logo {
+        width: 40px;
+        border-radius: 50%;
+        margin: 5px 20px 5px 5px;
+        background: black;
+      }
+
+      .search-container {
+        margin-left: 15px;
+      }
+
+      .mat-card-header {
+        .banner-image {
+          background-color: white;
+          border: 1px solid white;
+          width: 100%;
+          max-height: 40vh;
+          height: auto;
+          margin: 0 28px 10px;
+          position: relative;
+          font: {
+            family: Roboto_Regular;
+            size: $text_size_med;
+          }
+          img {
+            min-height: 200px;
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+          }
+          .edit-image-section {
+            cursor: pointer;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #3856d1;
+            color: white;
+            height: 36px;
+            width: 135px;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            border-radius: 3px;
+            box-shadow: 0px 3px 6px #00000029;
+            mat-icon {
+              font-size: 22px;
+            }
+          }
+        }
+        .mat-card-header-text {
+          display: none !important;
+        }
+
+        .mat-toolbar {
+          padding: 0;
+          padding-left: 0px;
+          padding-right: 0px;
+          border: none;
+          min-height: $row_height;
+          box-shadow: 0px 3px 6px #00000029;
+
+          .mat-toolbar-row {
+            height: $row_height;
+            border-bottom: 1px solid $mat_border_color;
+
+            .game-toggle-switch {
+              border: solid 1px $brand_color;
+
+              ::ng-deep .mat-button-toggle-checked {
+                background-color: $brand_color;
+                color: $selected_bg_color;
+              }
+            }
+
+            .toolbar-icon-color {
+              cursor: pointer;
+              color: $disable_color;
+            }
+
+            .filter-chip {
+              margin-left: 16px;
+            }
+
+            &:last-child {
+              border-top: 1px solid transparent;
+              border-bottom: 1px solid transparent;
+            }
+
+            .title {
+              margin-left: 14px;
+
+              font: {
+                family: Roboto_Regular;
+                size: $text_size_med;
+              }
+
+              .name {
+                font: {
+                  family: Roboto_Medium;
+                  size: $default_font_size;
+                }
+
+                color: $textMidGrey;
+              }
+
+              span {
+                color: $textColor;
+              }
+            }
+          }
+          .category-list {
+            display: flex;
+            .category {
+              cursor: pointer;
+              border: 1px solid #bfbfbf;
+              border-radius: 25px;
+              padding: 0 20px;
+              color: grey;
+              margin: 0 5px;
+              font: {
+                family: Roboto_Medium;
+                size: $default_font_size;
+              }
+            }
+            .selected {
+              color: $brand_color;
+              border: 1px solid $brand_color;
+            }
+          }
+        }
+      }
+
+      //changes
+      mat-card {
+        height: 100%;
+        padding: 0;
+      }
+
+      border-radius: 5px;
+
+      mat-card-footer {
+        margin: 0;
+        border-top: 1px solid $border-color;
+        text-align: center;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        padding: 8px;
+        font-size: 0.8em;
+        height: 40px;
+        white-space: nowrap;
+      }
+
+      .lower-text-container {
+        padding-top: calc(50% - 20px);
+      }
+
+      .color-content {
+        height: calc(50% - 20px);
+        width: 100%;
+        position: absolute;
+        top: 0;
+        .upper-text-container {
+          justify-content: center;
+          align-items: center;
+          display: flex;
+          height: 100%;
+        }
+      }
+
+      .isActiveContent {
+        opacity: 1 !important;
+      }
+
+      .theme-container {
+        cursor: pointer;
+      }
+
+      .mat-card-content {
+        width: 100%;
+        min-height: $company_content_height;
+        height: $company_content_height;
+        max-height: $company_content_height;
+        margin: 0;
+        border-top: 1px solid $mat_border_color;
+        border-bottom: 0px solid $mat_border_color;
+
+        font-family: Roboto_Regular;
+        font-size: $text_size_med;
+
+        .no_messages {
+          padding: 0;
+          width: 100%;
+          height: 100%;
+          text-align: center;
+          padding-top: 20px;
+
+          font: {
+            family: Roboto_Regular;
+            size: $default_font_size;
+          }
+
+          @extend .center-align;
+        }
+        .game-container {
+          div,
+          mat-grid-list {
+            // margin: 20px;
+            // mat-grid-tile {
+            //   border: 1px solid #f4f4f4;
+            //   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05), 0 1px 10px 0 rgba(0, 0, 0, 0.05),
+            //     0 3px 5px -1px rgba(0, 0, 0, 0.05);
+            //   background: #fff;
+            //   &:hover {
+            //     transform: scale(1.06);
+            //     box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05), 0 1px 10px 0 rgba(0, 0, 0, 0.05),
+            //       0 3px 6px 3px rgba(0, 0, 0, 0.12) !important;
+            //   }
+            // }
+            .asset-card {
+              width: 100%;
+            }
+          }
+          .category-section {
+            display: inline-flex;
+            width: 100%;
+            justify-content: space-between;
+            padding: 40px 28px 22px 28px;
+            // padding-bottom: 20px;
+            .category-name {
+              font: {
+                family: Roboto_Bold;
+                size: 16px;
+              }
+            }
+            .category-view-all {
+              color: $brand_color;
+              cursor: pointer;
+              font: {
+                family: Roboto_Bold;
+                size: 14px;
+              }
+            }
+          }
+        }
+      }
+
+      .no_messages {
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        padding-top: 20px;
+
+        font: {
+          family: Roboto_Regular;
+          size: $default_font_size;
+        }
+
+        @extend .center-align;
+      }
+    }
+
+    .add-game {
+      width: 54px;
+      height: 54px;
+      background-color: $add_icon_background;
+      color: $add_icon;
+      padding: 5px 20px;
+      border-radius: 50%;
+      font-size: $default_font_size;
+      position: absolute;
+      left: -23px;
+      top: 24px;
+      @extend .center-align;
+      -webkit-transition: all 1s;
+      -moz-transition: all 1s;
+      -o-transition: all 1s;
+      -ms-transition: all 1s;
+      transition: all 1s;
+    }
+
+    @keyframes blinker {
+      50% {
+        opacity: 0.5;
+      }
+    }
+  }
+
+  .horizontalLine {
+    margin: auto;
+  }
+
+  .disabled-btn {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .quick-nav-bar {
+    padding: 5px 40px;
+    background-color: $secondary_bg_color;
+    font-size: $text_size_med;
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05), 0 1px 10px 0 rgba(0, 0, 0, 0.05), 0 3px 5px -1px rgba(0, 0, 0, 0.05);
+  }
+
+  .toolbar {
+    background-color: $secondary_bg_color;
+    border-bottom: 1px solid $mat_border_color;
+    padding: 5px 20px;
+    font-size: $text_size_med;
+    width: 100%;
+  }
+
+  .spacer {
+    flex: 1;
+  }
+
+  .toolbar-button {
+    font-size: 12px;
+    color: $add-filter-icon-color;
+  }
+
+  .mat-sort-header-container {
+    align-items: center;
+  }
+
+  .matGridTile,
+  .mat-icon-button {
+    transition: transform 0.2s;
+    /* Animation */
+    box-shadow: none;
+  }
+  .matGridTile {
+    background: $primary_bg_color;
+    padding-right: 15px;
+    // width: 225px;
+  }
+  .tileCopying {
+    border: 1px solid #6edc0b !important;
+    animation: blinker 1s linear infinite;
+    padding: 0;
+  }
+
+  .gameListGrid {
+    padding: 0 25px;
+    // ::ng-deep .mat-card {
+    //   background: none !important;
+    // }
+  }
+
+  .gameListRow {
+    display: flex;
+    justify-content: left;
+    // justify-content: space-between;
+    padding: 0 28px;
+  }
+  .gameListRow_spaceEvenly {
+    justify-content: space-between;
+    .matGridTile {
+      padding-right: 0;
+    }
+  }
+
+  .no_messages {
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    padding-top: 20px;
+
+    font: {
+      family: Roboto_Regular;
+      size: $default_font_size;
+    }
+
+    @extend .center-align;
+  }
+
+  .mat-card-actions {
+    margin: 0;
+    padding: 0;
+    background: white;
+    .mat-paginator {
+      width: 95%;
+      margin: 0 auto;
+
+      .mat-paginator-page-size {
+        flex: 1;
+      }
+    }
+  }
+}
+// .view-all-style {
+//   .container-card {
+//     // height: calc(100vh - 220px) !important;
+//     height: calc(100vh - 161px) !important;
+//   }
+//   .game-container {
+//     padding-top: 40px;
+//   }
+//   .gameListRow {
+//     flex-wrap: wrap;
+//     padding: 0 25px;
+//   }
+//   .matGridTile {
+//     padding-bottom: 40px;
+//     margin: 0 3px;
+//   }
+// }
+/* Use the button type you're using here */
+button.mat-icon-button {
+  &.cdk-program-focused {
+    ::ng-deep .mat-button-focus-overlay {
+      opacity: 0; // hide overlay
+    }
+  }
+}
+
+::ng-deep .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+  line-height: 30px !important;
+}
+
+::ng-deep .mat-button-toggle-button {
+  height: 30px !important;
+}
+
+::ng-deep .mat-paginator-container {
+  align-items: center !important;
+}
+
+::ng-deep .gameListGrid .mat-grid-list {
+  background: none !important;
+}
+
+// ::ng-deep .gameListGrid .mat-grid-tile {
+//   width: 223px !important;
+// }

@@ -1,0 +1,24 @@
+@import "../../../../styles.scss";
+
+.barChartWrapper{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;    
+}
+
+.no_messages {
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    padding-top: 20px;
+
+    font: {
+        family: Roboto_Regular;
+        size: $default_font_size;
+    }
+
+    @extend .center-align;
+}

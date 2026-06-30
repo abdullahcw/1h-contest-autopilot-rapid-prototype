@@ -1,0 +1,155 @@
+<div class="dashboard-wrapper">
+  
+  <app-skill-insights [selectedDashboardTabType]="selectedDashboardTabType" ></app-skill-insights>
+
+<div class="main_container">
+    <div class="wrapper">
+     <mat-card class="dashboard-card">
+      <mat-toolbar class="toolbar">
+   
+      <mat-toolbar-row class="search-toolbar-row">
+        <div style="width: 100%;">
+          <app-search class="filter-chip" style="width:100%" [filter_options]="filter_options" [dataSource]="menuList"
+            (filtersUpdated)="refreshListOnFilterChange($event)" 
+            (getDataSourceWithFilterDetails)="getDataSource($event)" [applied_filters]="defaultFilters"
+            [context]="context" (getDataSourceWithSearchKey)="getDataSourceWithSearchKey($event)"  
+            (filterOptionUpdated)="filterOptionUpdated($event)">
+          </app-search>
+        </div>
+      </mat-toolbar-row>
+
+
+      <mat-toolbar-row class="dashboard download-icon">
+        <div class="icon-wrapper">
+          <div  class="download-report" [matMenuTriggerFor]="menu"
+            matTooltip="{{'options' | translate}}" matTooltipPosition="left" style="cursor: pointer">
+            <mat-icon class="download-icon">cloud_download</mat-icon>
+          </div>
+        </div>
+        <mat-menu #menu="matMenu" class="menu_status" y-position="below" overlapTrigger="false">
+          <button mat-menu-item class="options-menu-item" (click)="downloadReport()">
+            <mat-icon class="toolbar-icon-color">cloud_download</mat-icon>
+            <span>{{'download' | translate}}</span>
+          </button>
+        </mat-menu>
+      </mat-toolbar-row>
+    </mat-toolbar>
+    <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+      <mat-card-content class="masterCardTable">
+        <div class="no_messages" *ngIf="!playerDataSource?.data.length">
+          <p>{{is_loading ? ('please_wait' | translate) : ('no_record_found' | translate)}}</p>
+        </div>
+        <table aria-describedby="" mat-table [dataSource]="playerDataSource" matSort class="responsive-table"
+              matSortActive="first_name" matSortDirection="asc" matSortDisableClear (matSortChange)="sortData($event)"
+              matSortStart="desc" *ngIf="playerDataSource?.data?.length" [ngClass]="{'disabled-style': is_loading}">
+    
+             
+              <ng-container matColumnDef="profile_image_url">
+                <th id="" mat-header-cell *matHeaderCellDef mat-sort-header></th>
+                <td mat-cell *matCellDef="let player" width="20px">
+                  <app-custom-images-table-static class="img-wrapper" [className]="'img40by40'"  [ImageSrc]="player.profile_image_url" > </app-custom-images-table-static>
+              </ng-container>
+    
+              <ng-container matColumnDef="first_name">
+                <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'player' | translate}}</th>
+                <td mat-cell *matCellDef="let player">
+                  <p class="text-content-style">
+                    {{player.first_name}} {{player.last_name}}
+                  </p>
+                </td>
+              </ng-container>
+    
+              <ng-container matColumnDef="sp_games">
+                <th id="" mat-header-cell *matHeaderCellDef mat-sort-header >{{'total_game_played_sp' | translate}}</th>
+                <td mat-cell *matCellDef="let player">
+                  <p class="number-content-style medium-content">
+                    {{formatNumber(player.sp_games) || '0'}}
+                  </p>
+                </td>
+              </ng-container>
+    
+              <ng-container matColumnDef="week_streak">
+                <th id="" mat-header-cell *matHeaderCellDef mat-sort-header >{{'current_weekly_streak' | translate}}</th>
+                <td mat-cell *matCellDef="let player">
+                  <p class="text-content-style small-content">
+                    {{player.week_streak || '0'}}
+    
+                  </p>
+                </td>
+              </ng-container>
+    
+              <ng-container matColumnDef="days_inactive">
+                <th id="" mat-header-cell *matHeaderCellDef mat-sort-header >{{'days_inactive' | translate}}</th>
+                <td mat-cell *matCellDef="let player">
+                  <p class="number-content-style medium-content">
+                    {{formatNumber(player.days_inactive) || '0'}}
+    
+                  </p>
+                </td>
+              </ng-container>
+    
+              <ng-container matColumnDef="sp_last_played_on">
+                <th id="" mat-header-cell *matHeaderCellDef mat-sort-header >{{'last_played_sp' | translate}}</th>
+                <td mat-cell *matCellDef="let player">
+                  <p class="text-content-style long-content" *ngIf="player.spPlayedOnFormatted">
+                    {{player.spPlayedOnFormatted}} {{player.spTzAbbrevation}}
+                  </p>
+                  <p *ngIf="!player.spPlayedOnFormatted" class="hyphen-styling">
+                    -
+                  </p>
+                </td>
+              </ng-container>
+    
+    
+              <ng-container matColumnDef="department_name">
+                <th id="" mat-header-cell *matHeaderCellDef mat-sort-header >{{'department' | translate}}</th>
+                <td mat-cell *matCellDef="let player">
+                  <p class="text-content-style" *ngIf="player.secondary_department_count == 0">
+                    {{player.department_name || '-'}}
+                  </p>
+                  <p *ngIf="player.secondary_department_count > 0" class="handCursor"  (click)="toggleMenu($event, player.player_id, 'department_id'); $event.stopPropagation();">
+                    {{player.department_name}}
+                    <span > + {{player.secondary_department_count}} {{'more' |translate}}</span>
+                  </p>
+                </td>
+              </ng-container>
+    
+              <ng-container matColumnDef="location_name">
+                <th id="" mat-header-cell *matHeaderCellDef mat-sort-header >{{'location' | translate}}</th>
+                <td mat-cell *matCellDef="let player">
+                  <p class="text-content-style" *ngIf="player.secondary_location_count == 0">
+                    {{player.location_name || '-'}}
+                  </p>
+                  <p *ngIf="player.secondary_location_count > 0" class="handCursor" (click)="toggleMenu($event, player.player_id,'location_id'); $event.stopPropagation();">{{player.location_name}}
+                    <span > + {{player.secondary_location_count}} {{'more' |translate}}</span>
+                  </p>
+                </td>
+              </ng-container>
+    
+              <ng-container matColumnDef="group_name">
+                <th id="" mat-header-cell *matHeaderCellDef mat-sort-header >{{'group' | translate}}</th>
+                <td mat-cell *matCellDef="let player">
+                  <p class="text-content-style">
+                    {{player.group_name || '-'}}
+    
+                  </p>
+                </td>
+              </ng-container>
+    
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header headerHeight"></tr>
+              <tr mat-row *matRowDef="let player; columns: displayedColumns;" class="plaer-row" (click)="navigateToPlayerReport(row)"></tr>
+            </table>
+    
+
+      <mat-card-actions>
+        <mat-paginator #paginator [length]="totalPlayers" [pageSize]="noOfItemsPerPage"
+          [pageSizeOptions]="pageSizeOptions" (page)="getPlayersOverPagination($event)">
+        </mat-paginator>
+      </mat-card-actions>
+    
+    </mat-card-content>
+    </mat-card>
+    </div>
+    </div>
+    </div>
+    <app-menu [openCustomMenu]="openCustomMenu" [selectedId]="selectedId" [fieldType]="selectedType"> </app-menu>

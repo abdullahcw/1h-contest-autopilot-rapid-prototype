@@ -1,0 +1,190 @@
+<div class="main_container">
+  <div class="wrapper">
+    <mat-card class="container-card">
+      <mat-card-header>
+        <mat-toolbar class="toolbar">
+          <mat-toolbar-row>
+            <span class="title"><span
+                class="">{{ selection.hasValue() ? globalService.showTextOnSelection(selection.selected.length, globalService.formatNumber(totalUsers), ('players' | translate) ) : ('showing_all_players' | translate) }}</span></span>
+            <span class="spacer"></span>
+             <button class="add-player addEntity" matTooltip="{{'add_new_player' | translate}}"
+              matTooltipPosition="below" (click)="addNewPlayer()" *ngIf="(playerPermission && playerPermission.add) && !globalService.isCompanyBelongsToCustomField()
+              && companySettingPermission?.add" mat-fab>
+
+              <mat-icon>add</mat-icon>
+            </button>
+            <div class="icon-wrapper">
+              <div matTooltip="{{'how_to_login_add_users' | translate}}" (click)="showVideo()" class="open-video">
+                <mat-icon>play_circle_outline</mat-icon>
+              </div>
+              <button class="menu-options" mat-icon-button [matMenuTriggerFor]="menu"
+                matTooltip="{{'options' | translate}}" (click)="menuOptionsToBeDisplay()">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+            </div>
+            <mat-menu #menu="matMenu" class="menu_status" y-position="below" overlapTrigger="false">
+              <button mat-menu-item class="options-menu-item" (click)="navigateToUserDetailsPage(selection.selected[0])"
+                *ngIf="allowEdit()">
+                <mat-icon class="toolbar-icon-color" matTooltip="{{'edit' | translate}}" matTooltipPosition="left">edit
+                </mat-icon>
+                <span>{{'edit' | translate}}</span>
+              </button>
+              <button mat-menu-item class="options-menu-item" (click)="confirmUnlink(selection.selected[0])"
+              *ngIf="allowUnlick()">
+              <mat-icon class="toolbar-icon-color unlink" matTooltip="{{'unlink' | translate}}" matTooltipPosition="left"
+              [ngStyle]="{'font-weight': 'bold'}">link_off
+              </mat-icon>
+              <span>{{'unlink' | translate}}</span>
+            </button>
+              <button mat-menu-item class="options-menu-item" (click)="downloadPlayersCSV()"
+                *ngIf="userDataSource?.data?.length">
+                <mat-icon class="toolbar-icon-color" matTooltipPosition="left">cloud_download</mat-icon>
+                <span>{{'download' | translate}}</span>
+              </button>
+              <button mat-menu-item class="options-menu-item" (click)="openUploader()"
+                *ngIf="!globalService.isCompanyBelongsToCustomField() && companySettingPermission?.add">
+                <mat-icon class="toolbar-icon-color" matTooltipPosition="left">cloud_upload</mat-icon>
+                <span>{{'upload' | translate}}</span>
+              </button>
+              <button mat-menu-item class="options-menu-item" (click)="activateDeactivatePlayers('active')"
+                *ngIf="allowActivate()">
+                <mat-icon>visibility</mat-icon>
+                <span>{{'activate' | translate}}</span>
+              </button>
+              <button mat-menu-item class="options-menu-item" (click)="activateDeactivatePlayers('inactive')"
+                *ngIf="allowDeactivate()">
+                <mat-icon>visibility_off</mat-icon>
+                <span>{{'deactivate' | translate}}</span>
+              </button>
+              <button mat-menu-item class="options-menu-item" (click)="changeDepartment()"
+                *ngIf="allowEditLocationDepartment()">
+                <mat-icon>category</mat-icon>
+                <span>{{'change_loc_dept' | translate}}</span>
+              </button>
+              <button mat-menu-item class="options-menu-item"
+                (click)="addToGroup(null, 'Add/Change Group', 'changeGroup')" *ngIf="allowAddEditGroup()">
+                <mat-icon>group_work</mat-icon>
+                <span>{{'add_change_Group' | translate}}</span>
+              </button>
+              <button mat-menu-item class="options-menu-item" (click)="confirmRemoval()" *ngIf="allowRemoveGroup()">
+                <mat-icon>remove_circle_outline</mat-icon>
+                <span>{{'remove_from_group' | translate}}</span>
+              </button>
+              <button mat-menu-item class="options-menu-item" (click)="confirmOnboardingEmail()"
+                *ngIf="allowSendOnBoardingEmail()">
+                <mat-icon>mail</mat-icon>
+                <span>{{'send_onboarding_email' | translate}}</span>
+              </button>
+              <button mat-menu-item class="options-menu-item" (click)="confirmDeletion()" *ngIf="allowDelete()">
+                <mat-icon>delete_on</mat-icon>
+                <span>{{'delete' | translate}}</span>
+              </button>
+            </mat-menu>
+          </mat-toolbar-row>
+          <mat-toolbar-row>
+            <app-search class="filter-chip" style="width:100%" [filter_options]="filter_options"
+              [shouldAllowAddMore]="userDataSource?.data?.length" [dataSource]="menuList"
+              (getDataSourceWithFilterDetails)="getDataSource($event)"
+              (filtersUpdated)="refreshListOnFilterChange($event)"
+              (getDataSourceWithSearchKey)="getDataSourceWithSearchKey($event)" [context]="context"
+              (filterOptionUpdated)="filterOptionUpdated($event)"></app-search>
+          </mat-toolbar-row>
+        </mat-toolbar>
+      </mat-card-header>
+      <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+      <mat-card-content>
+        <div class="no_messages" *ngIf="!userDataSource?.data?.length">
+          <p>{{is_loading ? ('please_wait' | translate) : ('no_record_found' | translate)}}</p>
+        </div>
+        <div id="scrollToTop"></div>
+        <table aria-describedby="" mat-table [dataSource]="userDataSource" class="responsive-table" matSort
+          (matSortChange)="sortData($event)" matSortActive="first_name" matSortDirection="asc" matSortDisableClear
+          *ngIf="userDataSource?.data?.length" [ngClass]="{'disabled-style': is_loading}">
+          <ng-container matColumnDef="select">
+
+            <th id="" mat-header-cell *matHeaderCellDef class="checkboxes checkBoxColumn select-all-checkbox">
+              <mat-checkbox (change)="$event ? masterToggle() : null"
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let user" (click)="$event.stopPropagation();"
+              class="checkboxes checkboxes-colors">
+              <mat-checkbox color="primary" (change)="selection.toggle(user);totalPlayerSelected = false;"
+                [checked]="selection.isSelected(user)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="disclaimer">
+            <th mat-header-cell *matHeaderCellDef [attr.colspan]="displayedColumns?.length" class="selection-text">
+              <div *ngIf="!is_loading && (totalUsers > noOfItemsPerPage)">
+                <div *ngIf="isAllSelected() && !totalPlayerSelected">
+                  <span>{{selectionBasedText(('players_selected_on_page' | translate), totalUsers, selection.selected.length)}}</span>
+                  <button (click)="allUserSelectionUpdated(true)" mat-button class="highlight-text" color="primary">
+                    {{selectionBasedText(('select_all_players' | translate), totalUsers)}}</button>
+                </div>
+                <div *ngIf="isAllSelected() && totalPlayerSelected">
+                  <span>{{selectionBasedText(('all_players_selected' | translate), totalUsers)}}</span>
+                  <button (click)="allUserSelectionUpdated(false)" mat-button class="highlight-text" color="primary">
+                    {{'clear_all' | translate}}</button>
+                </div>
+              </div>
+            </th>
+          </ng-container>
+          <ng-container matColumnDef="user_logo">
+            <th id="" mat-header-cell *matHeaderCellDef class="checkboxes imgColumn"></th>
+            <td mat-cell *matCellDef="let user" class="user-logo" width="20px">
+           <app-custom-images-table-static class="img-wrapper"  [ImageSrc]="user.profile_image_url" >  </app-custom-images-table-static>
+              </td>
+          </ng-container>
+          <ng-container matColumnDef="first_name">
+            <th id="" mat-header-cell *matHeaderCellDef mat-sort-header> {{'name' | translate}} </th>
+            <td mat-cell *matCellDef="let user">{{user.first_name}} {{user.last_name}}</td>
+          </ng-container>
+          <ng-container matColumnDef="user_status">
+            <th id="" mat-header-cell *matHeaderCellDef mat-sort-header> {{'Status' | translate}} </th>
+            <td mat-cell *matCellDef="let user">
+              {{user.status === 'active' ? ('active' | translate) : user.status === 'unverified' ? ('pending_verification' | translate) : ('inactive' | translate)}}
+            </td>
+          </ng-container>
+
+          <ng-container [matColumnDef]="field.key" *ngFor="let field of customFields ">
+            <th id="" mat-header-cell *matHeaderCellDef mat-sort-header> {{field.value}} </th>
+            <td mat-cell *matCellDef="let user"> 
+              <span  *ngIf="user.secondary_location_count === 0 && field.key === 'location_name'">  {{user?.custom_fields[field.key]}} </span>
+
+              <span *ngIf="field.key === 'location_name' && user.secondary_location_count > 0" (click)="toggleMenu($event, user.player_id,'location_id'); $event.stopPropagation();">
+              {{user?.custom_fields[field.key]}} 
+              <span> + {{user.secondary_location_count}} {{'more' |translate}}</span>
+              </span>
+              <span *ngIf="user.secondary_department_count == 0 && field.key === 'department_name'">{{user?.custom_fields[field.key]}} </span>
+              <span *ngIf="user.secondary_department_count > 0 && field.key === 'department_name'" (click)="toggleMenu($event, user.player_id, 'department_id'); $event.stopPropagation();">
+              {{user?.custom_fields[field.key]}} 
+              <span> 
+                + {{user.secondary_department_count}} {{'more' |translate}}</span>
+              </span>
+              <span *ngIf="field.key !== 'location_name' && field.key !== 'department_name'">
+                {{!globalService.isCompanyBelongsToCustomField() ? user?.custom_fields[field.key] : user[field.key]}} 
+              </span>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header"></tr>
+          <tr mat-header-row *matHeaderRowDef="['disclaimer'];"
+            [ngClass]="{'disclaimer-class': !(isAllSelected() && (totalUsers > noOfItemsPerPage))}"></tr>
+          <tr mat-row *matRowDef="let user; columns: displayedColumns;" (click)="navigateToUserDetailsPage(user)"
+            [ngClass]="{'selected-row-styling': (selection && selection.selected.indexOf(user) > -1),
+            'notHandCursor' : (!companySettingPermission?.edit || this.globalService.isCompanyBelongsToCustomField()) }">
+          </tr>
+        </table>
+        <span class="spacer"></span>
+      </mat-card-content>
+      <mat-card-actions>
+        <mat-paginator #paginator [length]="totalUsers" [pageSize]="noOfItemsPerPage"
+          [pageSizeOptions]="pageSizeOptions" (page)="getUsersOverPagination($event)">
+        </mat-paginator>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
+<app-menu [openCustomMenu]="openCustomMenu" [selectedId]="selectedId" [fieldType]="selectedType"> </app-menu>

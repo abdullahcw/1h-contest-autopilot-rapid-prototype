@@ -1,0 +1,30 @@
+@import '../../../styles.scss';
+
+.main-container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    .report-container {
+        width: 500px;
+        height: calc(100vh - 132px);
+        margin: 20px;
+        padding: 0;
+        @include media-breakpoint-down(xs) {
+            height: calc(100vh - 102px);
+            margin: 10px;
+          }
+        .wrapper{
+            .form-group {
+                margin: 0px;
+                padding: 20px 20px 0 20px;    
+            }
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+                .report-wrapper {
+                    height: 100%;
+                    overflow: hidden;
+                }
+        }
+    }
+}

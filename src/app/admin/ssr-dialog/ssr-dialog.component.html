@@ -1,0 +1,202 @@
+<div class="container-wrapper" [hidden]="hidePopup">
+  <div class="container screen1" *ngIf="showScreen.first">
+    <div class="content">
+      <div class="header">
+        <label class="heading">
+          {{'welcome_to' | translate}}
+        </label>
+        <img src="/assets/img/1Huddle_TrademarkedLogo_Small_RGB_Black-4.png" alt="1huddle" class="logo">
+      </div>
+      <div class="app-container">
+        <img src="/assets/img/mobileIcon.png" alt="1huddle" class="logo">
+        <div class="app-text">
+          <label>
+            {{'go_to_app_store' | translate}}<span class="download-text">{{'download_the_app' | translate}}</span> 
+          </label> 
+        </div>
+      </div>
+
+      <div class="app-store-container">
+        <label class="app-text">
+          {{'download_from' | translate}}:
+        </label>
+        <div>
+          <a href="https://apps.apple.com/us/app/1huddle/id1082613721" target="_blank" style="outline: none;">
+            <img src="/assets/img/appleStore.png" alt="1huddle" class="logo"
+              (click)="gaEvent('SSR_Company_created_popup1_appstore')">
+          </a>
+          <a href="https://play.google.com/store/apps/details?id=com.ionicframework.SaleshuddleApp&hl=en_US&gl=US"
+            target="_blank">
+            <img src="/assets/img/playStore.png" alt="1huddle" class="logo"
+              (click)="gaEvent('SSR_Company_created_popup1_playstore')">
+          </a>
+        </div>
+      </div>
+
+    </div>
+    <div class="navigate-btn-right">
+      <span (click)="gotoSecond()">{{'download_complete' | translate}}
+        <mat-icon>east</mat-icon>
+      </span>
+    </div>
+  </div>
+  <div class="container second" *ngIf="showScreen.second">
+    <div class="content">
+      <div class="header">
+        <label class="heading">
+          {{'login_to_mobile_app' | translate}}
+        </label>
+      </div>
+      <div class="vip-code-container">
+        <img src="/assets/img/mob_1.png" alt="1huddle" class="logo">
+        <div class="app-text">
+          <label>
+            {{'its_time_to_login' | translate}}
+          </label>
+          <label>
+            {{'open_your_app' | translate}}
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="login-navigate-btn">
+      <mat-icon (click)="gotoFirst()">west</mat-icon>
+      <span (click)="gotoThird()">{{'login_complete' | translate}}
+        <mat-icon>east</mat-icon>
+      </span>
+    </div>
+  </div>
+  <div class="container" *ngIf="showScreen.third">
+    <div class="content screen3">
+      <div class="header">
+        <label class="heading">
+          {{'training_game' | translate}}
+        </label>
+      </div>
+      <div class="video-container">
+        <label class="video-header">
+          <span>{{'explore_shop_game' | translate}}</span>
+          <span>{{'sixteen_game_categories' | translate}}</span>
+        </label>
+        <section class="video-content" (click)="showVideo('third','SSR_Company_created_popup3_video')">
+          <img src="/assets/img/Group_3641.png" class="explore-video">
+        </section>
+        <span class="video-footer">
+          {{'watch_shop_game_video' | translate}}
+        </span>
+      </div>
+    </div>
+    <div class="navigate-btn">
+      <mat-icon (click)="gotoSecond()">west</mat-icon>
+      <mat-icon (click)="gotoFourth()">east</mat-icon>
+    </div>
+  </div>
+  <div class="container" *ngIf="showScreen.fourth">
+    <div class="content screen3">
+      <div class="header">
+        <label class="heading">
+          {{'build_game_in_min' | translate}}
+        </label>
+      </div>
+      <div class="video-container">
+        <label class="video-header">
+          <span>{{'easy_to_create' | translate}}</span>
+          <span>{{'game_with_game_builder' | translate}}</span>
+        </label>
+        <section class="video-content" (click)="showVideo('fourth','SSR_Company_created_popup4_video')">
+          <img src="/assets/img/Group_3642.png" class="explore-video">
+        </section>
+        <span class="video-footer">
+          {{'watch_create_game_video' | translate}}
+        </span>
+      </div>
+    </div>
+    <div class="navigate-btn">
+      <mat-icon (click)="gotoThird()">west</mat-icon>
+      <mat-icon (click)="gotoFifth()">east</mat-icon>
+    </div>
+  </div>
+  <div class="container" *ngIf="showScreen.fifth">
+    <div class="content screen5">
+      <div class="header">
+        <label class="heading">
+          {{'unlock_free_credit' | translate}}
+        </label>
+      </div>
+      <div class="video-upload-container">
+        <label class="video-headers">
+          <span><b>{{'bonus' | translate}}</b> {{'upload_data' | translate}}</span>
+          <span>{{'create_platform_game' | translate}}</span>
+        </label>
+        <section class="videos" (click)="showVideo('fifth','SSR_Company_created_popup5_video')">
+          <img src="https://1huddle-prod.s3-us-west-2.amazonaws.com/public_html/static/adminpanel/assets/admin_video/Claim+Your+Free+Game+Thumbnail.jpg" class="upload-image">
+          <img src="../../../assets/img/Group_3660.png" class="play-button" alt="">
+        </section>
+        <span class="footer">
+          {{'video_free_offer' | translate}}
+        </span>
+        <button color="primary" mat-raised-button (click)="fileInput && fileInput?.click()">{{'upload_file' | translate}}</button>
+        <input type="file" id="fileUp" onclick="this.value=null" #fileInput accept="doc/*, ppt/*, pdf/*"
+          (change)="fileChangeEvent($event)" hidden required />
+      </div>
+    </div>
+    <div class="upload-navigate-btn">
+      <mat-icon (click)="gotoFourth()">west</mat-icon>
+      <mat-icon (click)="gotoSixth()">east</mat-icon>
+    </div>
+  </div>
+  <div class="container" *ngIf="showScreen.sixth">
+    <div class="content screen3">
+      <div class="header">
+        <label class="heading">
+          {{'add_new_user' | translate}}
+        </label>
+      </div>
+      <div class="new-user-container">
+        <div class="left-content">
+          <div class="left-label">
+            <span class="invite-label">{{'invite_coworkers' | translate}}</span>
+            <span class="copy-label">{{'copy_vipcode_share' | translate}}</span>
+          </div>
+          <div class="vip-code">
+            <input type="text" [value]="vipCode" #newVipCode readonly>
+            <button color="primary" mat-raised-button (click)="copyVipCode(newVipCode)">{{'copy' | translate}}</button>
+          </div>
+        </div>
+        <div class="middle-content">
+          <div class="divider"></div>
+          <span class="or-text">{{'or_lowercase' | translate}}</span>
+          <div class="divider"></div>
+        </div>
+        <div class="right-content">
+          <span>{{'add_user_manually' | translate}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="newuser-navigate-btn">
+      <mat-icon (click)="gotoFifth()">west</mat-icon>
+      <mat-icon (click)="gotoSeventh()">east</mat-icon>
+    </div>
+  </div>
+  <div class="container" *ngIf="showScreen.seventh">
+    <div class="content screen3 screen7">
+      <div class="header">
+        <label class="heading">
+          {{'while_waiting' | translate}}
+        </label>
+      </div>
+      <div class="waiting-msg-container">
+        <label class="waiting-msg-header">
+          <span>{{'created_games' | translate}}</span>
+          <span>{{'lets_get_started_on_choices' | translate}}</span>
+        </label>
+      </div>
+    </div>
+    <div class="waiting-navigate-btn">
+      <mat-icon (click)="gotoSixth()">west</mat-icon>
+      <span (click)="gotoEnd()">{{'complete' | translate}}
+        <mat-icon>east</mat-icon>
+      </span>
+    </div>
+  </div>
+</div>

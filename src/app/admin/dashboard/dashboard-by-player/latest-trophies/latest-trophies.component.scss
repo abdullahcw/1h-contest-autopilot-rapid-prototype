@@ -1,0 +1,400 @@
+@import "../../../../../styles.scss";
+
+.trophies_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+
+  @include media-breakpoint-down(md) {
+    height: 95%;
+  }
+
+  @include media-breakpoint-up(lg) {     
+    height: 78%;
+  }
+
+  @media (min-width: 1920px) and (max-width: 2560px) {
+    height: 80%;
+  }
+
+  @include media-breakpoint-down(xs) { 
+    height: 90%;
+  }
+
+  .trophies_wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    // justify-content: space-around;
+    width: 100%;
+    position: relative;
+    height: 75%;
+
+    .trophy_container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      // justify-content: space-evenly;
+      height: 100%;
+      width: 20%;
+
+      .game_trophy_container {
+        position: relative;
+        height: 75%;
+        display: flex;
+        align-items: center;
+
+        @include media-breakpoint-down(xs) {
+          padding-top: 6px;
+        }
+
+        .trophy_outer {
+          z-index: 999;
+          // position: relative;
+
+          @include media-breakpoint-down(md) {
+            width: 70px;
+            height: 70px;
+          }
+
+          @include media-breakpoint-up(lg) {     
+            width: 70px;
+            height: 70px;
+          }
+
+          @media (min-width: 1920px) and (max-width: 2560px) {
+            width: 95px;
+            height: 95px;
+          }
+    
+          @include media-breakpoint-down(xs) {
+            width: 50px;
+            height: 50px;
+          }
+        }
+
+        .custom_trophy_outer {
+
+          @include media-breakpoint-down(md) {
+            width: 85px;
+            height: 85px;
+          }
+
+          @include media-breakpoint-up(lg) {     
+            width: 70px;
+            height: 70px;
+          }
+
+          @media (min-width: 1920px) and (max-width: 2560px) {
+            width: 120px;
+            height: 120px;
+          }
+    
+          @include media-breakpoint-down(xs) {
+            width: 60px;
+            height: 60px;
+          }
+          
+        }
+
+        .game_trophy {
+          position: absolute;
+          left: 0;
+          right: 0;
+          margin-left: auto;
+          margin-right: auto;
+          border-radius: 50%;
+
+          // width: 52px;
+          // height: 52px;
+          // top: 27px;
+          // left: 18px;
+
+          @include media-breakpoint-down(md) {
+            width: 52px;
+            // height: 52px;
+            // top: 27px;
+            // left: 18px;
+          }
+
+          @include media-breakpoint-up(lg) {     
+            width: 40px;
+            // height: 40px;
+            // top: 28px;
+            // left: 15px;
+          }
+
+          @media (min-width: 1920px) and (max-width: 2560px) {
+            width: 54px;
+            // height: 55px;
+            // top: 38px;
+            // left: 21px;
+          }
+    
+          @include media-breakpoint-down(xs) {
+            // top: 29px;
+            // left: 11px;
+            width: 29px;
+            // height: 29px;
+          }
+        }
+
+        .custom_game_trophy {
+          border-radius: 50%;
+          left:0;
+          right:0;
+          margin-left:auto;
+          margin-right:auto;
+          @include media-breakpoint-down(md) {
+            width: 48px;
+            // height: 49px;
+            // top: 35px;
+            // left: 19px;
+          }
+
+          @include media-breakpoint-up(lg) {     
+            width: 40px;
+            // height: 40px;
+            // top: 31px;
+            // left: 15px;
+          }
+
+          @media (min-width: 1920px) and (max-width: 2560px) {
+            width: 68px;
+            // height: 68px;
+            // top: 40px;
+            // left: 26px;
+          }
+    
+          @include media-breakpoint-down(xs) {
+            // top: 28px;
+            // left: 13px;
+            width: 34px;
+            // height: 34px;
+          }
+          
+        }
+      }
+
+      .other_trophy_container {
+        height: 75%;
+        display: flex;
+        align-items: center;
+
+
+        @include media-breakpoint-down(md) {
+          padding-top: 10px;
+        }
+
+        @include media-breakpoint-up(lg) {     
+          padding-top: 5px;
+        }
+
+        @media (min-width: 1920px) and (max-width: 2560px) {
+          padding: 0px;
+        }
+
+        @include media-breakpoint-down(xs) {
+          padding-top: 7px;
+        }
+
+        .trophy {
+          z-index: 999;
+          // position: relative;
+  
+          @include media-breakpoint-down(md) {
+            width: 70px;
+            height: 70px;
+          }
+
+          @include media-breakpoint-up(lg) {     
+            width: 70px;
+            height: 70px;
+          }
+
+          @media (min-width: 1920px) and (max-width: 2560px) {
+            width: 95px;
+            height: 95px;
+          }
+    
+          @include media-breakpoint-down(xs) {
+            width: 50px;
+            height: 50px;
+          }
+        }
+
+        .custom_trophy {
+
+          @include media-breakpoint-down(md) {
+            width: 85px;
+            height: 85px;
+          }
+
+          @include media-breakpoint-up(lg) {     
+            width: 70px;
+            height: 70px;
+          }
+
+          @media (min-width: 1920px) and (max-width: 2560px) {
+            width: 120px;
+            height: 120px;
+          }
+    
+          @include media-breakpoint-down(xs) {
+            width: 60px;
+            height: 60px;
+          }
+         
+        }
+      }
+
+      .custom-width {
+        @include media-breakpoint-down(xs) {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+
+      .trophyName {
+        border: 1.00615px solid #D9D9D9;
+        border-radius: 86.5292px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2px 0;
+        // margin-top: 12px;
+        text-align: center;
+
+        @include media-breakpoint-down(md) {
+          width: 60%;
+          padding: 2px 4px !important;
+        }
+
+        @include media-breakpoint-up(lg) {     
+          width: 75%;
+          padding: 2px 6px !important;
+        }
+
+        @media (min-width: 1920px) and (max-width: 2560px) {
+          width: 50%;
+        }
+
+        @include media-breakpoint-down(xs) {
+          width: 85%;
+          padding: 2px 2px !important;
+        }
+  
+        span {
+          font-family: $Roboto_Medium_font;
+          font-size: 12px;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          white-space: initial;
+          display: -webkit-box;
+
+          @include media-breakpoint-down(xs) {
+            font-size: 10px;
+          }
+        }
+      }
+
+      .custom_trophy_name {
+
+        @include media-breakpoint-down(md) {
+          width: 70%;
+        }
+
+        @include media-breakpoint-up(lg) {     
+          width: 80%;
+        }
+
+        @media (min-width: 1920px) and (max-width: 2560px) {
+          width: 65%;
+        }
+
+        @include media-breakpoint-down(xs) {
+          width: 85%;
+        }
+        
+      }
+
+      // .custom-margin {
+      //   @include media-breakpoint-down(xs) {
+      //     margin-top: 16px;
+      //   }
+      // }
+    }
+  }
+
+  .custom_trophies_wrapper {
+
+    @include media-breakpoint-down(md) {
+      height: 72%;
+    }
+  
+    @include media-breakpoint-up(lg) {     
+      height: 95%;
+    }
+  
+    @media (min-width: 1920px) and (max-width: 2560px) {
+      height: 95%;
+    }
+  
+    @include media-breakpoint-down(xs) { 
+      height: 85%;
+    }
+  }
+
+  .button-row {
+    width: auto;
+    display: flex;
+    padding: 4px 0;
+    background: #fff;
+    // box-shadow: 0px 1px 4px 1px #00000029;
+
+    .btn-right {
+      margin-left: auto;
+    }
+
+    .cancel-button {
+      border: 0px;
+      cursor: pointer;
+    }
+  }
+}
+
+.custom_trophies_container {
+  @include media-breakpoint-down(md) {
+    height: 95%;
+  }
+
+  @include media-breakpoint-up(lg) {     
+    height: 70%;
+  }
+
+  @media (min-width: 1920px) and (max-width: 2560px) {
+    height: 80%;
+  }
+
+  @include media-breakpoint-down(xs) { 
+    height: 70%;
+  }
+}
+
+.no_messages {
+  padding: 0;
+  width: 100%;
+  height: 80%;
+  text-align: center;
+
+  font-family: $Roboto_Regular_font;
+  font-size: 16px;
+
+  @extend .center-align;
+
+}

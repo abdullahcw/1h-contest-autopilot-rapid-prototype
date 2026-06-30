@@ -1,0 +1,34 @@
+<div class="search-wrapper">
+  <input matInput #search class="selected-item-input handCursor" [ngClass]="{'conditional-padding': forPathwayList}" [disabled]="disabled" name="search"
+    [matAutocomplete]="auto" [placeholder]="placeholderText" readonly [(ngModel)]='multiSelect' [required]="isRequired"
+    (click)="activateAutocomplete(auto.isOpen)">
+  <mat-icon class="cancel" (click)="activateAutocomplete(auto.isOpen)">arrow_drop_down</mat-icon>
+</div>
+<mat-autocomplete #auto class="dropdown-search-multiselect" (closed)="closed()">
+  <div class="search-item" *ngIf="shouldAllowSearch">
+    <div class="select-all-checkbox">
+      <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="isAllSelected()"
+        [indeterminate]="isItemSelected() && !isAllSelected()"
+        [disabled]="readMode || items?.length == 0 || (allItems?.length > limit && limitValidation)">
+      </mat-checkbox>
+    </div>
+    <input type="text" [formControl]="filterControl" [value]="searchKey" #searchInput class="search-input"
+      placeholder="{{'search' | translate}}" autofocus>
+  </div>
+  <div class="limit-msg" *ngIf="limitMassage">{{limitMassage | translate}}</div>
+  <div class="options-wrapper">
+    <mat-option class="option" *ngFor="let item of items" 
+    [ngClass]="{'read-mode': readMode,'read-mode-limit-validation': limitReached && !item.isSelected}">
+      <div class="option-container" [ngClass]="{'read-mode': readMode}"
+        (click)="readMode ? '' : $event.stopPropagation(); onItemClick(item); search.blur()">
+        <mat-checkbox (click)="$event.stopPropagation()" (change)="onItemClick(item);" [checked]="item.isSelected"
+          [disabled]="readMode">
+        </mat-checkbox>
+        <span [ngClass]="{'title': item && item.title?.length > 40}">{{ item.title }}</span>
+        <span *ngIf="item.isDeleted" class="delete-game-text" style="margin-left: 3px;">(Deleted)</span>
+      </div>
+    </mat-option>
+    <mat-option class="disabled-list" (click)="$event.stopPropagation()" *ngIf="items?.length == 0" disabled>
+      <span class="item">{{searchEmptyText}}</span></mat-option>
+  </div>
+</mat-autocomplete>

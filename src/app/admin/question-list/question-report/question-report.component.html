@@ -1,0 +1,115 @@
+<div class="main_container">
+  <div class="wrapper">
+    <mat-card class="container-card">
+      <mat-card-header>
+        <mat-toolbar class="toolbar">
+          <mat-toolbar-row>
+            <mat-icon *ngIf="showAccuracyReport" (click)="navigateToDashboard()" matTooltip="{{'back_to_slg_dashboard' | translate}}">west</mat-icon>
+            <span class="title"><span class="">{{'accuracy_que_report' | translate}}</span></span>
+            <span class="spacer"></span>
+            <div class="menu-options">
+              <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="{{'options' | translate}}"
+                matTooltipPosition="left">
+                <mat-icon>cloud_download</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu" class="menu_status" y-position="below" overlapTrigger="false">
+                <button mat-menu-item class="options-menu-item" (click)="downloadReport()">
+                  <mat-icon class="toolbar-icon-color" matTooltipPosition="left">cloud_download</mat-icon>
+                  <span>{{'download' | translate}}</span>
+                </button>
+                <button mat-menu-item class="options-menu-item"
+                  (click)="openEmailRecipientsPicker(translate.instant('send_by_email'), 'email')">
+                  <mat-icon class="toolbar-icon-color" matTooltipPosition="left">email</mat-icon>
+                  <span>{{'send_by_email' | translate}}</span>
+                </button>
+              </mat-menu>
+            </div>
+          </mat-toolbar-row>
+          <mat-toolbar-row class="search-toolbar-row">
+            <app-search class="filter-chip" style="width:100%" [filter_options]="filter_options"
+              [shouldAllowAddMore]="userDataSource?.data?.length" [dataSource]="menuList" [applied_filters]="appliedFilters"
+              (getDataSource)="getDataSource($event)" (filtersUpdated)="refreshListOnFilterChange($event)"
+              [context]="context" (getDataSourceWithSearchKey)="getDataSourceWithSearchKey($event)"
+              (filterOptionUpdated)="filterOptionUpdated($event)"></app-search>
+            <mat-form-field class="range">
+              <mat-icon class="calender-icon">calendar_today</mat-icon>
+              <mat-select [(value)]="selectedRange" (selectionChange)="setRange($event.value, true)" #dateRange>
+                <mat-option class="range-option" [value]="range.TODAY">{{'today' | translate}}</mat-option>
+                <mat-option class="range-option" [value]="range.THIS_WK">{{'this_week' | translate}}</mat-option>
+                <mat-option class="range-option" [value]="range.LAST_WK">{{'last_week' | translate}}</mat-option>
+                <mat-option class="range-option" [value]="range.THIS_MONTH">{{'this_month' | translate}}</mat-option>
+                <mat-option class="range-option" [value]="range.LAST_MONTH">{{'last_month' | translate}}</mat-option>
+                <div class="range-option mat-option"
+                  (click)="openEmailRecipientsPicker(translate.instant('send_by_email'), 'custom'); dateRange.close()">
+                  {{'custom' | translate}}</div>
+              </mat-select>
+            </mat-form-field>
+          </mat-toolbar-row>
+        </mat-toolbar>
+      </mat-card-header>
+      <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+      <mat-card-content>
+        <div class="no_messages" *ngIf="!userDataSource?.data?.length">
+          <p>{{is_loading ? ('please_wait' | translate) : ('no_record_found' | translate)}}</p>
+        </div>
+        <div id="scrollToTop"></div>
+        <table mat-table [dataSource]="userDataSource" class="responsive-table" matSort
+          (matSortChange)="sortData($event)" matSortActive="question" matSortDirection="asc" matSortDisableClear
+          *ngIf="userDataSource?.data?.length">
+          <ng-container matColumnDef="card">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'card' | translate}} #</th>
+            <td mat-cell *matCellDef="let question">
+              <div class="small-number-content">{{question.card_number || '---'}}</div>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="question">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'question' | translate}} </th>
+            <td mat-cell *matCellDef="let question">
+              <div class="question-title">{{question.question_title || '---'}}</div>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="game">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'game' | translate}} </th>
+            <td mat-cell *matCellDef="let question">
+              {{question.game_name || '---'}} <span *ngIf="question?.is_deleted"
+                class="delete-game-text">(Deleted)</span>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="correct_count">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'correct' | translate}} </th>
+            <td mat-cell *matCellDef="let question">
+              <div class="small-number-content">{{question.correct_ans_count || '---'}}</div>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="incorrect_count">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'incorrect' | translate}} </th>
+            <td mat-cell *matCellDef="let question">
+              <div class="small-number-content">{{question.incorrect_ans_count || '---'}}</div>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="total_attempts">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'total_attempts' | translate}} </th>
+            <td mat-cell *matCellDef="let question">
+              <div class="long-number-content">{{question.served_question_count || '---'}}</div>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="accuracy">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'accuracy' | translate}} </th>
+            <td mat-cell *matCellDef="let question">
+              <div class="medium-number-content">{{question.accuracy || '0'}}%</div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header"></tr>
+          <tr class="question-row" mat-row *matRowDef="let question; columns: displayedColumns;"></tr>
+        </table>
+        <span class="spacer"></span>
+      </mat-card-content>
+      <mat-card-actions>
+        <mat-paginator #paginator [length]="totalQuestions" [pageSize]="noOfItemsPerPage"
+          [pageSizeOptions]="pageSizeOptions" (page)="getQuestionsOverPagination($event)">
+        </mat-paginator>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

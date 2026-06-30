@@ -1,0 +1,182 @@
+@import '../../../../src/assets/main.scss';
+
+.content {
+  display: flex;
+  flex-direction: row;
+
+  .preview-container {
+    position: relative;
+    max-width: 600px;
+    padding: 20px 20px 40px 20px;
+
+    @include media-breakpoint-down(sm) {
+      display: none
+    }
+
+    .background-image {
+      position: absolute;
+      width: auto;
+      z-index: 100;
+    }
+
+    .foreground-image {
+      position: relative;
+      margin-left: 21px;
+
+      img {
+        margin-top: 17px;
+      }
+    }
+
+    .cell-container {
+      position: absolute;
+      top: 392px;
+      display: flex;
+      margin-left: 52px;
+      font-family: Roboto_Medium;
+
+      .rank {
+        margin-left: -19px
+      }
+
+      img {
+        margin-top: -10px;
+        margin-left: 5px;
+        border: 1px solid #101010;
+        border-radius: 50px;
+        border-color: #000000;
+      }
+
+      .name {
+        text-transform: none;
+        padding-right: 52px;
+        margin-left: 10px;
+        color: #000000;
+      }
+
+      .score {
+        padding: 0px;
+        margin: 0px;
+        margin-left: 22px;
+        color: #000000;
+      }
+    }
+  }
+
+  .manage-preview-container {
+    width: 350px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+
+    @include media-breakpoint-down(sm) {
+      min-height: 75vh;
+    }
+
+    input {
+      opacity: 0 !important;
+    }
+
+    mat-button-toggle-group {
+      border: 1px solid;
+
+      @include media-breakpoint-down(sm) {
+        margin: 40px 0;
+        width: 90%;
+      }
+
+      mat-button-toggle {
+        min-width: 115px;
+        color: black;
+      }
+
+      .mat-button-toggle-checked {
+        background-color: black;
+        color: white
+      }
+    }
+
+    ::ng-deep .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+      line-height: 0px;
+      padding: 0 16px;
+    }
+
+    ::ng-deep color-picker {
+
+      .color-picker {
+        top: 150px !important;
+        left: 0px !important;
+        right: 0;
+        margin: 0 auto;
+
+        @include media-breakpoint-down(sm) {
+          top: 55px !important;
+          width: 90% !important;
+          max-height: 290px;
+          margin: auto;
+          top: 0 !important;
+          bottom: 0 !important;
+        }
+        @include media-breakpoint-down(xs) {
+          top: 55px !important;
+          width: 90% !important;
+          max-height: 275px;
+          margin: auto;
+          top: 20px !important;
+          bottom: 0 !important;
+        }
+        position: absolute !important;
+      }
+
+      .arrow-bottom {
+        display: none !important;
+      }
+    }
+
+    .toggle-container {
+      display: flex;
+      position: absolute;
+      left: 0;
+      right: 0;
+      width: 100%;
+      top: 109px;
+
+      @include media-breakpoint-down(sm) {
+        top: 50px;
+      }
+
+      .toggle {
+        margin: 0 15px;
+        @include media-breakpoint-down(sm) {
+          margin: 0 13px;
+        }
+        border-radius: 0px
+      }
+
+      justify-content: center;
+    }
+
+    .footer {
+      display: flex;
+      flex-direction: row;
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+    }
+  }
+}
+
+@media (device-width: 320px) and (device-height: 480px) {
+  .manage-preview-container {
+    min-height: 90vh !important;
+  }
+}
+
+@media(min-width:320px) and (max-width: 500px) {
+  .form-inputs {
+    width: 100%;
+    max-width: 100%;
+  }
+}

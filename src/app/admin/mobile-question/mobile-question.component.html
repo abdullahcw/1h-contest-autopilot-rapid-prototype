@@ -1,0 +1,39 @@
+<div class="mobile-question-wrapper">
+  <div class="question-header">
+    <mat-toolbar class="small-toolbar" color="primary">
+      <div *ngIf="questionDetails && questionDetails.is_new; else add_header">
+        {{'add_question' | translate}}
+      </div>
+      <ng-template class="header" #add_header>{{'edit_question' | translate}}</ng-template>
+    </mat-toolbar>
+  </div>
+  <div app-single-question [question]='questionDetails'  [allLanguage]="allLanguage"  [timer_options]="timer_options" (questionToggled)="false"
+    [points_options]="points_options" [imgInput]="imgInput" [audioInput]="audioInput" [isCategory]="isCategory"
+    [isGame]="isGame" [isfeedback]="false" [manage_options]="manage_options" [games]="games" (editQuestion)="true"
+    [isCheckClicked]="isCheckClicked" (openImage)="mobileOpenImage($event)" (playAudio)="mobilePlayAudio($event)"
+    (openTagsEditor)="mobileOpenTagsEditor($event)" (saveQuestion)="save($event)"
+    (cancelEditing)="mobileCancelEditing($event)" (selectGame)="onGameSelection($event)"
+    [isAllCollapsed]='isAllCollapsed' (questionCategory)="categorySelection($event)"
+    (answerType)="selectedAnswerType = $event" [selectedQuestionsList]="selectedQuestionsList" [category]="category"
+     [selectedChip]="selectedChip" [isEditingQuestion]="isEditingQuestion" class="question-wrapper">
+  </div>
+  <div class="question-footer">
+    <mat-card-actions class="footer">
+      <div class="button-row">
+        <div class="footer_number" *ngIf="!questionDetails?.is_new">{{'card' | translate}} #: {{questionDetails?.card_number }}</div>
+        <div class="btn-right">
+          <button mat-button type="button" class="cancel-button" tabindex="-1"
+            (click)="cancel(questionDetails)">{{'cancel_uppercase' | translate}}</button>
+        </div>
+        <div>
+          <button mat-button type="submit" (click)="save()">
+            <div *ngIf="questionDetails && questionDetails?.is_new; else other_content">
+              {{'add_uppercase' | translate}}
+            </div>
+            <ng-template #other_content>{{'done_uppercase' | translate}}</ng-template>
+          </button>
+        </div>
+      </div>
+    </mat-card-actions>
+  </div>
+</div>

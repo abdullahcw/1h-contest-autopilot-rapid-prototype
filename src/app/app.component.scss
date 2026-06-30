@@ -1,0 +1,35 @@
+@import '../assets/main.scss';
+div.loading{ 
+    display: none;
+}
+#loader {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    border: 3px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 3px solid #3856D1;
+    border-right: 3px solid #3856D1;
+    width: 40px;
+    height: 40px;
+    margin: 0 auto;
+    border-radius: 50%;  
+    -webkit-animation: spin 1s linear infinite;
+    animation: spin 1s linear infinite;
+  
+  }
+  
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+router-outlet + div.loading{
+    display: block;
+}

@@ -1,0 +1,31 @@
+<section class="master-wrapper">
+  <mat-toolbar class="small-toolbar" color="primary">
+    <div>{{'notification' | translate}}</div>
+    <mat-icon class="cancel-icon" (click)="cancel()">close</mat-icon>
+  </mat-toolbar>
+  <div class="wrapper">
+    <div class="main-container">
+      <div class="notification-wrapper">
+        <div class="label-container">
+          <label for="notification">{{ 'notification' | translate }}</label>
+          <label class="updating-message" *ngIf="is_updating">{{ 'saving_changes' | translate }}</label>
+        </div>
+        <textarea class="contest-notification" name="contest-notification" (blur)="saveNotification()"
+          placeholder="{{ 'enter_notification' | translate}}" [(ngModel)]="notification"></textarea>
+        <div class="form-group date-picker">
+
+          <label for="schedule">{{ 'schedule_notification' | translate }}</label>
+          <input matInput class="holder form-inputs calendar-input" [matDatepicker]="picker"
+            (dateChange)="dateChanged()" placeholder="{{ 'date_format_mmddyyyy' | translate }}"
+            [(ngModel)]="notification_date" name="schedule-contest-notification" (click)="picker.open()"
+            (open)="isDatePickerOpen" (keydown)="isDatePickerOpen = true;" readonly>
+          <mat-datepicker-toggle matPrefix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker [startAt]="today" #picker>
+          </mat-datepicker>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</section>

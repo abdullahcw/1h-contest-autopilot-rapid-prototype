@@ -1,0 +1,94 @@
+<div class="main-container">
+  <div class="wrapper">
+    <mat-card class="container-card">
+      <mat-card-content class="masterCardTable" [ngClass]="{'disabled-style': is_loading}">
+        <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading && dataSource?.data?.length">
+        </mat-progress-bar>
+        <div class="no_messages" *ngIf="!dataSource?.data?.length">
+          <mat-spinner [diameter]="40" *ngIf="is_loading"></mat-spinner>
+          <p>{{is_loading ? ('please_wait' | translate) : messageToDisplay}}</p>
+        </div>
+        <table aria-describedby="" mat-table [dataSource]="dataSource" matSort class="responsive-table"
+          *ngIf="dataSource?.data?.length">
+
+          <ng-container matColumnDef="profile_image_url">
+            <th id="" mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let reportee" width="20px"><img class="profile-pic"
+                [src]="reportee?.profile_img_url" onError="this.src='/assets/img/default.png'" alt=""></td>
+          </ng-container>
+
+          <ng-container matColumnDef="first_name">
+            <th id="" mat-header-cell *matHeaderCellDef>{{'name' | translate}}</th>
+            <td mat-cell *matCellDef="let reportee">
+
+              {{reportee?.first_name}} {{reportee?.last_name}}
+
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="is_manager">
+            <th id="" mat-header-cell *matHeaderCellDef>{{'is_manager' | translate}}</th>
+            <td mat-cell *matCellDef="let reportee">
+
+              {{reportee?.is_manager ? ('yes' | translate) : ('no' | translate)}}
+
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="org_name">
+            <th id="" mat-header-cell *matHeaderCellDef>{{'organization_name' | translate}}</th>
+            <td mat-cell *matCellDef="let reportee">
+              {{reportee?.organization_name}}
+
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="position_title">
+            <th id="" mat-header-cell *matHeaderCellDef>{{'position_title' | translate}}</th>
+            <td mat-cell *matCellDef="let reportee">
+
+              {{reportee?.position_title}}
+
+
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="games_played">
+            <th id="" mat-header-cell *matHeaderCellDef>{{'games_played' | translate}}</th>
+            <td mat-cell *matCellDef="let reportee">
+
+              {{reportee?.games_played || '0'}}
+
+
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="trophies_achieved">
+            <th id="" mat-header-cell *matHeaderCellDef>{{'trophies_achieved' | translate}}</th>
+            <td mat-cell *matCellDef="let reportee">
+
+              {{reportee?.trophy_achieved || '0'}}
+
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="participation">
+            <th id="" mat-header-cell *matHeaderCellDef>{{'participation' | translate}}</th>
+            <td mat-cell *matCellDef="let reportee">
+              {{reportee?.participation || '0'}}
+
+
+            </td>
+          </ng-container>
+
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header headerHeight"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="updateReportee(row)"
+            [ngClass]="{'apply-hover': (row?.have_reportee)}"></tr>
+        </table>
+
+      </mat-card-content>
+
+    </mat-card>
+  </div>
+</div>

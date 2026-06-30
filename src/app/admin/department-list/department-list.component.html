@@ -1,0 +1,94 @@
+<div class="main_container">
+  <div class="wrapper">
+    <mat-card class="container-card">
+      <mat-card-header>
+        <mat-toolbar class="toolbar">
+          <mat-toolbar-row>
+            <span class="title"><span
+                class="">{{ selection.hasValue() ? globalService.showTextOnSelection(selection.selected.length, totalDepartments, ('departments' | translate) ) : ('showing_all_depts' | translate)}}</span></span>
+            <span class="spacer"></span>
+            <button *ngIf="departmentPermissions && departmentPermissions?.add" class="add-department addEntity"
+              matTooltip="{{'add_new_dept' | translate}}" matTooltipPosition="below"
+              (click)="presentDepartmentPopup(null, translate.instant('add_dept'))" mat-fab>
+              <mat-icon>add</mat-icon>
+            </button>
+            <button class="menu-options" mat-icon-button [matMenuTriggerFor]="menu" matTooltip="{{'options' | translate}}"
+              matTooltipPosition="left" *ngIf="selection.selected.length" (click)="menuOptionsToBeDisplay()">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu" y-position="below" overlapTrigger="false">
+              <button mat-menu-item class="options-menu-item"
+                (click)="presentDepartmentPopup(selection.selected, translate.instant('edit_dept'))"
+                *ngIf="(departmentPermissions && departmentPermissions?.edit) && selection.selected.length == 1">
+                <mat-icon class="toolbar-icon-color" matTooltip="{{'delete_locations' | translate}}" matTooltipPosition="left">edit
+                </mat-icon>
+                <span>{{'edit' | translate}}</span>
+              </button>
+              <button mat-menu-item class="options-menu-item"
+                (click)="presentDepartmentPopup(selection.selected, translate.instant('add_to_locs'))"
+                *ngIf="(departmentPermissions && departmentPermissions?.edit) && selection.selected.length > 1">
+                <mat-icon class="toolbar-icon-color" matTooltip="{{'delete_locations' | translate}}" matTooltipPosition="left">location_on
+                </mat-icon>
+                <span>{{'add_to_locs' | translate}}</span>
+              </button>
+              <button mat-menu-item class="options-menu-item" (click)="confirmDeletion($event)"
+                *ngIf="departmentPermissions && departmentPermissions?.delete && (selection.selected.length === 1 ? !isHeadDepartment : true)"> 
+                <mat-icon class="toolbar-icon-color" matTooltip="{{'delete_departments' | translate}}" matTooltipPosition="left">delete
+                </mat-icon>
+                <span>{{'delete' | translate}}</span>
+              </button>
+            </mat-menu>
+
+          </mat-toolbar-row>
+          <mat-toolbar-row>
+            <app-search class="search-container" style="width:100%" [filter_options]="filter_options"
+              (filtersUpdated)="refreshListOnFilterChange($event)" [shouldAllowAddMore]="departments?.length"
+              (getDataSource)="getDataSource($event)" [dataSource]="menuList" [context]="context" (filterOptionUpdated)="filterOptionUpdated($event)"></app-search>
+          </mat-toolbar-row>
+        </mat-toolbar>
+      </mat-card-header>
+      <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+      <mat-card-content>
+        <div class="no_messages" *ngIf="!dataSource?.data.length">
+          <p>{{is_loading ? ('please_wait' | translate) : ('no_record_found' | translate)}}</p>
+        </div>
+
+        <table mat-table [dataSource]="dataSource" class="responsive-table" matSort (matSortChange)="sortData($event)"
+          matSortActive="department" matSortDirection="asc" matSortDisableClear *ngIf="dataSource?.data.length"
+          [ngClass]="{'disabled-style': is_loading}">
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef class="checkboxes select-all-checkbox">
+              <mat-checkbox (change)="$event ? masterToggle() : null"
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let department" (click)="$event.stopPropagation();"
+              class="checkboxes checkboxes-colors">
+              <mat-checkbox color="primary" (change)="$event ? selection.toggle(department) : null"
+                [checked]="selection.isSelected(department)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="department">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'department' | translate}}</th>
+            <td mat-cell *matCellDef="let department"><label>{{'department' | translate}}</label>
+              <p>{{department.department_name}}</p>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header"></tr>
+          <tr mat-row *matRowDef="let department; columns: displayedColumns;"
+            (click)="presentDepartmentPopup([department], translate.instant('edit_dept'))"
+            [ngClass]="{'selected-row': (selection && selection.selected.indexOf(department) > -1),'notHandCursor' : !department.is_editable }">
+          </tr>
+        </table>
+        <span class="spacer"></span>
+      </mat-card-content>
+      <mat-card-actions>
+        <mat-paginator #paginator [length]="totalDepartments" [pageSize]="noOfItemsPerPage"
+          [pageSizeOptions]="pageSizeOptions" (page)="getDepartmentsOverPagination($event)">
+        </mat-paginator>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

@@ -1,0 +1,539 @@
+@import '../../../assets/main.scss';
+
+.header-toolbar {
+  padding: 0;
+
+  .admin-font {
+    font-family: Roboto_Bold;
+
+    .admin-font-sub {
+      padding-left: 8px;
+      font-family: Roboto_Regular;
+
+      @include media-breakpoint-only(xs) {
+        display: none;
+      }
+    }
+
+  }
+
+  .left-content-holder {
+    height: 100%;
+    display: flex;
+    padding: 0;
+    width: 50%;
+    position: relative;
+    align-items: center;
+
+    .header-pattern {
+      height: 100%;
+
+      @include media-breakpoint-down(xs) {
+        display: none;
+        // margin-left: -180px;
+      }
+    }
+
+    .headerHolder {
+      // button {
+      //   display: none;
+
+      //   @include media-breakpoint-only(xs) {
+      //     display: inline-flex;
+      //   }
+      // }
+      display: flex;
+      align-items: center;
+      margin-left: 10px;
+      position: absolute;
+
+      .small_name {
+        @include media-breakpoint-down(xs) {
+          display: none;
+        }
+      }
+
+      .small-company-logo {
+        display: none;
+
+        @include media-breakpoint-down(xs) {
+          display: flex;
+          align-items: center;
+          margin-left: 35px;
+          position: absolute;
+          width: 30px;
+          height: 30px;
+        }
+      }
+
+      .logo {
+        width: 140px;
+        height: 28px;
+      }
+
+      .disable-drawer {
+        pointer-events: none;
+        opacity: 0.5;
+      }
+    }
+  }
+
+  ::ng-deep .mat-selected {
+    color: #fff;
+  }
+
+  .mat-autocomplete-panel {
+    margin-top: -50px !important;
+  }
+
+  .profile-menu {
+    padding-top: 0px;
+  }
+
+  .side-nav-icon {
+    padding-bottom: 28px !important;
+  }
+
+  .nav-icons {
+    @extend .align-button;
+    flex: 1;
+
+    .help-button {
+      margin-right: 20px;
+      // height: 30px;
+      // width: 30px;
+      display: flex;
+      align-items: center;
+      // mat-icon {
+      font-size: 35px;
+      // margin-top: 13px;
+      cursor: pointer;
+      padding-right: 5px;
+      // }
+    }
+
+    .open-video {
+      // margin: 0 5px;
+      background: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      font-size: 35px;
+      cursor: pointer
+    }
+
+    .open-video:hover {
+      background: #0b0c0f;
+    }
+
+    .paywall-wrapper {
+      // color: #444;
+      display: flex;
+      background-color: rgb(235, 235, 235);
+      border-radius: 16px;
+      box-sizing: border-box;
+      color: black;
+      font-family: Roboto_Black;
+      font-size: 12px;
+      align-items: center;
+      text-align: center;
+      padding: 1px 3px;
+      margin-right: 15px;
+
+      .paywall-counter {
+        position: relative;
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        font-family: Roboto_Bold;
+      }
+
+      .paywall-activated-text {
+        position: relative;
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        font-family: Roboto_Bold;
+        padding: 0 10px;
+      }
+
+      .paywall-noofdays {
+        background-color: #AAA9A9;
+        font-family: Drukwide_Bold;
+        border-radius: 50%;
+        font-size: 16px;
+        width: 30px;
+        height: 30px;
+        margin: auto;
+      }
+
+      .paywall-title {
+        font-family: Roboto_Medium;
+        font-size: 13px;
+        padding: 0 6px;
+      }
+    }
+  }
+}
+
+
+input {
+  outline: none !important;
+}
+
+.search-company-wrapper {
+  display: flex;
+  width: 100%;
+  padding: 0 10px;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+
+  div {
+    width: auto;
+    display: flex;
+    justify-content: flex-end;
+    position: relative;
+    max-width: 275px;
+
+    .company-name {
+      .search-company {
+        -webkit-user-select: none !important;
+        -moz-user-select: none !important;
+        -o-user-select: none !important;
+        -ms-user-select: none !important;
+        user-select: none !important;
+        width: 100%;
+        max-width: 275px;
+        color: white;
+        padding: 5px;
+        padding-left: 0;
+        border-radius: 3px;
+        font-size: $default_font_size;
+        font-family: Roboto_Regular;
+        -webkit-font-smoothing: antialiased;
+        cursor: pointer;
+        border: none;
+        z-index: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-align: right;
+
+        &::placeholder {
+          color: #ccc;
+        }
+
+        @include media-breakpoint-down(xs) {
+          // padding: 5px 18px 5px 32px;
+          max-width: 95px;
+        }
+      }
+    }
+
+    .panel-open {
+      background-color: rgba(20, 20, 107, .11);
+
+      .drop-down-icon {
+        background: 0;
+      }
+    }
+
+    .fake-input {
+      width: 275px;
+      background-color: transparent;
+      z-index: -1;
+      position: absolute;
+
+      @include media-breakpoint-down(xs) {
+        width: 140px;
+      }
+    }
+
+    .search {
+      // position: absolute;
+      // top: 0px;
+      // left: 10px;
+      // bottom: 0;
+      margin: auto 5px;
+      margin-left: 10px;
+      color: white;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+  }
+
+  .drop-down-icon {
+    margin: auto 0;
+    margin-right: 5px;
+    color: white;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+
+    &:hover {
+      background-color: #393fb8;
+    }
+  }
+}
+
+::ng-deep .country-dropdown {
+  position: relative;
+  // background: #6368e1;
+
+  .searchCompany {
+    // position: fixed;
+    position: sticky;
+    position: -webkit-sticky;
+    /* For macOS/iOS Safari */
+    top: 0;
+    /* Sets the sticky toolbar to be on top */
+    z-index: 1000;
+    width: 100%;
+    // max-width: 270px;
+    border: none;
+    padding: 10px;
+    outline: none;
+    font-family: Roboto_Regular;
+    font-size: $default_font_size;
+    background: #6368e1;
+    z-index: 5;
+    color: #fff;
+
+    &::placeholder {
+      color: #fff !important;
+    }
+  }
+
+  .options-wrapper {
+    // margin-top: 40px;
+
+    .options {
+      background: $brand_color !important;
+      display: flex;
+      align-items: center;
+      color: #ffffff !important;
+
+      &:hover {
+        background: #809FDD !important;
+      }
+
+      .mat-option-text {
+        display: flex;
+        align-items: center;
+
+        .company {
+          flex: 1;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+
+      .icon {
+        //   display: none;
+        // }
+
+        // // &.mat-selected {
+        // //   color: #fff;
+
+        //   .icon {
+        display: inline-flex;
+
+        mat-icon {
+          font-size: 20px;
+          margin-right: 5px;
+          position: absolute;
+          right: 10px;
+          top: 12px;
+          bottom: 0;
+          margin: 0 auto;
+        }
+      }
+    }
+  }
+
+
+  .disabled-list {
+    background: #393fb8 !important;
+    color: #ffffff !important;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.breadcrumb {
+  margin: 0;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  background: $secondary_bg_color;
+  border-radius: 0;
+  -moz-box-shadow: 0 1px 1px 1px #e0e0e0;
+  -webkit-box-shadow: 0 1px 1px 1px #e0e0e0;
+  box-shadow: 0 1px 1px 1px #e0e0e0;
+
+  @include media-breakpoint-down(sm) {
+    padding-top: 1px;
+    padding-bottom: 1px;
+  }
+
+  font: {
+    size: $default_font_size;
+    family: Roboto_Regular;
+  }
+
+  .breadcrumb-item {
+    padding: 0;
+    font-family: Roboto_Regular;
+    font-size: $text_size_small;
+    color: $breadcrumb_text_color;
+
+    @include media-breakpoint-down(sm) {
+      font-size: 10px;
+    }
+  }
+
+  .breadcrumb-item:last-child {
+    color: $textMidGrey;
+  }
+
+  .arrow-space {
+    padding: 0 6px;
+    font-family: Roboto_Bold;
+
+    :last-child {
+      visibility: hidden;
+    }
+  }
+}
+
+.profile-icon-wrapper {
+  height: 64px !important;
+  width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-right: 22px;
+}
+.img-wrapper{
+  cursor: pointer;;
+}
+.questionMark {
+  width: 25px;
+  height: 22px
+}
+
+.profile_icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  // border: 1px solid #efefef;
+  cursor: pointer;
+  margin-left: 3px;
+  margin-right: 2px;
+  @extend .center-align;
+
+  p {
+    color: $textColor;
+    margin: 0;
+    text-transform: uppercase;
+    font-size: $default_font_size;
+    font-family: Roboto_Regular;
+  }
+}
+
+.help-section {
+  border: none;
+  height: 24px;
+  width: 24px;
+
+  .help-button {
+    color: $secondary_bg_color;
+    font-size: 14px;
+    font-family: Roboto_Bold;
+    margin-right: 0;
+  }
+
+  &:hover {
+    background: #0b0c0f;
+  }
+}
+
+.user_details {
+  display: flex;
+
+  .user_image {
+    width: 70px;
+    height: 70px;
+    min-width: 70px;
+    min-height: 70px;
+    border-radius: 50%;
+    background: $user-image-bg;
+    margin: 20px 20px;
+    @extend .center-align;
+
+    p {
+      color: $textColor;
+      margin: 0;
+      text-transform: uppercase;
+      font-size: 24px;
+      font-family: Roboto_Regular;
+    }
+  }
+  .img-wrapper-user-image{
+    margin: 20px 20px;
+  }
+  .user_credentials {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .name {
+      margin: 0;
+      text-transform: capitalize;
+
+      font: {
+        family: Roboto_Bold;
+        size: $default_font_size;
+      }
+    }
+
+    .email {
+      margin-bottom: 0;
+
+      font: {
+        family: Roboto_Regular;
+        size: $text_size_med;
+      }
+
+      color: $textMidGrey;
+    }
+
+    .settings {
+      margin-top: 15px;
+      border-radius: 0;
+      font-size: $text_size_med;
+      font-family: Roboto_Regular;
+      height: 35px;
+    }
+  }
+}
+
+::ng-deep .mat-menu-item.profile-options-item {
+  font: {
+    family: Roboto_Regular !important;
+    size: $default_font_size !important;
+  }
+
+  mat-icon {
+    margin-right: 10px;
+    font-size: 22px;
+  }
+
+}
+
+::ng-deep .footer-divider.mat-divider {
+  background-color: #f7f7f7;
+}

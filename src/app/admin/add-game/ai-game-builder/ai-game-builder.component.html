@@ -1,0 +1,15 @@
+<div class="aiGameBuilder">
+    <mat-toolbar class="small-toolbar" color="primary">
+      <div class="titleWrapper">
+        {{aiAssist_title}}
+      </div>
+    </mat-toolbar>    
+    <section class="content" [ngClass]="{'disabled-style': is_loading}">      
+      <app-ai-assist style="width:100%" *ngIf="showAiFormUI" [gameObj]="currentGameObj" [(aiAssist)]="aiAssistObj" (goToQuestions)="changeQuestionList($event)" (questionObj)="questionsFromAI($event)" 
+      (changePopUpTitle)="changePopupTitleText($event)"
+      ></app-ai-assist>
+      <app-ai-questions-list style="width:100%" [gameObj]="currentGameObj" [(aiAssist)]="aiAssistObj" [generatedQuestionPayload]="generatedQuestionPayload" *ngIf="showQuestionListUI" (goToAiForm)="changeAiFormUI($event)" [generatedCategories]="generatedCategoryList" [questionList]="generatedQuestions" (questionAddedToGame)="questionsAdded($event)"></app-ai-questions-list>
+    </section>
+  </div>
+
+  

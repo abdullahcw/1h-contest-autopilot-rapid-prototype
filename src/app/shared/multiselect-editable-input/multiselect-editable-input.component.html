@@ -1,0 +1,29 @@
+<div class="search-outer" *ngIf="!isDisabled">
+  <div class="search-wrapper" style="max-width: 200px ;">
+    <mat-icon matPrefix>add</mat-icon>
+    <input matInput #search class="selected-item-input handCursor" name="search" [matAutocomplete]="auto"
+      [placeholder]="placeholderText" readonly [required]="isRequired" value="{{'add_criteria' | translate}}"
+      (click)="activateAutocomplete(auto.isOpen);searchInput.focus();">
+  </div>
+</div>
+<mat-autocomplete #auto class="dropdown-editable-multiselect">
+  <div class="search-item">
+    <div class="select-all-checkbox"></div>
+    <input type="text" #searchInput class="search-input" value="{{'add_criteria' | translate}}" autofocus readonly>
+    <button class="done-toolbar search-apply-button" (click)="selectionDone()" [disabled]="!isItemSelected()"
+      mat-raised-button color="primary">
+      {{'done_uppercase' | translate}}
+    </button>
+  </div>
+  <div class="options-wrapper">
+    <mat-option class="option" *ngFor="let item of items['criteria']" [ngClass]="{'read-mode': readMode}">
+      <div class="option-container" (click)="$event.stopPropagation()" (click)="onItemClick(item); searchInput.blur();">
+        <mat-checkbox (click)="$event.stopPropagation()" (change)="onItemClick(item);" [checked]="item.isSelected">
+        </mat-checkbox>
+        <span>{{ item.title }}</span>
+      </div>
+    </mat-option>
+    <mat-option class="disabled-list" (click)="$event.stopPropagation()" *ngIf="items?.length == 0" disabled>
+      <span class="item">{{searchEmptyText}}</span></mat-option>
+  </div>
+</mat-autocomplete>

@@ -1,0 +1,101 @@
+<div class="no_messages" *ngIf="totalCount == 0">
+  <mat-spinner [diameter]="40" *ngIf="is_loading"></mat-spinner>
+  <p>
+    {{
+    is_loading
+    ? ("please_wait" | translate)
+    : ("player_not_achieved_trophy" | translate)
+    }}
+  </p>
+</div>
+<section class="playerAchivementWrapper">
+  
+
+  <div class="trophies-tab tab-section" *ngIf="totalCount > 0">
+    <div class="totalCountWrapper">
+      <div class="totalCount">
+        <span class="title">{{ "total_trophies" | translate }}</span>
+        <span class="titleValue" *ngIf="getDashboardFilter()['dashboard_by'] === dashboard.BY_TEAM">{{ fix_trophies.length + game_trophies.length + mlg_trophy.length }}</span>
+        <span class="titleValue" *ngIf="getDashboardFilter()['dashboard_by'] === dashboard.BY_PLAYER">{{ totalCount }}</span>
+        <span class="titleValue" *ngIf="getDashboardFilter()['dashboard_by'] === dashboard.BY_CONTEST">{{ contestTrophies.length }}</span>
+        <span class="titleValue" *ngIf="getDashboardFilter()['dashboard_by'] === dashboard.BY_GAME">{{ fix_trophies.length + game_trophies.length + mlg_trophy.length }}</span>
+      </div>
+    </div>
+
+    <mat-grid-list cols="{{ breakpoint }}" rowHeight="1:1" [gutterSize]="'20px'" *ngIf="fix_trophies.length && (getDashboardFilter()['dashboard_by'] === dashboard.BY_TEAM 
+        || getDashboardFilter()['dashboard_by'] === dashboard.BY_GAME
+        || getDashboardFilter()['dashboard_by'] === dashboard.BY_PLAYER)">
+      <div class="trophies_title">
+        <span>{{ "career_trophies" | translate }}</span>
+      </div>
+      <mat-grid-tile *ngFor="let trophy of fix_trophies">
+        <div class="trophy-wrapper">
+          <img class="trophy-icon" [src]="trophy.logo_url" onError="this.src='/assets/img/default.png'" alt="" />
+          <div class="title">{{ trophy.trophies_name }}</div>
+          <div class="description">
+            {{ trophy.description }}
+          </div>
+        </div>
+      </mat-grid-tile>
+    </mat-grid-list>
+    <mat-grid-list cols="{{ breakpoint }}" rowHeight="1:1" [gutterSize]="'20px'" *ngIf="game_trophies.length && (getDashboardFilter()['dashboard_by'] === dashboard.BY_TEAM
+        || getDashboardFilter()['dashboard_by'] === dashboard.BY_GAME
+        || getDashboardFilter()['dashboard_by'] === dashboard.BY_PLAYER)">
+      <div class="trophies_title">
+        <span>{{ "slg_trophies" | translate }}</span>
+      </div>
+      <mat-grid-tile *ngFor="let trophy of game_trophies">
+        <img class="maximise" (click)="openDetails(trophy, 'gameTrophy')" src="assets/img/maximize.png" alt="" />
+        <div class="trophy-wrapper" (click)="openDetails(trophy,'gameTrophy')">
+          <img class="trophy-icon" [src]="trophy.logo_url" onError="this.src='/assets/img/default.png'" alt="" />
+          <div class="title">{{ trophy.trophies_name }}</div>
+          <div class="description">
+            {{ 'trophy_unlocked' | translate}}
+          </div>
+        </div>
+      </mat-grid-tile>
+    </mat-grid-list>
+
+    <mat-grid-list cols="{{ breakpoint }}" rowHeight="1:1" [gutterSize]="'20px'" *ngIf="mlg_trophy.length && (getDashboardFilter()['dashboard_by'] === dashboard.BY_TEAM 
+        || getDashboardFilter()['dashboard_by'] === dashboard.BY_GAME
+        || getDashboardFilter()['dashboard_by'] === dashboard.BY_PLAYER)">
+      <div class="trophies_title">
+        <span>{{ "mlg_trophies" | translate }}</span>
+      </div>
+      <mat-grid-tile *ngFor="let trophy of mlg_trophy">
+        <img class="maximise" (click)="openDetails(trophy, 'mlgTrophy')" src="assets/img/maximize.png" alt="" />
+        <div class="trophy-wrapper" (click)="openDetails(trophy,'mlgTrophy')">
+          <img class="trophy-icon" [src]="trophy.logo_url" onError="this.src='/assets/img/default.png'" alt="" />
+          <div class="title">{{ trophy.trophies_name }}</div>
+          <div class="description">
+            {{ 'trophy_unlocked' | translate}}
+          </div>
+        </div>
+      </mat-grid-tile>
+    </mat-grid-list>
+
+    <mat-grid-list cols="{{ breakpoint }}" rowHeight="1:1" [gutterSize]="'20px'" *ngIf="contestTrophies.length && (getDashboardFilter()['dashboard_by'] === dashboard.BY_CONTEST 
+        || getDashboardFilter()['dashboard_by'] === dashboard.BY_PLAYER) ">
+      <div class="trophies_title">
+        <span>{{ "contest_trophies" | translate }}</span>
+      </div>
+      <mat-grid-tile *ngFor="let trophy of contestTrophies">
+        <div class="trophy-wrapper">
+          <div class="trophies_sub_title" *ngIf="trophy.isReward">
+            <span>{{ "reward_unlocked_uppercase" | translate }}</span>
+          </div>
+
+          <div class="trophies_sub_title" *ngIf="!trophy.isReward">
+            <span>{{ "trophy_achieved_uppercase" | translate }}</span>
+          </div>
+          <img [ngClass]="{'contest-reward-icon': trophy.isReward}" class="contest-trophy-icon" [src]="trophy.logo_url"
+            onError="this.src='/assets/img/default.png'" alt="" />
+          <div class="reward_desc" *ngIf="trophy.isReward">
+            <span>{{trophy?.category_type}}: </span> <span class="reward_desc_sub">{{ trophy.description }}</span>
+          </div>
+          <div class="title">{{ trophy.trophies_name }}</div>
+        </div>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+</section>

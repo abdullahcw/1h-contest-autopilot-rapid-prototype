@@ -1,0 +1,112 @@
+@import "../../../../styles.scss";
+
+.circleChartWrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-direction: column;
+  .namingWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 270px;
+
+    @include media-breakpoint-down(md) {
+      display: flex;
+      justify-content: space-evenly;
+    }
+
+    .wonText {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      justify-content: center;
+
+      .colorDiv {
+        background-color: #3f55ca;
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+      }
+    }
+
+    .inProgressText {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      justify-content: center;
+      .colorDiv {
+        background-color: #9c9c9c;
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+      }
+    }
+
+    .textFontStyling{
+      font-family: 'Roboto_Regular';
+      font-size: 16px;
+    }
+  }
+  
+  .canvasDiv{
+    position: relative;
+    width: 400px;
+
+    @include media-breakpoint-down(md) {
+      width: 365px;
+    }
+
+    .progress-container {
+      display: flex;
+      position: absolute;
+      align-items: center;
+      flex-direction: column;
+      top: 49px;
+      right: 148px;
+      height: 100px;
+      width: 100px;
+      justify-content: space-around;
+
+      @include media-breakpoint-down(md) {
+        top: 40px;
+        right: 132px;
+      }
+
+      .winScore{
+        color: #3f55ca;
+        font-size: 24px;
+        font-family: $FaktPro_Black_font;
+      }
+  
+      .inProgressScore{
+        font-size: 24px;
+        color: #9C9C9C;
+        font-family: $FaktPro_Black_font;
+      }
+    }
+  }
+
+  .no_messages {
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    padding-top: 20px;
+
+    font: {
+        family: Roboto_Regular;
+        size: $default_font_size;
+    }
+
+    @extend .center-align;
+}
+}
+
+
+
+canvas#circleChart{position:relative; z-index:10;}

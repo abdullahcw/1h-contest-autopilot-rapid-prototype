@@ -1,0 +1,41 @@
+name: Dev-Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Commit-Build-ID to Deploy'
+        required: true
+
+env:
+  BRANCH_NAME: ${{ GITHUB.REF_NAME }}
+  SERVICE_NAME: 1hadmin
+
+jobs:
+  deploy:
+    runs-on: adminpanel
+
+    steps:
+    - name: Send greeting
+      run: echo "Hello ${{ github.event.inputs.name }}"
+      
+
+    - name: Get Hash
+      id: hash
+      run: echo "git_hash=$(git rev-parse --short "$GITHUB_SHA")" >> $GITHUB_ENV
+      
+    - name: delete dist if present in code
+      run: if test -d "dist"; then  rm -rf dist; fi
+      
+    - name: Download Artifacts
+      run: aws s3 cp s3://${{ secrets.BACKUP_BUCKET}}/${SERVICE_NAME}/${{ github.event.inputs.name }}.zip .
+      
+    - name: extract artifact
+      run:  unzip ${{ github.event.inputs.name }}.zip
+      
+    - name: upload dist to s3 origin
+      run:  aws s3 sync dist/OHAdminClient/. s3://${{ secrets.DEV_ADMIN_BUCKET }}/
+      
+    - name: invalidate cloudfront 
+      run: aws cloudfront create-invalidation --distribution-id ${{ secrets.DEV_CF_ID }} --paths "/*"
+   

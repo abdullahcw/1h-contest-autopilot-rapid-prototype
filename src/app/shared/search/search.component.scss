@@ -1,0 +1,417 @@
+@import "../../../assets/main.scss";
+
+::ng-deep .mat-chip.mat-standard-chip {
+  color: #444;
+  background-color: #ebebeb;
+  font-weight: normal;
+  font-family: Roboto_Regular;
+  font-size: 12px;
+
+  span {
+    padding-top: 2px;
+  }
+
+  &:hover {
+    background-color: #c4c4c4;
+  }
+}
+
+::ng-deep .mat-menu-panel.matMenuAlignment {
+  margin-top: 10px !important;
+  max-width: 400px !important;
+}
+
+.menu_container {
+  height: auto;
+  max-height: 300px;
+  overflow-y: auto;
+
+  .no_data_found {
+    margin: 15px;
+    padding: 10px 0 10px 0;
+  }
+}
+
+::ng-deep .mat-menu-panel.selection-menu {
+  .mat-menu-content {
+    position: relative;
+
+    app-list-selection.select-list {
+      input.search-item {
+        width: calc(100% - 70px);
+      }
+    }
+
+    .done-toolbar {
+      cursor: pointer;
+      height: 50px;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .search-apply-button {
+      position: absolute;
+      top: 10px;
+      right: 0;
+      height: 30px;
+      /* min-width: 35px; */
+      width: 48px;
+      padding: 0;
+      margin-right: 8px;
+      font-size: 12px;
+      border-radius: 2px;
+
+      mat-icon {
+        font-size: 18px;
+        line-height: 18px;
+        height: 18px;
+        width: 18px;
+      }
+    }
+  }
+}
+
+.activeOption {
+  background: #000 !important;
+}
+
+.disable_event {
+  pointer-events: none !important;
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+.options {
+  font-size: 14px;
+  font-family: Roboto_Regular;
+  color: #444;
+
+  &:hover {
+    background: #f2f2f2 !important;
+  }
+}
+
+.apply-border {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.disabled-menu {
+  cursor: pointer;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.search-wrapper {
+  height: auto;
+  background-color: transparent;
+  padding: 0;
+  border: 1px solid transparent;
+  overflow: hidden;
+
+  .search-string {
+    width: 100%;
+    font-size: 14px;
+    margin: 0px;
+    color: $search_color;
+
+    ::ng-deep .mat-form-field-flex {
+      // chips alignment adjusted for the SLG & contest assignment UI
+      display: flex !important;
+    }
+
+ 
+      .mat-chip {
+        overflow: inherit;
+    }
+
+    @include media-breakpoint-down(xs) {
+      overflow-x: scroll;
+      scrollbar-width: none; // hide scroll area for mozilla
+      overflow-x: overlay;
+      overflow-y: hidden;
+
+      ::ng-deep .mat-chip-list-wrapper {
+        flex-wrap: nowrap;
+
+        .mat-chip {
+          overflow: hidden;
+          min-width: fit-content;
+        }
+      }
+    }
+
+    .chips-input-wrapper {
+      display: flex;
+      padding: 0;
+      margin: 0;
+      align-items: center;
+      min-height: 48px;
+
+      input {
+        position: absolute;
+        min-height: 48px;
+        margin: 0;
+        width: auto;
+      }
+    }
+
+    .disabled-chip {
+      pointer-events: none;
+    }
+  }
+
+  .scrollable {
+    overflow-x: scroll !important;
+    scrollbar-width: none; // hide scroll area for mozilla
+    overflow-x: overlay;
+    overflow-y: hidden;
+
+    ::ng-deep .mat-chip-list-wrapper {
+      flex-wrap: nowrap;
+
+      .mat-chip {
+        overflow: hidden;
+        min-width: fit-content;
+      }
+    }
+  }
+
+  .add-filter-indicator {
+    border: 1px solid #b6b6b6;
+    border-style: dashed;
+    padding: 2px 12px 2px 5px;
+    border-radius: 40px;
+    height: 30px;
+
+    mat-icon {
+      color: $add-filter-icon-color;
+    }
+
+    font: {
+      family: Roboto_Regular;
+      size: $text_size_small;
+    }
+
+    mat-icon {
+      font-size: 20px;
+      margin-top: -1px;
+      @extend .center-align;
+    }
+
+    display: flex;
+    align-items: center;
+    color: $midGrey;
+
+    span {
+      font-family: Roboto_Regular;
+      margin-top: 2px;
+      color: $add-filter-color;
+    }
+  }
+
+  .autocomplete {
+    width: auto !important;
+    height: auto !important;
+  }
+
+  .inner-search-plain-text {
+    width: auto !important;
+    height: auto !important;
+  }
+
+  .toolbar-button {
+    font: {
+      family: Roboto_Regular;
+      size: $default_font_size;
+    }
+
+    color: $add_icon;
+    border-radius: 30px;
+    padding: 5px 20px;
+  }
+
+  .search-indicator {
+    color: #ccc;
+    position: absolute;
+    display: flex;
+    font-size: 14px;
+    align-items: center; 
+    padding-left: 10px;
+  }
+
+  .search-input {
+    padding-left: 10px;
+  }
+}
+
+.fixed-height {
+  height: $row_height !important;
+}
+
+.disable-click {
+  pointer-events: none;
+}
+
+.search-toolbar {
+  height: 36px !important;
+  font-size: 16px;
+}
+
+.emptyFilterSearch {
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+}
+
+.mat-list-item {
+  font-family: Roboto_Regular;
+  font-size: 14px;
+}
+
+.search-form {
+  margin: 0;
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+
+  .searchPopUp {
+    @extend .form-inputs;
+    border: none !important;
+    border-bottom: 1px solid #ccc !important;
+    margin-bottom: 0;
+    height: 48px;
+    min-width: 250px;
+  }
+}
+
+.footer {
+  padding: 10px;
+
+  .apply-button {
+    height: 40px;
+    border-radius: 5px;
+    display: block;
+    margin-left: auto;
+    min-width: 12px !important;
+
+    font: {
+      family: Roboto_Regular;
+      size: $default_font_size;
+    }
+
+    mat-icon {
+      font-size: 24px;
+    }
+  }
+}
+
+.additional-filter {
+  padding: 8px 8px 6px 8px;
+  width: auto;
+  height: 20px;
+  color: #000;
+  background: #b8b8b8;
+  border-radius: 50px;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+}
+
+.sppinerDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 248px;
+}
+
+.emptyDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  padding-top: 10px;
+}
+
+.empty-multiselect {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  padding-top: 15px;
+  width: 200px;
+  font-family: Roboto_Regular;
+}
+
+.popupSppinerDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 248px;
+  min-width: 245px;
+}
+
+.handCursor {
+  cursor: pointer;
+}
+
+.display-none {
+  display: none;
+}
+
+.menu_search mat-icon {
+  position: absolute;
+  right: 0;
+  margin-top: 10px;
+  background: $secondary_bg_color;
+}
+
+mat-list mat-list-item {
+  &:hover {
+    background-color: #f4f4f4;
+  }
+}
+
+.mat-menu-panel.filterSearch {
+  margin-top: 50px !important;
+}
+
+::ng-deep .menu_search.mat-menu-item-highlighted {
+  background: none !important;
+}
+
+::ng-deep .menu_search.mat-menu-item-submenu-trigger {
+  -webkit-tap-highlight-color: #fff !important;
+}
+
+::ng-deep .menu_search,
+.menu_search:visited,
+.menu_search:hover,
+.menu_search:active {
+  background: none;
+}
+
+::ng-deep .mat-selected {
+  background: none !important;
+}
+
+.view-mode {
+
+  opacity: 0.5;
+  cursor: pointer;
+  pointer-events: none;
+
+}
+
+.mat-icon-flag {
+  font-size: 15px;
+  text-align: center;
+  height: 15px;
+  width: 15px;
+  vertical-align: middle;
+  // margin-left: -8px;
+  margin-right: 6px;
+}
+
+.mat-list-item-content-player-feedback{}

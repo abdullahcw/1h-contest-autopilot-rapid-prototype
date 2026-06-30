@@ -1,0 +1,36 @@
+<div class="list-selection-container" [ngClass]="{'list-selection-view-mode': viewMode, 'list-selection-search-mode': isMultiMenu }">
+  <div class="search-item" *ngIf="shouldAllowSearch">
+    <div class="select-all-checkbox">
+      <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="isAllSelected()"
+        [disabled]="!itemsToBeDisplayed?.length"
+        [indeterminate]="isItemSelected()">
+      </mat-checkbox>
+    </div>
+    <input type="search" #listSelectionSearchInput [(ngModel)]="searchKeyword" [value]="searchKeyword"
+      [formControl]="filterItem" class="search-item" placeholder="{{searchPlaceHolder}}"
+      (click)="$event.stopPropagation()">
+  </div>
+  <div class="listItem-checkbox" [ngClass]="{'fixed-height': fixedHeightContextMenu}">
+    <div *ngIf="itemsToBeDisplayed?.length">
+      <mat-selection-list #listItem>
+        <mat-list role="list">
+          <mat-list-item role="listitem" *ngFor="let item of itemsToBeDisplayed" (click)="onItemClick(item)">
+            <div class="list-item-name" [ngClass]="{'apply-logo': item?.itemLogo}">
+              <div class="checkboxes-colors">
+                <mat-checkbox [checked]="item.isSelected" (click)="$event.stopPropagation()"
+                  (change)="onItemClick(item)"></mat-checkbox>
+              </div>
+              <div *ngIf=item?.itemLogo>
+               <app-custom-images-table class="item-logo" [className]="'img35by35'"  [ImageSrc]="item.itemLogo" > </app-custom-images-table> 
+              </div>
+              <div class="item-name">
+                {{item?.itemName}}
+              </div>
+            </div>
+          </mat-list-item>
+        </mat-list>
+      </mat-selection-list>
+    </div>
+    <div class="no_messages" *ngIf="!itemsToBeDisplayed?.length">{{'no_data_found' | translate}}.</div>
+  </div>
+</div>

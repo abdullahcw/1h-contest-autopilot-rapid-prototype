@@ -1,0 +1,95 @@
+@import '../../../../src/assets/main.scss';
+
+.change_game_postion {
+    width: 330px;
+
+    .change_game_postion_toolbar {
+        font-size: 18px;
+        font-family: Roboto_Medium;
+
+        .closeIcon {
+            display: flex;
+            flex: 1;
+            justify-content: flex-end;
+            align-items: center;
+            cursor: pointer;
+          }
+    }
+
+    .game_positioning {
+        padding: 20px 16px 0 16px;
+
+        .positioning_text {
+            display: flex;
+            flex-direction: row;
+
+            span {
+                font-size: 14px;
+                font-family: Roboto_Medium;
+            }
+        }
+
+        .error_msg_styling{
+            font-family: Roboto_Regular;
+            letter-spacing: 0px;
+            color: #EB0B0B;
+           font-size: 10px;
+        }
+    }
+
+    .padding_top {
+        padding-top: 15px;
+    }
+
+    .position_padding_top {
+        padding-top: 15px;
+    }
+
+    .position_input_wrapper {
+        display: flex;
+        align-items: center;
+    }
+
+    .position_number {
+        display: flex;
+        align-items: center;
+
+        input {
+            outline: none;
+            border: 1px solid #C6C6C6;
+            width: 60px;
+            height: 25px;
+        }
+    }
+
+
+    .button-row {
+        width: auto;
+        display: flex;
+        margin: 10px;
+
+        .btn-right {
+            margin-left: auto;
+        }
+
+        .cancel-button {
+            border: 0px;
+            font-size: 16px !important;
+            font-family: Roboto_Medium;
+            background: white;
+
+            cursor: pointer;
+        }
+    }
+
+    .positionNumber.ng-invalid {
+        border-left: none !important;
+        border: 1px solid #C6C6C6 !important;
+    }
+
+    .positionNumber{
+        font-size: 16px;
+        font-family: Roboto_Bold;
+        text-align: center;
+    }
+}

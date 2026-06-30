@@ -1,0 +1,453 @@
+@import "../../../../styles.scss";
+@import "../../../../assets/colors";
+
+.container-card {
+  height: $contest_container_height;
+  max-height: $contest_container_height;
+  padding: 0;
+  margin: 5px 40px 0 40px;
+  position: relative;
+  @include i-pad-design;
+
+  @include media-breakpoint-down(md) {
+    margin: 5px 10px;
+
+  }
+
+  .text-style {
+    font-family: $Roboto_Black_font;
+    font-size: 14px;
+    padding-top: 5px;
+  }
+
+  .back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 10px;
+    height: 30px;
+    color: #3856D1;
+    background: #F6F6F6;
+    border: 1px solid #CCCCCC;
+    font-size: 12px;
+    font-family: 'Roboto_Regular';
+
+    span {
+      cursor: pointer;
+    }
+  }
+
+  .text-link {
+    font-family: $Roboto_Regular_font;
+    color: #3856D1;
+    font-size: 12px;
+    cursor: pointer;
+    padding-top: 5px;
+  }
+
+  .content-wrapper {
+    display: flex;
+    height: calc(100% - 30px);
+
+    .left-wraper {
+      @include media-breakpoint-down(md) {
+        width: 100%;
+        position: fixed;
+        left: -300px;
+        top: 0;
+      }
+    }
+
+    .open-menu-background {
+      top: 0;
+      left: 0;
+      height: calc(100vh - 1px);
+      z-index: 110;
+      background: #00000066;
+      width: 100%;
+    }
+
+    .open-menu {
+      left: 0px !important;
+    }
+
+    .disabled-style-mobbile {
+      cursor: progress;
+      pointer-events: none;
+      opacity: 1;
+    }
+
+    .isBackground {
+      width: 100% !important;
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .left {
+      width: 220px;
+      border-left: 1px solid #CCCCCC;
+      border-right: 1px solid #CCCCCC;
+      border-bottom: 1px solid #CCCCCC;
+
+      @include media-breakpoint-down(md) {
+        width: 300px;
+        background: #fff;
+        transition: all .3s;
+        position: absolute;
+        left: -300px;
+        top: 55px;
+      }
+
+      .mat-checkbox-layout .mat-checkbox-label {
+        padding-top: 5px;
+      }
+
+      .checkbox-filter {
+        ::ng-deep .mat-checkbox-ripple {
+          display: none;
+        }
+      }
+
+      .spacer {
+        border-bottom: 1px solid #CCCCCC;
+        width: calc(100% - 15px);
+        margin: auto;
+      }
+
+      .fliters {
+        display: flex;
+        height: 50px;
+        justify-content: space-between;
+        padding: 0px 16px;
+        align-items: center;
+
+
+      }
+
+      .wrapper {
+        height: calc(100vh - 272px);
+        overflow: hidden;
+        overflow-y: scroll;
+
+        @include media-breakpoint-down(md) {
+          height: calc(100vh - 132px);
+        }
+
+
+
+        .filters-wrapper {
+          font-size: 16px;
+          line-height: 20px;
+          overflow: hidden;
+
+          label {
+            display: flex;
+            font-size: 14px;
+            font-family: $Roboto_Black_font;
+            padding: 12px 16px 2px;
+            margin: 0px;
+            margin-bottom: -10px;
+          }
+
+          .radio-group-label {
+            display: flex;
+            flex-direction: column;
+            padding: 12px 0 0 12px;
+          }
+        }
+
+        .cat-filter {
+          height: 188px;
+        }
+
+        .rating-filter {
+          height: 155px;
+        }
+
+        .show {
+          overflow: visible;
+          height: auto;
+        }
+
+        .less-more-text {
+          font-size: 12px;
+          padding: 5px 15px 1px;
+          color: #3A5ACE;
+          font-family: $Roboto_Regular_font;
+          cursor: pointer;
+          display: flex;
+        }
+
+        .options-wrapper {
+          overflow: auto;
+          margin-top: 5px;
+
+          ul {
+            padding-left: 15px;
+            list-style-type: none;
+
+          }
+
+          .option {          
+            padding: 0;
+            height: 33px;
+            display: flex;
+            align-items: center;
+
+            ::ng-deep .mat-option-text {
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              height: 40px;
+            }
+
+            .option-container {
+              font-size: 14px;
+              display: flex;
+              align-items: center;
+              padding-left: 16px;
+              height: 40px;
+
+
+              mat-checkbox {
+                width: 190px;
+
+                @include media-breakpoint-down(md) {
+                  width: 300px;
+                }
+
+                .filter-name {
+                  font-size: 12px;
+                  font-family: $Roboto_Regular_font;
+                }
+
+                ::ng-deep .mat-checkbox-layout {
+                  width: 100%;
+                  display: block;
+                  margin: 0;
+                }
+
+                .mat-ripple-element {
+                  transition-duration: 0ms !important;
+                }
+              }
+            }
+          }
+
+          .seleted-option {
+            background: #3856d1;
+            color: white;
+
+            .subtitle {
+              color: white;
+            }
+          }
+
+          .radio-group {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            margin-top: 10px;
+
+            .option-container-radio {
+              padding-left: 16px;
+              padding-top: 2px;
+
+              &:hover {
+                background: rgba(0, 0, 0, .04);
+              }
+
+              .radio-button {
+                display: flex;
+                align-items: center;
+                height: 30px;
+              }
+
+              mat-radio-button {
+                ::ng-deep .mat-radio-label {
+                  margin: 0;
+                  width: 100%;
+                }
+
+                ::ng-deep .mat-radio-label-content {
+                  padding-left: 5px;
+                  padding-bottom: 5px;
+                }
+
+                ::ng-deep .mat-radio-ripple {
+                  display: none;
+                }
+
+                ::ng-deep .mat-radio-outer-circle {
+                  height: 16px;
+                  width: 16px;
+                }
+
+                ::ng-deep .mat-radio-inner-circle {
+                  height: 16px;
+                  width: 16px;
+                }
+
+                .mat-ripple-element {
+                  display: none !important;
+                }
+              }
+            }
+          }
+        }
+
+        .radio-wrapper {
+          margin-top: 0px;
+        }
+      }
+
+      .mat-close {
+        display: none;
+
+        @include media-breakpoint-down(md) {
+          display: flex;
+          margin-left: auto;
+          padding: 0;
+          margin-right: 5px;
+          padding-top: 4px;
+        }
+      }
+    }
+
+    .right {
+      width: calc(100% - 200px);
+
+      .pointerDefault {
+        cursor: default;
+      }
+
+      @include media-breakpoint-down(md) {
+        width: 100%;
+      }
+      .details-icon {
+        color: #b7b7b7;
+        padding: 0 0 0 15px;
+
+        @include media-breakpoint-down(md) {
+          padding: 0 0 0 5px;
+
+        }
+      }
+
+      .mobile-open {
+        display: none;
+
+        @include media-breakpoint-down(md) {
+          display: flex;
+          width: 36px;
+          height: 36px;
+          background: #3856D1;
+          padding: 10px;
+          border-radius: 5px;
+          cursor: pointer;
+          z-index: 2;
+          margin: 0 5px;
+        }
+      }
+
+      .content-wrapper-right {
+        height: calc(100% - 50px);
+
+        @include media-breakpoint-down(md) {
+          height: calc(100% - 70px);
+
+        }
+
+        table td:nth-child(2) {
+          padding-left: 1px !important;
+        }
+
+        .win-rate {
+          display: flex;
+          flex-direction: column;
+
+          .add-players {
+            font-size: 11px;
+          }
+        }
+
+      }
+
+      .search-item {
+        &::placeholder {
+          color: #888888;
+          font-size: 12px;
+          font-family: $Roboto_Regular_font;
+        }
+      }
+
+      .search-item:focus {
+        outline: none;
+      }
+
+      .game-logo {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+      }
+
+      .game-count {
+        height: 24px;
+        background: #2C2C2C;
+        color: #fff;
+        border-radius: 100px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 10px;
+        padding: 0 12px;
+        font-size: 14px;
+        font-family: $Roboto_Regular_font;
+      }
+
+      .search-toolbar-row {
+        padding: 0;
+        height: 52px;
+        background: #F6F6F6;
+
+        .search-item {
+          width: 100%;
+          height: 100%;
+          border: 0;
+          background: #F6F6F6;
+          margin-left: 16px;
+          font-size: 14px;
+          font-family: $Roboto_Regular_font;
+
+          @include media-breakpoint-down(md) {
+            margin-left: 10px;
+          }
+        }
+      }
+
+      .add-to-btn {
+        width: 175px;
+        font-size: 14px;
+        background: #3856d1;
+        color: #FFFFFF;
+        height: 32px;
+        margin-right: 10px;
+        padding: 0 4px;
+        border: none;
+
+        @include media-breakpoint-down(md) {
+          height: 36px;
+        }
+
+        span {
+          font-size: 14px;
+          font-family: $Roboto_Medium_font;
+        }
+
+        &:disabled {
+          background: #949494;
+        }
+      }
+    }
+  }
+}

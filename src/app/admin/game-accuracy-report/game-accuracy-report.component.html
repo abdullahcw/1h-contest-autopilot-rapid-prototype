@@ -1,0 +1,138 @@
+<div class="game-accuracy-wrapper">
+  <form #gameAccuracyForm="ngForm" class="game-accuracy-form">
+    <div class="form-content-wrapper">
+      <div *ngIf="selectedReportId !== reports.COMPANY_GAME_REPORT" class="game-player-wrapper">
+        <div class="player-type-wrapper form-group" *ngIf="showActiveOption()">
+          <label>{{'players' | translate}}</label>
+          <mat-radio-group class="player-type-section" aria-label="Players" name="players"          
+            [(ngModel)]="selectedTypeOfPlayers" (change)="playersRadioButtonCliked()"> 
+            <mat-radio-button class="radio-btn" [value]="playerStatus.ACTIVE" >{{'active' | translate}}</mat-radio-button>
+            <mat-radio-button class="radio-btn" [value]="playerStatus.ALL" >{{'all' | translate}}</mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+
+      <div class="form-group game-wrapper suffix-spinner-wrapper"
+        *ngIf="selectedReportId === reports.GAME_ACCURACY_REPORT">
+        <label for="game">{{'games' | translate}}</label>
+        <app-search-multiselect [items]="gamesToBeDisplayed" placeholderText="{{('select_games' | translate)}}" [isRequired]="true"
+          [shouldAllowSearch]="true" (selectedItems)="onGameSelectionUpdated($event)" [disabled]="fetchingGames">
+        </app-search-multiselect>
+        <mat-spinner class="spinner" mode="indeterminate" *ngIf="fetchingGames" diameter="20">
+        </mat-spinner>
+      </div>
+
+      <div class="form-group company-wrapper suffix-spinner-wrapper"
+        *ngIf="selectedReportId === reports.MASTER_REPORT_ACROSS_COMPANIES ||
+        selectedReportId === reports.COMPANY_GAME_REPORT">
+        <label for="company">{{'company' | translate}}</label>
+        <app-search-multiselect [items]="companiesToBeDisplayed" placeholderText="{{('select_companies' | translate)}}"
+          [disabled]="fetchingCompanies" [isRequired]="true" [shouldAllowSearch]="true" [selectedReportId]="selectedReportId"
+          (selectedItems)="onCompanySelectionUpdated($event)">
+        </app-search-multiselect>
+        <mat-spinner class="spinner" mode="indeterminate" *ngIf="fetchingCompanies" diameter="20">
+        </mat-spinner>
+      </div>
+
+      <div class="form-group game-wrapper-loc suffix-spinner-wrapper" *ngIf="selectedReportId === reports.WINRATE_GAME_REPORT || selectedReportId === reports.PLAYER_WINRATE || selectedReportId === reports.TOTAL_GAMES_REPORT">
+      
+        <label for="game">{{'location' | translate}}</label>
+        <app-search-multiselect [items]="locToBeDisplayed" placeholderText="{{('select_locations' | translate)}}"
+          [isRequired]="true" [shouldAllowSearch]="true" (selectedItems)="onLocationSelectionUpdated($event)" (isAllSected)="isAllOptionSelected($event,'Location')"
+          [disabled]="fetchingLocations">
+        </app-search-multiselect>
+        <mat-spinner class="spinner" mode="indeterminate" *ngIf="fetchingLocations" diameter="20">
+        </mat-spinner>
+      </div>
+
+
+      <div class="form-group game-wrapper suffix-spinner-wrapper" *ngIf="selectedReportId === reports.WINRATE_GAME_REPORT ||  selectedReportId === reports.PLAYER_WINRATE || selectedReportId === reports.TOTAL_GAMES_REPORT">
+      
+        <label for="game">{{'department' | translate}}</label>
+        <app-search-multiselect [items]="deptToBeDisplayed" placeholderText="{{('select_departments' | translate)}}"
+          [isRequired]="true" [shouldAllowSearch]="true" (selectedItems)="onDepartmentSelectionUpdated($event)"
+          (isAllSected)="isAllOptionSelected($event,'Department')"
+          [disabled]="fetchingLocations">
+        </app-search-multiselect>
+        <mat-spinner class="spinner" mode="indeterminate" *ngIf="fetchingLocations" diameter="20">
+        </mat-spinner>
+      </div>
+
+    
+    <div class="player-type-wrapper form-group" *ngIf="selectedReportId === reports.WINRATE_GAME_REPORT ||  selectedReportId === reports.PLAYER_WINRATE">
+      <mat-radio-group class="player-type-section" aria-label="Players" name="players"
+        [(ngModel)]="selectedTypeOfWinrateGames" (change)="radioButtonCliked()">
+        <mat-radio-button class="radio-btn" [value]="winrateGamesToggel.ALLGAMES">{{'all_games_more' | translate}}</mat-radio-button>
+        <mat-radio-button class="radio-btn" [value]="winrateGamesToggel.ALLPINNED">{{'all_pinned_games' | translate}}</mat-radio-button>
+      </mat-radio-group>
+    </div> 
+      <div class="form-group game-wrapper suffix-spinner-wrapper"
+        *ngIf="selectedReportId === reports.WINRATE_GAME_REPORT ||  selectedReportId === reports.PLAYER_WINRATE">
+        
+
+        <label for="game">{{'games' | translate}}</label>
+        <app-search-multiselect [items]="gamesToBeDisplayed" placeholderText="{{('select_games' | translate)}}" [isRequired]="true"
+          [shouldAllowSearch]="true" (selectedItems)="onWinRateGameSelectionUpdated($event)" [disabled]="fetchingGames"
+          (isAllSected)="isAllOptionSelected($event,'Games')"
+          >
+        </app-search-multiselect>
+        <mat-spinner class="spinner" mode="indeterminate" *ngIf="fetchingGames" diameter="20">
+        </mat-spinner>
+      </div>
+
+      <div class="date-container" *ngIf="selectedReportId !== reports.WINRATE_GAME_REPORT">
+        <div class="start-date-wrapper date-picker">
+          <label for="startDate">{{'start_date' | translate}}</label>
+          <input class="date-picker-field holder form-inputs calendar-input" name="startDate"
+            (dateChange)="setStartDate(startDate);" (open)="isDatePickerOpen" (click)="startDatePicker.open()"
+            [(ngModel)]="startDate" (keydown)="$event.preventDefault(); isDatePickerOpen = true;" [max]="today"
+            [matDatepicker]="startDatePicker" placeholder="{{'date_format_mmddyyyy' | translate}}" readonly required>
+          <mat-datepicker-toggle matPrefix [for]="startDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #startDatePicker></mat-datepicker>
+        </div>
+
+        <div class="end-date-wrapper date-picker">
+          <label for="endDate">{{'end_date' | translate}}</label>
+          <input class="date-picker-field holder form-inputs calendar-input" name="endDate"
+            (dateChange)="setEndDate(endDate);" (open)="isDatePickerOpen" (click)="endDatePicker.open()"
+            [(ngModel)]="endDate" (keydown)="$event.preventDefault(); isDatePickerOpen = true;" [min]="startDate"
+            [max]="today" [matDatepicker]="endDatePicker" placeholder="{{'date_format_mmddyyyy' | translate}}" readonly required>
+          <mat-datepicker-toggle matPrefix [for]="endDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #endDatePicker></mat-datepicker>
+        </div>
+      </div>
+
+      <div class="email-ids-wrapper form-group name-field">
+        <label class="label roboto_regular">{{'email_ids' | translate}}</label>
+        <mat-form-field class="email-container" (click)="emailInput.focus()">
+          <mat-chip-list #chipList>
+            <mat-chip *ngFor="let email of emails" [selectable]="true" [removable]="true"
+              (removed)="removeFilter(email)">
+              {{email}}<mat-icon class="cancel-chip" matChipRemove>cancel</mat-icon>
+            </mat-chip>
+            <div class="add-filter-indicator" *ngIf="!is_editing" (click)="is_editing = true;">
+              <mat-icon>add</mat-icon><span>{{'add_email' | translate}}</span>
+            </div>
+            <input #emailInput type="email" name="emailInput" [matChipInputFor]="chipList" (blur)="is_editing = false"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="true" email (focus)="is_editing = true;"
+              (matChipInputTokenEnd)="addEmailChip($event)" pattern="\S+@\S+\.\S+" required>
+          </mat-chip-list>
+        </mat-form-field>
+      </div>
+    </div>
+    <mat-card-actions class="footer">
+
+      <div class="button-row">
+        <div>
+          <button *ngIf="!reportSending" type="submit" mat-raised-button color="primary" (click)="emailInput.blur(); sendEmail(); isClicked = true"
+          [disabled]="disableButton()"   >
+            <div> {{'send_email_uppercase' | translate}} </div>
+          </button>        
+          <mat-spinner class="spinner" style="    margin-left: 25px;" mode="indeterminate" *ngIf="reportSending" diameter="20">
+          </mat-spinner>
+
+        </div>
+      </div>
+    </mat-card-actions>
+  </form>
+</div>

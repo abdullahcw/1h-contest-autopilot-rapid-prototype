@@ -1,0 +1,28 @@
+.delete-company-content {
+    padding: 20px;
+    padding-bottom: 6px;
+    .title {
+        margin-bottom: 20px;
+    }
+    .captcha-container {
+        text-align: center;
+    }
+    .captcha {
+        display: inline-block;
+    }
+    .button-row {
+        width: auto;
+        display: flex;
+        margin-top: 20px;
+        .btn-right {
+            margin-left: auto;
+        }
+        .cancel-button{
+            border:0px;
+            // margin-right: 10px;
+            background: white;
+
+            cursor: pointer;
+          }
+    }
+}

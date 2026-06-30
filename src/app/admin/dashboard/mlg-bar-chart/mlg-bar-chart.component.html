@@ -1,0 +1,6 @@
+<div class="barChartWrapper">
+    <canvas id="myChart" style="width: 90%;height: 80%;" #barChartCanvas *ngIf="showChart()"></canvas>
+    <div class="no_messages" *ngIf="!showChart()">
+        <p>{{('no_gameplay' | translate)}}</p>
+    </div>
+</div>

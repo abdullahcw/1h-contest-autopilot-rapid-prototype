@@ -1,0 +1,16 @@
+<div class="container">
+  <mat-toolbar color="primary">
+    Audio Player
+    <span class="spacer"></span>
+    <mat-icon class="action-icon" (click)="edit()" *ngIf="shouldAllowEditing">edit</mat-icon>
+    <mat-icon class="action-icon" (click)="delete()" *ngIf="shouldAllowEditing">delete</mat-icon>
+    <mat-icon class="action-icon" (click)="dialogRef.close()">close</mat-icon>
+  </mat-toolbar>
+  <section>
+    <div class="content">
+      <mat-icon (click)="play()">{{ !audio ? 'play_arrow' : (audio.paused ? 'play_arrow' : 'pause')}}</mat-icon>
+      <mat-slider color="primary" class="slider" [(ngModel)]="audio.currentTime" [min]="0" [max]="audio?.duration"></mat-slider>
+      <div class="elapsed-time">{{currentTime}}</div>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,126 @@
+<div class="main_container">
+  <div class="wrapper">
+    <mat-card class="container-card">
+      <mat-card-header>
+        <mat-toolbar class="toolbar">
+          <mat-toolbar-row>
+            <span class="title"><span
+                class="">{{ selection.hasValue() ? globalService.showTextOnSelection(selection.selected.length, totalLocations, ('locations' | translate)) : ('showing_all_locations' | translate)}}</span></span>
+            <span class="spacer"></span>
+            <button *ngIf="locationPermission && locationPermission?.add" class="add-location addEntity"
+              matTooltip="{{'add_new_location' | translate}}" matTooltipPosition="below"
+              (click)="presentAddLocationPopup(null, translate.instant('add_location'))" mat-fab>
+              <mat-icon>add</mat-icon>
+            </button>
+            <button class="menu-options" mat-icon-button [matMenuTriggerFor]="menu" matTooltip="{{'options' | translate}}"
+              matTooltipPosition="left" (click)="menuOptionsToBeDisplay()" *ngIf="selection.selected.length">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu" y-position="below" overlapTrigger="false" class="menu">
+              <button mat-menu-item class="options-menu-item"
+                (click)="presentAddLocationPopup(selection.selected,translate.instant('edit_location'))"
+                *ngIf="locationPermission && locationPermission?.edit && selection.selected.length == 1">
+                <mat-icon class="toolbar-icon-color" matTooltip="{{'edit' | translate}}" matTooltipPosition="left">edit</mat-icon>
+                <span>{{'edit' | translate}}</span>
+              </button>
+              <button mat-menu-item class="options-menu-item"
+                (click)="presentAddLocationPopup(selection.selected, translate.instant('change_time_zone'), ['timezone'])"
+                *ngIf="locationPermission && locationPermission?.edit && selection.selected.length > 1">
+                <mat-icon class="toolbar-icon-color" matTooltip="{{'change_time_zone' | translate}}" matTooltipPosition="left">access_time
+                </mat-icon>
+                <span>{{'change_time_zone' | translate}}</span>
+              </button>
+              <button mat-menu-item class="options-menu-item"
+                (click)="presentAddLocationPopup(selection.selected, translate.instant('change_address'), ['address'])"
+                *ngIf="locationPermission && locationPermission?.edit && selection.selected.length > 1">
+                <mat-icon class="toolbar-icon-color" matTooltip="{{'change_address' | translate}}" matTooltipPosition="left">location_city
+                </mat-icon>
+                <span>{{'change_address' | translate}}</span>
+              </button>
+              <button mat-menu-item class="options-menu-item"
+                (click)="presentAddLocationPopup(selection.selected, translate.instant('add_departments'), ['departments'])"
+                *ngIf="locationPermission && locationPermission?.edit && selection.selected.length > 1">
+                <mat-icon class="toolbar-icon-color" matTooltip="{{'change_deparment' | translate}}" matTooltipPosition="left">category
+                </mat-icon>
+                <span>{{'Add Departments' | translate}}</span>
+              </button>
+              <button mat-menu-item class="options-menu-item" (click)="confirmDeletion($event)"
+                *ngIf="locationPermission && locationPermission?.delete && (selection.selected.length === 1 ? !isHeadLocation : true)">
+                <mat-icon class="toolbar-icon-color" matTooltip="{{'delete' | translate}}" matTooltipPosition="left">delete</mat-icon>
+                <span>{{'delete' | translate}}</span>
+              </button>
+            </mat-menu>
+
+          </mat-toolbar-row>
+          <mat-toolbar-row>
+            <app-search class="filter-chip" style="width:100%" [filter_options]="filter_options"
+            [shouldAllowAddMore]="dataSource?.data?.length" [dataSource]="menuList"
+            (getDataSource)="getDataSource($event)" (filtersUpdated)="refreshListOnFilterChange($event)"
+            [context]="context" (filterOptionUpdated)="filterOptionUpdated($event)"></app-search>
+          </mat-toolbar-row>
+        </mat-toolbar>
+      </mat-card-header>
+      <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+      <mat-card-content>
+        <div class="no_messages" *ngIf="!dataSource?.data.length">
+          <p>{{is_loading ? ('please_wait' | translate) : ('no_record_found' | translate)}}</p>
+        </div>
+        <table mat-table [dataSource]="dataSource" class="responsive-table" matSort (matSortChange)="sortData($event)"
+          matSortActive="location" matSortDirection="asc" matSortDisableClear *ngIf="dataSource?.data.length"
+          [ngClass]="{'disabled-style': is_loading}">
+          <ng-container matColumnDef="select" >
+            <th mat-header-cell *matHeaderCellDef class="checkboxes select-all-checkbox">
+              <mat-checkbox (change)="$event ? masterToggle() : null"
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let location" (click)="$event.stopPropagation();"
+              class="checkboxes checkboxes-colors">
+              <mat-checkbox color="primary" (change)="$event ? selection.toggle(location) : null"
+                [checked]="selection.isSelected(location)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="location">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'location' | translate}}</th>
+            <td mat-cell *matCellDef="let location">
+              <label>{{'location' | translate}}</label>
+              <p>{{location.location_name}}</p>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="address">
+            <th mat-header-cell *matHeaderCellDef>{{'address' | translate}}</th>
+            <td mat-cell *matCellDef="let location"><label>{{'location' | translate}}</label>
+              <span *ngIf="location?.city || location?.state_name || location?.country_name ; else empty_location">
+                {{location?.city || ''}}<span
+                  *ngIf="location?.city && (location?.state_name || location?.country_name)">,</span>
+                {{location?.state_name || ''}}<span *ngIf="location?.state_name && location?.country_name">,</span>
+                {{location?.country_name || ''}}
+              </span>
+              <ng-template #empty_location>---</ng-template>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="timezone">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'timezone' | translate}} </th>
+            <td mat-cell *matCellDef="let location"><label> {{'timezone' | translate}}</label>
+              <p>{{location.tz_name || '---'}}</p>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header"></tr>
+          <tr mat-row *matRowDef="let location; columns: displayedColumns;"
+            (click)="presentAddLocationPopup([location], translate.instant('edit_location'))"
+            [ngClass]="{'selected-row-styling': (selection && selection.selected.indexOf(location) > -1),'notHandCursor' : !location.is_editable}">
+          </tr>
+        </table>
+        <span class="spacer"></span>
+      </mat-card-content>
+      <mat-card-actions>
+        <mat-paginator #paginator [length]="totalLocations" [pageSize]="noOfItemsPerPage"
+          [pageSizeOptions]="pageSizeOptions" (page)="getLocationsOverPagination($event)">
+        </mat-paginator>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

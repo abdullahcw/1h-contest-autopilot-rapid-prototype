@@ -1,0 +1,264 @@
+<div class="main_container">
+  <div class="wrapper">
+    <app-mlg-list (tabChangefromMlg)="tabChangefromMlg($event)" *ngIf="!isMultilevelTab"></app-mlg-list>
+    <mat-card class="container-card" *ngIf="isMultilevelTab">
+      <mat-card-header>
+        <mat-toolbar class="toolbar">
+          <mat-toolbar-row class="game-toolbar">
+            <span class="title"><span class="">{{'game_library' | translate}}</span></span>
+            <span class="spacer"></span>
+            <button class="add-game addEntity" *ngIf="gamePermission?.add" matTooltip="{{'add_new_game' | translate}}"
+              matTooltipPosition="below" (click)="navigateToGamePage()" mat-fab>
+              <mat-icon>add</mat-icon>
+            </button>
+            <mat-button-toggle-group class="game-toggle-switch" name="fontStyle" aria-label="Font Style"
+              [value]="isMultilevelTab" #group="matButtonToggleGroup" (change)="onValChange(group.value)">
+              <mat-button-toggle [value]="true">{{'singlelevel_uppercase' | translate}}</mat-button-toggle>
+              <mat-button-toggle [value]="false">{{'multilevel_uppercase' | translate}}</mat-button-toggle>
+            </mat-button-toggle-group>
+            <mat-button-toggle-group class="game-mobile-toggle-switch" name="fontStyle" aria-label="Font Style"
+              [value]="isMultilevelTab" #groupTab="matButtonToggleGroup" (change)="onValChange(groupTab.value)">
+              <mat-button-toggle [value]="true">
+                <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" class="level">
+                  <circle cx="12.5" cy="12.5" r="10.78" [style.fill]="isMultilevelTab ? '#f6f6f6' : '#3956D1'"/>
+                </svg>
+              </mat-button-toggle>
+              <mat-button-toggle [value]="false">
+                <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" class="level">
+                  <circle cx="13.87" cy="11.81" r="10.59" [style.fill]="isMultilevelTab ? '#3956D1' : '#f6f6f6'"/>
+                  <circle cx="11.31" cy="13.72" r="10.19" 
+                    [style.fill]="isMultilevelTab ? '#3956D1' : '#f6f6f6'"
+                    [style.stroke]="isMultilevelTab ? '#f6f6f6' : '#3956D1'"
+                    [style.stroke-miterlimit]="'10'"/>
+                </svg>
+              </mat-button-toggle>
+            </mat-button-toggle-group>
+          </mat-toolbar-row>
+          <mat-toolbar-row>
+            <app-search class="search-container" style="width:100%" [filter_options]="filter_options"
+              [shouldAllowAddMore]="games?.length" (filtersUpdated)="refreshListOnFilterChange($event)" (getDataSourceWithSearchKey)="getDataSourceWithSearchKey($event)" 
+              [dataSource]="menuList" [multiMenuDataSource]="multiMenuList" [shouldAllowMultiline]="false"
+              (getDataSourceWithFilterDetails)="getDataSource($event)" [context]="context" (getDataSourceWithFilterDetails)="getDataSourceWithMultiMenu($event)"
+              (filterOptionUpdated)="filterOptionUpdated($event)"></app-search>
+          </mat-toolbar-row>
+          <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_pingames_loading || is_loading"></mat-progress-bar>
+          <mat-toolbar-row class="pinned-games-header" *ngIf="hidePinGamesIfArchive">
+            <div class="pinned-container pinned-games-toolbar">
+              <div class="title-container">
+                  <span class="title">
+                      {{'my_top_games' | translate}}
+                  </span>
+                  <div class="box" [ngClass]="{'open-border': check}">
+                      <span class="info">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" matTooltip= "{{'pinned_games_info_msg' | translate}}"  matTooltipPosition="below">
+                              <g id="Group_10971" data-name="Group 10971" transform="translate(-536.6 -193.811)">
+                                  <g id="noun_Info_2086835" transform="translate(536.6 193.811)">
+                                  <g id="Group_4459" data-name="Group 4459">
+                                      <path id="Path_4319" data-name="Path 4319" d="M23.03,14.03a9,9,0,1,1-9,9A9,9,0,0,1,23.03,14.03Zm0,7.026a.886.886,0,1,1,.886-.886A.884.884,0,0,1,23.03,21.056Zm.545,5.722a.546.546,0,0,1-1.091,0V22.6a.546.546,0,0,1,1.091,0ZM23.03,15.121a7.909,7.909,0,1,0,7.909,7.909A7.912,7.912,0,0,0,23.03,15.121Z" transform="translate(-14.03 -14.03)" fill="#555"/>
+                                  </g>
+                                  </g>
+                              </g>
+                          </svg>
+                      </span>
+                  </div>
+              </div>
+              <div class="action">
+                  <mat-icon (click)="toggleExpansion(true)" *ngIf="showPinGames" class="expand_more">add</mat-icon>
+                  <mat-icon (click)="toggleExpansion(false)" *ngIf="!showPinGames" class="expand_less">remove</mat-icon>
+              </div>
+            </div>
+          </mat-toolbar-row>
+          <mat-toolbar-row *ngIf="showPinGames && hidePinGamesIfArchive" class="toolbar-content"></mat-toolbar-row>
+          <mat-toolbar-row class="pinned-games" [ngClass]="{'easeOut': !showPinGames, 'easeIn': showPinGames }" id="pinned-games" *ngIf="hidePinGamesIfArchive" #scrollMenu (scroll)="onScroll($event)">
+            <div class="left-horizontal-scroll" (click)="scroll('left')" [ngClass]="{'hide-icon': hideLeftScrollBtn}" *ngIf="!showPinGames && !is_pingames_loading && pin_games.length > 3">
+              <mat-icon>chevron_left</mat-icon>
+            </div>
+            <div *ngFor="let pinGameData of pin_games;let i=index;" [ngClass]="{'disabled-style': is_pingames_loading}">
+              <app-pinned-card *ngIf="!showPinGames"               
+              [pinGameData]="pinGameData" (refreshGamesList)="refreshGamesList($event)" 
+              (navigateToEditGame)="navigateToEditGamePage($event)"></app-pinned-card>
+            </div>
+            <div class="right-horizontal-scroll" (click)="scroll('right')" [ngClass]="{'hide-icon': hideRightScrollBtn}" *ngIf="!showPinGames && !is_pingames_loading && pin_games.length > 3">
+              <mat-icon>chevron_right</mat-icon>
+            </div>
+            <div class="no-pingames" *ngIf="!pin_games.length && !showPinGames && !is_pingames_loading && !isMultiplayerGame">
+              <span>{{'no_pin_game_msg_top' | translate}}</span>
+              <span>{{'no_pin_game_msg_bottom' | translate}}</span>
+            </div>
+            <div class="no-pingames" *ngIf="!pin_games.length && !showPinGames && !is_pingames_loading && isMultiplayerGame">
+              <span>{{'no_games_available' | translate}}</span>
+            </div>
+          </mat-toolbar-row>
+          <mat-toolbar-row class="library-toolbar" *ngIf="hidePinGamesIfArchive">
+            <span class="title"><span class="">{{'single_level_game_library' | translate}}</span></span>
+          </mat-toolbar-row>
+        </mat-toolbar>
+      </mat-card-header>
+      <mat-card-content [ngClass]="{'mat-card-content-expand': !showPinGames, 'mat-card-content-archive': !hidePinGamesIfArchive, 'disabled-style': is_loading}">
+
+        <div class="no_messages" *ngIf="!games?.length">
+          <p>{{is_loading ? ('please_wait' | translate) : ('no_record_found' | translate)}}</p>
+        </div>
+        <mat-grid-list cols="{{breakpoint}}" rowHeight="2:1" [gutterSize]="'20px'" matSort
+          (matSortChange)="sortData($event)" matSortActive="game" matSortDirection="asc" matSortDisableClear>
+            <div class="gameListRow asset-card">
+            <mat-grid-tile *ngFor="let gameData of games;let i=index;" class="matGridTile"
+            [ngClass]="{'tileFocus': selectedGame == i,'tileCopying':gameData?.polling_identifier}">
+              <div class="content">
+                <div class="left-side" (click)="!gameData?.polling_identifier && gameData?.is_editable &&
+                  !gameData.is_archived ? navigateToEditGamePage(gameData) :''">
+                  <div style="    position: absolute ;">
+                  <app-custom-images-table class="img-wrapper" [className]="'img80by80'"  [ImageSrc]="gameData?.game_logo" > </app-custom-images-table>
+                   <div class="isMultilang" *ngIf="gameData?.is_multilang">
+                    <mat-icon matTooltip="{{gameData?.langs}}"  matTooltipPosition="below" matTooltipClass="game-lang-tooltip" >language</mat-icon>
+                   </div>
+                  </div>
+                </div>
+
+                <div class="right-side">
+                  <div class="topRight">
+                    <span class="robotoRegular gameMode" *ngIf="!gameData?.polling_identifier && !gameData?.is_archived"
+                      [ngClass]="{'draft-color': gameData?.game_state == 'DRAFT' ,
+                    'ready-color': gameData?.game_state == 'READY','practise-color': gameData?.game_mode == 'PRACTICE','live-color': gameData?.game_mode == 'CONTEST'}">
+                      {{gameData?.game_state != 'LIVE' ? gameData?.game_state : gameData?.game_mode == 'PRACTICE' ?
+                      ('practice_uppercase' | translate) :('live_uppercase' | translate)}}</span>
+                    <span *ngIf="gameData?.polling_identifier && !gameData?.is_archived"
+                      class="gameCopy gameModeSelected">{{'duplicating' | translate}}...</span>
+                    <button class="moreBtnSize" mat-icon-button [matMenuTriggerFor]="gameMenuBtn"
+                      (menuOpened)="menuOpened(i,gameData)" (menuClosed)="menuClosed()"
+                      [ngClass]="{'disabled-style': !gameData?.is_editable && gameData?.is_archived}">
+                      <mat-icon class="fontMore" style="z-index:2;" *ngIf="!gameData?.polling_identifier">
+                        more_vert
+                      </mat-icon>
+                    </button>
+                  </div>
+                  <div class="top-right-content" (click)="!gameData?.polling_identifier && gameData?.is_editable &&
+                    !gameData.is_archived ? navigateToEditGamePage(gameData) :''">
+                    <mat-card-title class="robotoRegular"> {{gameData?.game_name}}</mat-card-title>
+
+                    <mat-card-subtitle class="robotoRegular">
+                      {{'single_level' | translate}}
+                    </mat-card-subtitle>
+                    <mat-card-subtitle class="ellipsis">
+                      {{gameData?.is_shop_game ? ('the_shop' | translate) : gameData?.game_category}}
+                    </mat-card-subtitle>
+                    <mat-card-subtitle>
+                      {{gameData?.is_shop_game ? ('huddle_team' | translate) : (gameData?.owner_first_name + ' ' +
+                      gameData?.owner_last_name)}}
+                    </mat-card-subtitle>
+                    <mat-card-subtitle *ngIf="gameData?.game_type !== '2'">
+                      {{('win_rate' | translate)}}: {{gameData?.win_rate !== 0 ? gameData?.win_rate : ('no_gameplay' | translate)}}
+                    </mat-card-subtitle>
+                  </div>
+                </div>
+                <div class="overlay">
+
+                </div>
+              </div>
+              <div class="show-schedule">
+                <button class="schedule-button" *ngIf="hoveredElement === gameData?.game_id">Schedule Game</button>
+              </div>
+            </mat-grid-tile>
+          </div>
+        </mat-grid-list>
+      </mat-card-content>
+      <mat-card-actions>
+        <mat-paginator #paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="noOfItemsPerPage"  [length]="totalGames"  (page)="getGamesOverPagination($event)"></mat-paginator>
+      </mat-card-actions>
+    </mat-card>
+
+  </div>
+</div>
+<mat-menu class="matMenuCustom" #gameMenuBtn="matMenu" overlapTrigger="false" [xPosition]="'before'">
+  <span>
+    <button mat-menu-item class="options-menu-item" (click)="scheduleGame()"
+      *ngIf="(selectedgameState == 'LIVE' && selectedgameType == 1 && isEditable && !selectedGameId?.is_archived)">
+      <mat-icon>schedule</mat-icon>
+      <span>{{'schedule' | translate}}</span>
+    </button>
+    <button mat-menu-item class="options-menu-item"
+      (click)="stateChange('LIVE', gameId, selectedgameState,selectedgameType)"
+      *ngIf="selectedgameState == 'DRAFT' && selectedgameType == 2 && isScheduleAvailable && !selectedGameId?.is_archived">
+      <mat-icon>schedule</mat-icon>
+      <span>{{'turn_on' | translate}}</span>
+    </button>
+
+    <button mat-menu-item class="options-menu-item" (click)="scheduleGame()"
+      *ngIf="(selectedgameState == 'READY' && selectedgameType == 1 && isEditable && !selectedGameId?.is_archived)">
+      <mat-icon>schedule</mat-icon>
+      <span>{{'schedule' | translate}}</span>
+    </button>
+
+    <hr class="horizontalLine" *ngIf="isEditable">
+    <div matTooltip="{{'pin_games_limit_reach' | translate}}"  matTooltipPosition="below" [matTooltipDisabled]="!pinGameLimitReached">
+      <button mat-menu-item class="options-menu-item" (click)="pinGame(selectedGameId)" *ngIf="!selectedGameId?.is_pinned && selectedgameType == 1 && !selectedGameId?.is_archived"
+        [disabled]="pinGameLimitReached">
+        <img src="/assets/img/icon/pin_gray.png" alt="" [ngClass]="{'disable-icon': pinGameLimitReached}">
+        <span class="pinGame-icon">{{'pin_game'| translate}}</span>
+      </button>
+    </div>
+    <button mat-menu-item class="options-menu-item" (click)="pinGame(selectedGameId)" *ngIf="selectedGameId?.is_pinned && selectedgameType == 1 && !selectedGameId?.is_archived">
+      <img src="/assets/img/icon/remove_pin.png" alt="">
+      <span class="removePin-icon">{{'remove_pin'| translate}}</span>
+    </button>
+
+    <button mat-menu-item class="options-menu-item" (click)="duplicateGame(selectedGameId)"
+      *ngIf="(selectedgameState != 'DRAFT' && gamePermission?.clone && !selectedGameId?.is_archived)">
+      <mat-icon>file_copy</mat-icon>
+      <span>{{'clone' | translate}}</span>
+    </button>
+    <button mat-menu-item class="options-menu-item" (click)="openCompanySelectionDialog()"
+      *ngIf="(selectedgameState != 'DRAFT' &&  selectedgameType == 1 && permissionService?.isAdmin() && !selectedGameId?.is_archived)">
+      <mat-icon>add</mat-icon>
+      <span>{{'add_to_companies' | translate}}</span>
+    </button>
+    <button mat-menu-item class="options-menu-item" (click)="openMarketplaceSelectionDialog()"
+      *ngIf="(selectedgameState != 'DRAFT' && selectedgameType == 1 && permissionService?.isAdmin() && !selectedGameId?.is_archived)">
+      <mat-icon>storefront</mat-icon>
+      <span>{{'add_to_the_shop' | translate}}</span>
+    </button>
+    <button mat-menu-item class="options-menu-item" (click)="navigateToEditGamePage(selectedGameId)"
+      *ngIf="isEditable && !selectedGameId?.is_shop_game && !selectedGameId?.is_archived && !selectedGameId?.is_archived">
+      <mat-icon>edit</mat-icon>
+      <span>{{'edit' | translate}}</span>
+    </button>
+    <button mat-menu-item class="options-menu-item" (click)="archiveGame(selectedGameId)"
+      *ngIf="isEditable && !selectedGameId?.is_archived">
+      <img src="/assets/img/icon/archive.png" alt="">
+      <span class="archive-icon">{{'archive' | translate}}</span>
+    </button>
+    <button mat-menu-item class="options-menu-item" (click)="addToGameLibrary(selectedGameId)"
+      *ngIf="isEditable && selectedGameId?.is_archived">
+      <img src="/assets/img/icon/move_to_library.png" alt="">
+      <span class="archive-icon">{{'move_to_library' | translate}}</span>
+    </button>
+    <button mat-menu-item class="options-menu-item" (click)="confirmDeletion(selectedGameId)" *ngIf="isEditable">
+      <mat-icon>delete</mat-icon>
+      <span>{{'delete' | translate}}</span>
+    </button>
+    <hr class="horizontalLine" *ngIf="isEditable">
+    <button mat-menu-item class="options-menu-item"
+      (click)="stateChange('DRAFT', gameId, selectedgameState, selectedgameType)"
+      *ngIf="(selectedgameState == 'READY' && isEditable && !selectedGameId?.is_shop_game && !selectedGameId?.is_archived)">
+      <mat-icon>drafts</mat-icon>
+      <span>{{'move_to_drafts' | translate}}</span>
+    </button>
+    <button mat-menu-item class="options-menu-item"
+      (click)="stateChange('DRAFT', gameId, selectedgameState, selectedgameType)"
+      *ngIf="(selectedgameState == 'LIVE' && selectedgameType == 2 && isEditable && !selectedGameId?.is_archived)">
+      <mat-icon>drafts</mat-icon>
+      <span>{{'move_to_drafts' | translate}}</span>
+    </button>
+    <button mat-menu-item class="options-menu-item"
+      (click)="stateChange('READY', gameId,selectedgameState,selectedgameType)"
+      *ngIf="(selectedgameState == 'DRAFT' && selectedgameType == 1 && isEditable) && !selectedGameId?.is_archived">
+      <mat-icon>near_me</mat-icon>
+      <span>{{'move_to_ready' | translate}}</span>
+    </button>
+    <button mat-menu-item class="options-menu-item" (click)="copyText(gameShareUrl)"
+      *ngIf="selectedgameType != 3 && !selectedGameId?.is_archived">
+      <mat-icon>link</mat-icon>
+      <span>{{'copy_game_url' | translate}}</span>
+    </button>
+  </span>
+</mat-menu>

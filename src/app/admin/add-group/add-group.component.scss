@@ -1,0 +1,45 @@
+@import '../../../styles.scss';
+
+.main-container {
+    min-width: 320px;
+    @include media-breakpoint-down(sm){
+        min-width: 260px;
+      }
+
+.small-toolbar {
+    height: 50px;
+    font-size: 16px;
+    display: flex;
+    flex-direction: row;
+    .add-group{
+        border-radius: 30px;
+        margin-left: auto;
+        mat-icon{
+            color: white;
+        }
+    }
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    padding: 12px 20px;
+    .button-row {
+        width: auto;
+        display: flex;
+        margin-top: 25px;
+        .btn-right {
+            margin-left: auto;
+        }
+        .cancel-button{
+            border:0px;
+            cursor: pointer;
+        }
+    }
+}
+
+.container > * {
+    width: 100%;
+}
+}
+  

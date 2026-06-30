@@ -1,0 +1,105 @@
+<div class="main-container">
+    <div class="mlg-details-container">
+        <div class="mlg-details">
+            <div class="mlg-card">
+                <mat-spinner class="spinner" mode="indeterminate" *ngIf="isLoading" diameter="20"></mat-spinner>
+                <div *ngIf="!isLoading" class="mlg-card-content">
+                    <div class="top-side">
+                        <span class="robotoBold title" #elements matTooltip="{{player?.player_data?.first_name}} {{player?.player_data?.last_name}}" [matTooltipShowDelay]="500">
+                            {{player?.player_data?.first_name | uppercase}} {{player?.player_data?.last_name | uppercase}}
+                        </span>
+                    </div>
+                    <div class="side-wrapper">
+                    <div class="left-side">
+                        <div class="logo-wrapper">
+                            <img appSignedUrl [imgSelector]="'changeImageSrc'" [imgSrcValue]="player?.player_data?.profile_image_url" onError="this.src='/assets/img/default.png'" alt="" src="/assets/img/default.png"/>
+                            <span class="player-status" [ngClass]="{'isActive': player?.player_data?.is_active}"></span>
+                        </div>
+                    </div>
+                    <div class="right-side">                        
+                        <div class="player-details">
+                            <div class="location">
+                                <img src="../../../../../assets/img/location.png" alt="" class="mlg-won-icon">
+                                <span class="mlg-subtitle" matTooltip="{{player?.player_data?.primary_field}}" matTooltipPosition="right">{{player?.player_data?.primary_field ? player?.player_data?.primary_field : '--'}}</span>
+                            </div>
+                            <div class="product">
+                                <img src="../../../../../assets/img/department.png" alt="" class="mlg-progress-icon">
+                                <span class="mlg-subtitle" matTooltip="{{player?.player_data?.secondary_field}}" matTooltipPosition="right">{{player?.player_data?.secondary_field ? player?.player_data?.secondary_field : '--'}}</span>
+                            </div>
+                
+                            <div class="phase1">
+                                <img src="../../../../../assets/img/group.png" alt="" class="mlg-played-icon">
+                                <span class="mlg-subtitle" matTooltip="{{player?.player_data?.group}}" matTooltipPosition="right">{{player?.player_data?.group ? player?.player_data?.group : '--' }}</span>
+                            </div>
+                
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <div class="graphical-container">
+                <div class="all-time-graph">
+                    <app-contest-circle-chart class="bar-chart" [completion]="completionObj" *ngIf="!isLoading"></app-contest-circle-chart>
+                    <mat-spinner class="spinner" mode="indeterminate" *ngIf="isLoading" diameter="20"></mat-spinner>
+                </div>
+            </div>
+        </div>
+        <div class="mlg-score">
+            <div class="mlg-record">
+                <div class="mlg-won">
+                    <mat-spinner class="spinner" mode="indeterminate" *ngIf="isLoading" diameter="20"></mat-spinner>
+                    <div *ngIf="!isLoading" class="mlg-content">
+                        <img src="../../../../assets/img/gameplay_participation.png" alt="" class="mlg-won-icon">
+                        <div class="mlg-subcontent">
+                            <span class="mlg-count">{{ player?.rank < 0 ? '--' : (player?.rank | number) }}<span class="ordinal" *ngIf="player?.rank > 0">{{getOrdinalNumber(player?.rank)}}</span></span>
+                            <span class="mlg-subtitle">{{ 'final_ranking' | translate }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mlg-record-divider"></div>
+                <div class="mlg-progress">
+                    <mat-spinner class="spinner" mode="indeterminate" *ngIf="isLoading" diameter="20"></mat-spinner>
+                    <div *ngIf="!isLoading" class="mlg-content">
+                        <img src="../../../../assets/img/icon/totalpoint.png" alt="" class="mlg-progress-icon">
+                        <div class="mlg-subcontent">
+                            <span class="mlg-count">{{ player?.total_points < 0 ? '--' : (player?.total_points | number) }}</span>
+                            <span class="mlg-subtitle">{{ 'total_points' | translate }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="vertical-divider"></div>
+            <div class="mlg-game-time">
+                <div class="mlg-time-spent">
+                    <mat-spinner class="spinner" mode="indeterminate" *ngIf="isLoading" diameter="20"></mat-spinner>
+                    <div *ngIf="!isLoading" class="mlg-content">
+                        <img src="../../../../assets/img/mlg_timespent.png" alt="" class="mlg-time-icon">
+                        <div class="mlg-subcontent">
+                            <span class="mlg-count">{{ player?.time_spent < 0 ? '--:--:--' : convertToHHMMSS(player?.time_spent) }}</span>
+                            <span class="mlg-subtitle">{{ 'time_spent' | translate }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mlg-game-time-divider"></div>
+                <div class="mlg-games-played">
+                    <mat-spinner class="spinner" mode="indeterminate" *ngIf="isLoading" diameter="20"></mat-spinner>
+                    <div *ngIf="!isLoading" class="mlg-content">
+                        <img src="../../../../assets/img/mlg_gamesplayed.png" alt="" class="mlg-played-icon">
+                        <div class="mlg-subcontent">
+                            <span class="mlg-count">{{ player?.games_played < 0 ? '--' : (player?.games_played | number) }}</span>
+                            <span class="mlg-subtitle">{{ 'games_played' | translate }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="leaderboard-container">
+        <div class="performance">
+            <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
+            <app-contest-dashboard-performance-game [showContestGameplay]="showContestGameplay" [selectedTab]="selectedTab" 
+                [playerId]="playerId" [contestId]="contestId" [contestState]="contestState">
+            </app-contest-dashboard-performance-game>
+        </div>
+    </div>
+</div>

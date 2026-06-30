@@ -1,0 +1,26 @@
+<div class="crop-container">
+  <mat-toolbar class="cropping-header" color="primary">
+    {{title}}
+  </mat-toolbar>
+  <section id="crop-image-popup">
+    <div class="container contentWrapper centerAlign">
+      <div>
+          <angular-cropper #angularCropper [cropperOptions]="config"></angular-cropper>
+      </div>
+    </div>
+    <div class="button-row">
+      <div class="options">
+        <mat-icon (click)="zoomIn()">zoom_in</mat-icon>
+        <mat-icon (click)="zoomOut()">zoom_out</mat-icon>
+        <mat-icon (click)="rotateRight()">rotate_right</mat-icon>
+        <mat-icon (click)="restoreZoom()">fullscreen_exit</mat-icon>
+      </div>
+      <div class="btn-right">
+        <button mat-button class="cancel-button" tabindex="-1" (click)="goToEditProfile()">CANCEL</button>
+      </div>
+      <div >
+        <button mat-button id="doneBtn" class="done-button" tabindex="-1" (click)="saveCroppedImg($event)">DONE</button>
+      </div>
+    </div>
+  </section>
+</div>

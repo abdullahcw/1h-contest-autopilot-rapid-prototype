@@ -1,0 +1,141 @@
+<div class="main_container">
+  <div class="wrapper">
+
+    <app-add-game-header [(game)]=game [viewbutton]="true" (goToNextStep)="goToNextStep()" (switchLanguage)="switchLanguage($event)"
+    (allLanguageData)="allLanguageData($event)"  (status)="status($event)" [gameUpdated]="gameUpdated"  *ngIf="gameReset">
+    </app-add-game-header>
+    <mat-card class="container-card">
+      <mat-card-header>
+        <mat-toolbar class="toolbar">
+          <mat-toolbar-row class="category-toolbar">
+            <div class="button-wrapper">
+              <button class="add-game addEntity" matTooltip="{{'add_new_question' | translate}}"
+                matTooltipPosition="below" (click)="addNewQuestion()" mat-fab
+                [hidden]="!categories.length || selectedChip == -2 || gameDetails?.is_shop_game || (gameDetails?.game_state !== 'DRAFT' && gameDetails?.default_lang_id !== storageService.getGameLanguage())"
+                *ngIf="questionPermission?.add " [matTooltipDisabled]="globalService.isMobile()">
+                <mat-icon>add</mat-icon>
+              </button>
+              
+              <button mat-stroked-button (click)="openAiAssist()" class="button-height ai-assist-btn"
+               (mouseenter)="hoverAiAssist=true" (mouseleave)="hoverAiAssist=false" *ngIf="ai_game_builder && selectedLanguage == 1"
+               [ngClass]="{'mobileStyling': isMobile}">                
+                <img *ngIf="hoverAiAssist" src="assets/img/aiAssistIconWhite.png" alt=""/>
+                <img *ngIf="!hoverAiAssist" src="assets/img/aiAssistIcon.png" alt=""/>
+                <span class="ai-title"*ngIf="isMobile"></span>
+                <span class="ai-title" *ngIf="!isMobile">{{'ai_assist' | translate}}</span>
+              </button>
+
+              <button mat-stroked-button class="button-height library-btn"
+                [ngClass]="{'active': selectedChip == -2,'disable-game-change': gameDetails?.is_shop_game } "
+                (click)="switchToQuestionLibrary()">
+                <mat-icon *ngIf="isMobile">library_books</mat-icon>
+                <span *ngIf="!isMobile">{{'library_uppercase' | translate}}</span>
+              </button>
+              <button mat-stroked-button class="button-height" *ngIf="!isMobile"
+                [ngClass]="{'active': selectedChip == -1,'disabled-style': is_loading}"
+                (click)="selectChip('all')">{{'all_questions_uppercase' | translate}}
+                <span class="que-count">&nbsp;({{getQuestionCount()}})</span></button>
+            </div>
+            <div class="content">
+              <mat-form-field class="chip-form-field scrollable">
+                <mat-chip-list>
+                  <div class="chips-container" [ngClass]="{'disabled-style': is_loading}" id="scroll">
+                    <div class="divider"></div>
+                    <div class="mat-chip mat-standard-chip handCursor" *ngFor="let category of categories;let i=index;"
+                      [ngStyle]="{'color': categoryColors[i],'border' : '1.2px solid categoryColors[i] !important','border-color': categoryColors[i] ,
+                      'background-color': selectedChip == i ? categoryColors[i] : '#fff'}"
+                      [ngClass]="{'chip-active': selectedChip == i}" 
+                      (removed)="remove(category)" (click)="selectChip(i);">
+                     
+                      <input type="text" [id]="'isContent' + i" class="editable-tag" (blur)="blur(i);"
+                        [ngClass]="{'disable-game-change': gameDetails?.is_shop_game , 'input-clickble': selectedChip == i && !gameDetails?.is_shop_game}" [(ngModel)]="category.name"
+                        maxlength="14" [disabled]="selectedChip !== i"
+                        (focus)="selectedChip === i ? isCategoryFocused = true : isCategoryFocused = false;"
+                        [ngStyle]="{'color': (selectedChip == i && isCategoryFocused) ? '#000' : (selectedChip == i ? '#fff' : categoryColors[i])}"
+                        (keydown.enter)="$event.target.blur();false" [matTooltipDisabled]="globalService.isMobile()"
+                        matTooltip="{{selectedChip == i ? ('click_to_rename' | translate) : ''}}"
+                        matTooltipPosition="below" elastic-input />
+                      <span class="que-count">({{getQuestionCount(category) || '0'}})
+                      </span>
+                      <mat-icon *ngIf="gameDetails?.is_category_deletable"
+                        [ngClass]="{'disable-game-change': gameDetails?.is_shop_game}"
+                        matTooltip="{{'delete' | translate}}" matTooltipPosition="below"
+                        (click)="confirmCategoryDeletion(category)">cancel
+                      </mat-icon>
+         
+                    </div>
+
+                    <mat-spinner *ngIf="is_categoryAdd" mode="indeterminate" [diameter]="30"></mat-spinner>
+                    <div class="input-wrapper"
+                      *ngIf="categories.length < categoryColors.length && !questionPermission?.add_category">
+                      <div class="add-filter-indicator handCursor" [matBadge]="showShortcuts ? 'F' : ''"
+                        matBadgeColor="primary" matBadgeSize="medium" (click)="addNextCategory()"
+                        [ngClass]="{'disable-game-change': gameDetails?.is_shop_game}" *ngIf="!is_categoryAdd ">
+                        <mat-icon>add</mat-icon><span>{{'category' | translate}}</span>
+                      </div>
+                    </div>
+                  </div>
+                </mat-chip-list>
+              </mat-form-field>
+            </div>
+            <div class="progress-wrapper" (click)="localisation_progress > 0 ? showGameProgress(game) : $event.stopPropagation()" *ngIf="show_progress_bar">
+              <span class="translations-text">Translations</span>
+              <mat-progress-bar class="progress" mode="determinate" value="{{localisation_progress}}"></mat-progress-bar>
+              <span class="translations-text">{{localisation_progress}}
+                <span>%</span>
+              </span>
+            </div>
+
+            <div matTooltip=" {{'how_to_build_games' | translate}}" (click)="showVideo()" class="open-video">
+              <mat-icon>play_circle_outline</mat-icon>
+            </div>
+            <div class="updating-message" *ngIf="updating">{{'saving_changes' | translate}}</div>
+          </mat-toolbar-row>
+          <mat-toolbar-row class="search-toolbar" [ngClass]="{'disabled-style': !questions}">
+            <app-search #search class="filter-chip" style="width:100%" [filter_options]="filter_options"
+              [shouldAllowAddMore]="questions?.length" [dataSource]="menuList" (getDataSource)="getDataSource($event)"
+              [applied_filters]="modifiedFilters" (filtersAdded)="refreshListOnFilterChange($event)"
+              (filtersDeleted)="deletedFilters($event)" [context]="context"></app-search>
+            <mat-icon class="option-icon handCursor vert-menu" style="z-index:2;" (click)="toggleMenu($event)"
+              matTooltip="{{'options' | translate}}" matTooltipPosition="left"
+              [matTooltipDisabled]="globalService.isMobile()" *ngIf="!gameDetails?.is_shop_game">more_vert</mat-icon>
+          </mat-toolbar-row>
+        </mat-toolbar>
+      </mat-card-header>
+      <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+      <mat-card-content [ngClass]=" shouldSearchLocally ? 'dimension' : 'dimension-pagination'">
+        <div class="no_messages" *ngIf="!questions">
+          <p>{{'please_wait' | translate}}</p>
+        </div>
+        <div class="no_messages" [hidden]="categories.length || selectedChip == -2">
+          <p class="bottom-margin">{{'create_category_to_add_new_que' | translate}}</p>
+        </div>
+        <div class="no_messages" [hidden]="questions && questions.length > 0 || selectedChip != -2">
+          <p class="bottom-margin">{{'no_record_found' | translate}}</p>
+        </div>
+        <div class="alert alert-info alert-dismissible info-question"
+          *ngIf="isQuestionUpdated || isCopiedQuestion || isMovedQuestion">
+          <strong>{{isQuestionUpdated ? ('updating_questions' | translate) : isCopiedQuestion ? ('duplicating_questions' | translate) :
+            isMovedQuestion ? ('moving_questions' | translate) : ''}}
+          </strong>&nbsp;&nbsp;{{'please_wait' | translate}}
+        </div>
+        <div class="question-wrapper"  [ngClass]="{'custom-height': categories.length}"
+                  [ngStyle]="{'margin-top': isCopiedQuestion || isMovedQuestion || isQuestionUpdated ? '42px' : '0px'}">
+          <app-question-game-builder [contextfrom]="'isGameScreen'" [questions]="questions" [isAllCollapsed]="(selectedChip === -2)" #questionComponent
+            [addQuestion]="addQuestion" [selectedChip]="selectedChip" [isCategory]="selectedChip < 0 ? true : false"
+            [isGame]="false" [game]="game" [category]="selectedTag" [allCategory]="categories" [clearUnsavedQuestion]="clearUnsavedQuestion"
+            [languageSwitch]="languageSwitch" [selectedLanguageObject]="selectedLanguageObject"
+            [copyMoveAction]="isCopyMoveCompleted" [openCustomMenu]="openCustomMenu" [allLanguage]="allLanguage" [gameModeLanguage]="gameModeLanguage"
+            (updateQuestionList)="updateQuestionList($event)" (moveCopyActionList)="moveCopyActionList($event)"
+            (checkBoxAction)="selectedQuestions($event)" (questionCsvAction)="questionCsvAction($event)">
+          </app-question-game-builder>
+        </div>
+      </mat-card-content>
+      <mat-card-actions *ngIf="!shouldSearchLocally">
+        <mat-paginator [length]="questionsCount" [pageSize]="noOfItemsPerPage" [pageSizeOptions]="pageSizeOptions"
+          (page)="getQuestionsOverPagination($event)">
+        </mat-paginator>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

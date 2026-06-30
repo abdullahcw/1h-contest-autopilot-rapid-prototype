@@ -1,0 +1,123 @@
+@import '../../../styles.scss';
+
+.uploader-container {
+  // max-height: 40vh;
+  // height: 95vh;
+  min-width: 410px;
+  position: relative;
+  overflow: hidden;
+
+  @include media-breakpoint-down(sm) {
+    min-width: 260px;
+  }
+
+  // .ng-valid[required],
+  // .ng-valid.required {
+  //     border-left: 5px solid #17b057 !important;
+  //     __<<ngThemingMigrationEscapedComment0>>__
+  // }
+  // .ng-invalid:not(form) {
+  //     border-left: 5px solid #a94442 !important;
+  //     __<<ngThemingMigrationEscapedComment1>>__
+  // }
+  .small-toolbar {
+    height: 50px;
+    font-size: 16px;
+  }
+
+  // ::ng-deep .mat-tab-label {
+  //     opacity: 1 !important;
+  // }
+  // ::ng-deep .mat-tab-disabled {
+  //     color: $textMidGrey !important;
+  // }
+  // ::ng-deep .mat-tab-label-active {
+  //     color: $textMidGrey !important;
+  // }
+  .content {
+    display: flex;
+    flex-direction: column;
+    padding: 0 0;
+
+    .container {
+
+      // padding: 15px 15px 0;
+      // height: calc(95vh - 160px);
+      .content-validation {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        padding: 20px;
+
+        .title {
+          font-family: Roboto_Bold;
+          font-size: 14px;
+        }
+
+        .validation-message {
+          font-family: Roboto_Regular;
+          font-size: 14px;
+          display: flex;
+          padding: 2px 0;
+
+          .mat-icon {
+            font-size: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+
+          .green-color {
+            color: green;
+          }
+
+          .red-color {
+            color: red;
+          }
+        }
+      }
+    }
+
+    .footer {
+      display: flex;
+      justify-content: flex-end;
+      padding: 10px;
+      background-color: $secondary_bg_color;
+      position: sticky;
+      z-index: 5;
+
+      .downloadSample {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        span {
+          font-size: 13px;
+          font-family: Roboto_Regular;
+          padding: 0 8px;
+        }
+      }
+
+      .button-row {
+        width: 100%;
+        display: flex;
+
+        .btn-right {
+          margin-left: auto;
+        }
+
+        .cancel-button {
+          border: 0px;
+          margin-right: 10px;
+          background: white;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  .container>* {
+    width: 100%;
+  }
+}

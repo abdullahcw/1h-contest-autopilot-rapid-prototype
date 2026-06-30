@@ -1,0 +1,135 @@
+<div class="dashboard-wrapper">
+  <app-skill-insights [selectedDashboardTabType]="selectedDashboardTabType" (dashboardTypeChanged)=dashboardTypeChanged($event) *ngIf="!selectedDashboardTabTypeChanges" ></app-skill-insights>
+<div class="tab-content">
+<div class="tab" label="SKILL INSIGHTS">
+  <mat-card class="dashboard-card" [ngClass]="{'noShadow': selectedDashboardType === dashboard.BY_MULTILEVEL}">
+    <mat-card-header>
+      <mat-toolbar class="toolbar">
+        <mat-toolbar-row class="dashboard">
+          <div class="icon-wrapper">
+            <div matTooltip="{{'how_to_run_reports' | translate}}" (click)="showVideo()" class="open-video"
+              [ngClass]="{'view-video' : tabIndex === 1}">
+              <mat-icon>play_circle_outline</mat-icon>
+            </div>
+            <div *ngIf="tabIndex === 1" class="download-report" [matMenuTriggerFor]="menu"
+              matTooltip="{{'options' | translate}}" matTooltipPosition="left" style="cursor: pointer"
+              [ngClass]="{'disabled-style': (!isRequiredFilterApplied() || playerReports.length === 0)}">
+              <mat-icon class="download-icon" [ngClass]="{'disabled-icon': (!isRequiredFilterApplied() || playerReports.length === 0)}">cloud_download</mat-icon>
+            </div>
+          </div>
+          <mat-menu #menu="matMenu" class="menu_status" y-position="below" overlapTrigger="false">
+            <button mat-menu-item class="options-menu-item" (click)="downloadReport()"
+              [ngClass]="{'disabled-style': (!isRequiredFilterApplied() || playerReports.length === 0 || preventDoubleClick)}">
+              <mat-icon class="toolbar-icon-color">cloud_download</mat-icon>
+              <span>{{'download' | translate}}</span>
+            </button>
+            <button mat-menu-item class="options-menu-item"
+              (click)="openCustomDateRangePicker(translate.instant('send_by_email'), 'send_by_email');">
+              <mat-icon class="toolbar-icon-color">email</mat-icon>
+              <span>{{'send_by_email' | translate}}</span>
+            </button>
+          </mat-menu>
+        </mat-toolbar-row>
+        <mat-toolbar-row class="search-toolbar-row">
+          <div [ngClass]="{'disabled-style': !isFiltersLoaded}" style="width: 100%;">
+            <app-search class="filter-chip" style="width:100%" [filter_options]="filter_options" [dataSource]="menuList"
+              (filtersUpdated)="refreshListOnFilterChange($event)"
+              (getDataSourceWithFilterDetails)="getDataSource($event)" [applied_filters]="defaultFilters"
+              [context]="context" (getDataSourceWithSearchKey)="getDataSourceWithSearchKey($event)" [isDashboard]="true"
+              (filterOptionUpdated)="filterOptionUpdated($event)">
+            </app-search>
+          </div>
+          <mat-form-field class="range" *ngIf="selectedDashboardType !== dashboard.BY_CONTEST && selectedDashboardType !== dashboard.BY_MULTILEVEL">
+            <mat-icon class="calender-icon">calendar_today</mat-icon>
+            <mat-select id="range" [(ngModel)]="selectedRange" (selectionChange)="setRange($event.value, true)"
+              #dateRange>
+              <mat-option class="range-option" [value]="range.ALL_TIME" *ngIf="showRangeOptions(selectedDashboardType) 
+                || selectedDashboardType === dashboard.BY_GAME">{{'all_time' | translate}}</mat-option>
+              <mat-option class="range-option" [value]="range.TODAY" *ngIf="!showRangeOptions(selectedDashboardType)">{{'today' | translate}}</mat-option>
+              <mat-option class="range-option" [value]="range.THIS_WK" *ngIf="!showRangeOptions(selectedDashboardType)">{{'this_week' | translate}}</mat-option>
+              <mat-option class="range-option" [value]="range.LAST_WK" *ngIf="!showRangeOptions(selectedDashboardType)">{{'last_week' | translate}}</mat-option>
+              <mat-option class="range-option" [value]="range.THIS_MONTH" *ngIf="!showRangeOptions(selectedDashboardType)">{{'this_month' | translate}}</mat-option>
+              <mat-option class="range-option" [value]="range.LAST_MONTH" *ngIf="!showRangeOptions(selectedDashboardType)">{{'last_month' | translate}}</mat-option>
+              <mat-option class="range-option" [value]="range.THIS_QT">{{'this_quarter' | translate}}</mat-option>
+              <mat-option class="range-option" [value]="range.LAST_QT">{{'last_quarter' | translate}}</mat-option>
+              <div class="range-option mat-option"
+                (click)="openCustomDateRangePicker(translate.instant('send_by_email'), 'custom'); dateRange.close();"
+                *ngIf="tabIndex === 1" [ngClass]="{'disabled-style': !isRequiredFilterApplied()}">
+                {{'custom' | translate}}</div>
+            </mat-select>
+          </mat-form-field>
+        </mat-toolbar-row>
+      </mat-toolbar>
+    </mat-card-header>
+    <mat-tab-group backgroundColor="white" class="custom-tab-label" [(selectedIndex)]="tabIndex"
+      (selectedIndexChange)="switchTab($event)">
+      <mat-tab *ngIf="selectedDashboardType !== dashboard.BY_HIERARCHY">
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">dashboard</mat-icon>
+          <p class="tab-label">{{'dashboard' | translate}}</p>
+        </ng-template>
+
+        <app-dashboard-by-type [selectedDashboardType]="selectedDashboardType" [resetView]="resetView" [fetchingAllLocations]="fetchingAllLocations"
+          (changeTab)="switchTab($event)" class="align-leaderboard-gamecard" [appliedFilters] = "appliedFilters" [selectedRange]="selectedRange" [tabIndex]="tabIndex"
+          *ngIf="selectedDashboardType === dashboard.BY_TEAM" [timeZone]="timeZone">
+        </app-dashboard-by-type>
+
+        <app-dashboard-by-mlg class="align-mlg-dashboard" *ngIf="selectedDashboardType === dashboard.BY_MULTILEVEL" [tabIndex]="tabIndex"
+          [selectedDashboardType]="selectedDashboardType" [resetView]="resetView" [fetchingAllLocations]="fetchingAllLocations"
+          (changeTab)="switchTab($event)" [appliedFilters]="appliedFilters" [selectedRange]="selectedRange" [timeZone]="timeZone">
+        </app-dashboard-by-mlg>
+          <app-dashboard-by-contest class="align-mlg-dashboard" *ngIf="selectedDashboardType === dashboard.BY_CONTEST" [tabIndex]="tabIndex"
+          [selectedDashboardType]="selectedDashboardType" [resetView]="resetView" [fetchingAllLocations]="fetchingAllLocations" (setContestState)="setContestState($event)"
+          (changeTab)="switchTab($event)" [appliedFilters]="appliedFilters" [selectedRange]="selectedRange" [timeZone]="timeZone">
+        </app-dashboard-by-contest>
+        <app-dashboard-by-player class="align-mlg-dashboard" *ngIf="selectedDashboardType === dashboard.BY_PLAYER" [tabIndex]="tabIndex"
+          [resetView]="resetView" [fetchingAllLocations]="fetchingAllLocations" (changeTab)="switchTab($event)" [appliedFilters]="appliedFilters"
+          [selectedRange]="selectedRange" [startDate]="startDate" [endDate]="endDate">
+        </app-dashboard-by-player>
+
+        <app-dashboard-by-slg class="align-mlg-dashboard" *ngIf="selectedDashboardType === dashboard.BY_GAME" [tabIndex]="tabIndex"
+          [selectedDashboardType]="selectedDashboardType" [resetView]="resetView" [fetchingAllLocations]="fetchingAllLocations"
+          [startDate]="startDate" [endDate]="endDate" (changeTab)="switchTab($event)" [timeZone]="timeZone"
+          [appliedFilters]="appliedFilters" [selectedRange]="selectedRange">
+        </app-dashboard-by-slg>
+
+      </mat-tab>
+      <mat-tab *ngIf="selectedDashboardType === dashboard.BY_HIERARCHY">
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">dashboard</mat-icon>
+          <p class="tab-label">{{'dashboard' | translate}}</p>
+        </ng-template>
+        <mat-card-content>
+          <div class="no_messages" *ngIf="fetchingAllLocations">
+            <mat-spinner [diameter]="40"></mat-spinner>
+            <p>{{'please_wait' | translate}}</p>
+          </div>
+          <div>
+            <app-report-by-hirarchy #hierarchyReport *ngIf="!fetchingAllLocations"
+              [hierarchyReportPayload]="hierarchyReportPayload" (updateFilters)="updateFilters($event)"
+              (addDefaultFilter)="addDefaultManagerFilter($event)">
+            </app-report-by-hirarchy>
+          </div>
+        </mat-card-content>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">view_list</mat-icon>
+          <p class="tab-label">{{'detailed_report' | translate}}</p>
+        </ng-template>
+        <mat-card-content>
+          <div class="no_messages" *ngIf="fetchingAllLocations">
+            <mat-spinner [diameter]="40"></mat-spinner>
+            <p>{{'please_wait' | translate}}</p>
+          </div>
+          <div>
+            <app-master-report #masterReport *ngIf="!fetchingAllLocations" [masterReportPayload]="masterReportPayload" (isReportLoaded)="isReportLoaded($event)">
+            </app-master-report>
+          </div>
+        </mat-card-content>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card>
+</div>
+
+

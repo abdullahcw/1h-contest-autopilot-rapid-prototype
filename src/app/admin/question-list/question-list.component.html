@@ -1,0 +1,66 @@
+<div class="main_container">
+  <div class="wrapper">
+    <mat-card class="container-card">
+      <mat-card-header>
+        <mat-toolbar class="toolbar">
+          <mat-toolbar-row>
+            <span class="title"><span
+                class="">{{ selection.length ? globalService.showTextOnSelection(selection.length, globalService.formatNumber(totalQuestions), ('questions' | translate) ) : ('showing_all_questions' | translate)}}</span></span>
+            <span class="spacer"></span>
+            <button class="add-game addEntity" matTooltip="{{'add_new_question' | translate}}"
+              matTooltipPosition="below" (click)="addNewQuestion()" mat-fab *ngIf="questionPermission?.add">
+              <mat-icon>add</mat-icon>
+            </button>
+
+            <button class="question_state_menu" mat-icon-button [matMenuTriggerFor]="menu"
+              matTooltip="{{'options' | translate}}" matTooltipPosition="left">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu" class="menu_status" y-position="below" overlapTrigger="false">
+              <button mat-menu-item class="options-menu-item"
+                (click)="updateQuestionsState(true)"
+                *ngIf="shouldDisplayOption(true) && menuOptionsToBeDisplaySom() && questionPermission?.edit">
+                <mat-icon>visibility</mat-icon>
+                <span>{{'activate' | translate}}</span>
+              </button>
+              <button mat-menu-item class="options-menu-item"
+                (click)="updateQuestionsState(false)"
+                *ngIf="shouldDisplayOption(false) && menuOptionsToBeDisplaySom() && questionPermission?.edit">
+                <mat-icon>visibility_off</mat-icon>
+                <span>{{'deactivate' | translate}}</span>
+              </button>
+              <button mat-menu-item class="options-menu-item"
+                (click)="downloadQuestionsCSV()">
+                <mat-icon class="toolbar-icon-color" matTooltipPosition="left">cloud_download</mat-icon>
+                <span>{{'download_questions' | translate}}</span>
+              </button>
+            </mat-menu>
+          </mat-toolbar-row>
+          <mat-toolbar-row>
+            <app-search class="filter-chip" style="width:100%" [filter_options]="filter_options"
+              [shouldAllowAddMore]="dataSource?.data?.length" [dataSource]="menuList"
+              (getDataSource)="getDataSource($event)" (filtersUpdated)="refreshListOnFilterChange($event)"
+              [context]="context" (filterOptionUpdated)="filterOptionUpdated($event)"></app-search>
+          </mat-toolbar-row>
+        </mat-toolbar>
+      </mat-card-header>
+      <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+      <mat-card-content>
+        <div class="no_messages" *ngIf="!dataSource?.data.length">
+          <p>{{is_loading ? ('please_wait' | translate) : ('no_record_found' | translate)}}</p>
+        </div>
+        <div id="scrollToTop"></div>
+        <app-question [questions]="dataSource?.data" [isAllCollapsed]="isAllCollapsed" [showHeader]="false"
+          (checkBoxAction)="selectedQuestions($event)" [addQuestion]="addQuestion" [isCategory]="true" [isGame]="true"
+          [statusAction]="statusAction" (updateQuestionList)="updateQuestionList($event)">
+        </app-question>
+        <span class="spacer"></span>
+      </mat-card-content>
+      <mat-card-actions>
+        <mat-paginator #paginator [length]="totalQuestions" [pageSize]="noOfItemsPerPage"
+          [pageSizeOptions]="pageSizeOptions" (page)="getQuestionsOverPagination($event)">
+        </mat-paginator>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

@@ -1,0 +1,130 @@
+
+<section class="dashboardByTeamWrapper">
+
+    <div class="teamdetailsContainer" *ngIf="!resetView">
+        <div class="tileWrapper progressTileWrapper" *ngIf="!isGameModeShop" >
+            <mat-spinner class="spinner" mode="indeterminate" *ngIf="isPinnedGamedLoading" diameter="20">
+            </mat-spinner>
+            <div class="redirectIcon"  *ngIf="!isPinnedGamedLoading">                
+                <i class="material-icons material-icons-outlined" (click)="openPopup()" style="font-size: 18px;cursor: pointer;">
+                    info
+                  </i>                
+            </div>
+            <div class="tile " *ngIf="!isPinnedGamedLoading">
+                <div class="winRateProgress">
+                    <round-progress 
+                        [current]="winRate"
+                        [max]="max"
+                        [color]="stroleColor"
+                        [background]="'#E2E2E2'"
+                        [radius]="125"
+                        [stroke]="22"
+                        [semicircle]="true"
+                        [rounded]="false"
+                        [clockwise]="true"
+                        [responsive]="true"
+                        [duration]="800"
+                        [animation]="'easeInOutBack'"
+                        [animationDelay]="500"
+                    ></round-progress>
+                </div>
+                <div class="winRateDetails">
+                    <span class="progressScore" style="margin-top: 0;">
+                        {{winRate == '-1' ? '--' : winRate }}
+                    </span>
+                        <span>{{'win_rate' | translate}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="tileWrapper" [ngClass]="{'tileWrapperWidth' : isGameModeShop}">
+            <mat-spinner class="spinner" mode="indeterminate" *ngIf="isOverallLoading" diameter="20">
+            </mat-spinner>
+            <div class="tile" *ngIf="!isOverallLoading">
+                <img class="gamesPlayedImg" src="../../../../assets/img/mlg_gamesplayed.png" alt="" >            
+                <span class="score" style="margin-top: 0;">
+                    <app-numbers [value]="overall_details?.total_games_played"></app-numbers>
+                </span>
+                <span>{{'games_played' | translate}}</span>
+            </div>
+        </div>
+        <div class="tileWrapper" [ngClass]="{'tileWrapperWidth' : isGameModeShop}">
+            <mat-spinner class="spinner" mode="indeterminate" *ngIf="isOverallLoading" diameter="20">
+            </mat-spinner>
+            <div class="tile" *ngIf="!isOverallLoading">
+                <img class="trophiesImg" src="../../../../assets/img/trophies.png" alt="" >
+                <span class="score">
+                    <app-numbers [value]="overall_details?.trophies"></app-numbers>
+                </span>
+                <span>{{'trophies' | translate}}</span>
+            </div>
+        </div>
+        <div class="tileWrapper" [ngClass]="{'tileWrapperWidth' : isGameModeShop}">
+            <mat-spinner class="spinner" mode="indeterminate" *ngIf="isOverallLoading" diameter="20">
+            </mat-spinner>
+            <div class="tile" *ngIf="!isOverallLoading">
+                <img class="participationImg" src="../../../../assets/img/participation.png" alt="" >
+                <span class="score">
+                    <app-numbers [value]="overall_details?.participation"></app-numbers>
+                    </span>
+                <span>{{'participation' | translate}}</span>
+            </div>
+        </div>
+        <div class="tileWrapper" [ngClass]="{'tileWrapperWidth' : isGameModeShop}">
+            <mat-spinner class="spinner" mode="indeterminate" *ngIf="isOverallLoading" diameter="20">
+            </mat-spinner>
+            <div class="redirectIcon"  *ngIf="!isOverallLoading">
+                <mat-icon style="color: #4453C3;" (click)="viewAccuracyReport()">open_in_new</mat-icon>
+            </div>
+            <div class="tile" *ngIf="!isOverallLoading">
+                <img class="openFeedbackImg" src="../../../../assets/img/feedback.png" alt="" >
+                <span class="score">
+                    <app-numbers [value]="overall_details?.question_feedback?.open_count"></app-numbers>
+                    </span>
+                <span>{{'openFeedbackText' | translate}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="leaderboardPinnedGamesContainer" *ngIf="!resetView">
+
+        <div class="globalPinnedGames" *ngIf="!isGameModeShop">
+            <div class="header">
+                <span>{{ 'globalPinnedGames' | translate }}</span>
+             </div>
+             <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="isPinnedGamedLoading"></mat-progress-bar>             
+             <app-global-pinned-games [ngClass]="{'disabled-style': isPinnedGamedLoading}" (getPinnedGames)="updatePinnedGames($event)"
+              [pinnedGamesList]="pinnedGamesData" [pinnedGames]="pinnedGames" class="gameplay-leaderboard" [totalCount]="totalCountPineedGames" [notScrolly]="notScrolly"
+             [notEmpty]="notEmpty"></app-global-pinned-games>
+        </div>
+        <div class="leaderboard">
+            <div class="header">
+                <span>{{ 'leaderboard_uppercase' | translate }}</span>
+             </div>
+             <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="isTopPlayerLoading"></mat-progress-bar>
+             <app-gameplay-leaderboard 
+             [ngClass]="{'disabled-style': isTopPlayerLoading}"
+             (switchTab)="switchTab($event)" [gamePlay]="gamePlay" class="gameplay-leaderboard" [totalCount]="totalCount" [notScrolly]="notScrolly"
+             [notEmpty]="notEmpty" >
+             </app-gameplay-leaderboard>
+        </div>
+    </div>
+
+    <div class="reset_view" *ngIf="resetView && !fetchingAllLocations">
+        <p>{{'pls_add_filter' | translate}}</p>
+    </div>
+</section>
+<!-- <app-gameplay-leaderboard (switchTab)="switchTab($event)" [gamePlay]="gamePlay" class="gameplay-leaderboard" [totalCount]="totalCount"
+    [selectedDashboardType]="selectedDashboardType" (getLeaderboard)="getLeaderboard($event)" [notScrolly]="notScrolly"
+    [notEmpty]="notEmpty" *ngIf="!resetView">
+</app-gameplay-leaderboard> -->
+
+<!-- <app-gameplay-card [resetView]="resetView" [matTiles]="cardData" [fetchingAllLocations]="fetchingAllLocations" class="gameplay-card"
+    [selectedDashboardType]="selectedDashboardType" [dashboard]="dashboard" *ngIf="!resetView">
+</app-gameplay-card> -->
+
+<!-- <div class="reset_view" *ngIf="resetView && !fetchingAllLocations">
+    <p>{{'pls_add_filter' | translate}}</p>
+</div>
+<div class="no_messages" *ngIf="fetchingAllLocations">
+    <mat-spinner [diameter]="40"></mat-spinner>
+    <p>{{'please_wait' | translate}}</p>
+</div> -->

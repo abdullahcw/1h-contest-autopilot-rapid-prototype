@@ -1,0 +1,62 @@
+<div class="main-container">
+  <div class="wrapper">
+    <mat-card class="container-card">
+      <mat-card-header>
+        <mat-toolbar class="toolbar">
+          <mat-toolbar-row class="trophyButtons">
+            <mat-icon *ngIf="showFeedbackReport" (click)="navigateToDashboard()" matTooltip="{{tootlTipText}}">west</mat-icon>
+            <span class="title" [ngClass]="{'custom-title': showFeedbackReport}"><span class="">{{ questionsSelected && questionsSelected.length ? globalService.showTextOnSelection(questionsSelected.length, totalQuestion, ('player_feedback' | translate) )
+              : ('showing_player_feedback' | translate)}}</span></span>
+            <span class="spacer"></span>
+            <div class="feedback-btn-wrapper">
+              <button mat-stroked-button class="btn-feedback" style="margin: 0 10px;"
+                *ngIf="feedbackPermission?.can_resolve" [disabled]="disabledResolve" (click)="resolveQuestion()">
+                <span class="showText">
+                    {{'close_uppercase' | translate}}
+                </span>
+                <i class="material-icons showIcon" >
+                    done
+                    </i>
+              </button>
+              <button mat-stroked-button [disabled]="!questionFeedback.length" class="btn-feedback"
+                (click)="downloadQuestionsReport()"
+                [ngStyle]="{'margin-left':feedbackPermission?.can_resolve ? '' : '100px'}">
+                <span class="showText">
+                    {{'download_uppercase' | translate}}
+                </span>
+                <i class="material-icons showIcon">
+                    cloud_download
+                    </i>
+              </button>
+            </div>
+          </mat-toolbar-row>
+          <mat-toolbar-row>
+            <app-search class="search-container" style="width:100%" [shouldAllowAddMore]="questionFeedback?.length"
+              [dataSource]="menuList" [filter_options]="filter_options" [applied_filters]="appliedFilters"
+              (filtersUpdated)="refreshListOnFilterChange($event)" (getDataSource)="getDataSource($event)"
+              [context]="context" (filterOptionUpdated)="filterOptionUpdated($event)">
+            </app-search>
+          </mat-toolbar-row>
+
+        </mat-toolbar>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+      <mat-card-content class="feedback-wrapper">
+        <div class="feedback-container">
+          <app-question [isfeedback]="true" [questions]="questionFeedback" [copyMoveAction]="resetSelection"
+            (updateQuestionList)="updateQuestionList($event)" (checkBoxAction)="selectedQuestions($event)">
+          </app-question>
+        </div>
+        <div *ngIf="questionFeedback?.length === 0" class="no_messages">
+          <p>{{is_loading ? ('please_wait' | translate) : isOpenFilterApplied ? ('nice_work' | translate) : ('no_record_found' | translate)}}</p>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <mat-paginator #paginator [length]="totalQuestion" [pageSize]="noOfItemsPerPage"
+          [pageSizeOptions]="pageSizeOptions" (page)="getFeedbackOverPagination($event)">
+        </mat-paginator>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

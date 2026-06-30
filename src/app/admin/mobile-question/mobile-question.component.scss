@@ -1,0 +1,183 @@
+@import '../../../styles.scss';
+
+.mobile-question-wrapper {
+  background: white;
+  min-width: 300px;
+  position: relative;
+
+  @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
+    width: calc(100vw - 130px);
+  }
+
+  .question-wrapper {
+    max-height: calc(100vh - 210px);
+    -webkit-overflow-scrolling: touch;
+    min-width: 300px !important;
+    overflow-y: scroll;
+
+    .question-icon-titile{
+      position: absolute;
+      right: 14px !important;
+      bottom: 120px !important;
+    }
+
+
+    .question-rows tr {
+      display: flex !important;
+      flex-direction: column !important;
+    }
+
+    ::ng-deep tr {
+      display: flex !important;
+      flex-direction: column !important;
+    }
+
+    ::ng-deep tr td {
+      display: flex !important;
+      flex-direction: column !important;
+      width: 100% !important;
+    }
+  }
+
+  ::ng-deep .question-rows.isActive {
+    box-shadow: none !important;
+  }
+
+  ::ng-deep .save-cancel-qs {
+    display: none !important;
+  }
+
+  ::ng-deep td.align-top-checkbox {
+    padding: 0 !important;
+  }
+
+  ::ng-deep td .question_container {
+    .question-wrapper {
+      min-width: 300px !important;
+      padding: 0 5px;
+    }
+
+
+    .question-wrapper.half-height .question,
+    .question-wrapper.full-height .question {
+      height: 120px !important;
+    }
+
+    .actions {
+      background: #dcdcdc4d;
+      position: relative !important;
+      margin-left: 4px !important;
+      flex-wrap: wrap;
+
+      .asset-icon {
+        width: 38px !important;
+        height: 34px !important;
+        margin: 0px 4px 0 4px !important;
+      }
+
+      .points-width {
+        max-height: 35px;
+      }
+
+      .options {
+        margin: 6px 2px !important;
+
+      }
+
+      .options .game-name {
+        padding: 0 !important;
+        margin-top: 15px;
+      }
+    }
+
+    .mat-icon-wrapper,
+    .option-wrapper {
+      margin-top: 10px;
+    }
+  }
+
+  ::ng-deep td .answer-container .answer-options .answer-option .options input {
+    min-width: 280px !important;
+  }
+
+  .question-header {
+    .small-toolbar {
+      height: 50px;
+      font-size: 15px;
+    }
+  }
+
+  .question-footer {
+    .footer {
+      display: flex;
+      justify-content: flex-end;
+      padding: 6px 16px;
+      position: sticky;
+      z-index: 5;
+      margin: 0;
+
+      .button-row {
+        width: 100%;
+        display: flex;
+
+        .btn-right {
+          margin-left: auto;
+        }
+
+        .cancel-button {
+          border: 0px;
+          // margin-right: 10px;
+          background: white;
+          cursor: pointer;
+        }
+      }
+
+      .footer_number {
+        display: flex;
+        align-items: center;
+        color: #858585;
+        font-family: Roboto_regular;
+        font-size: 13px;
+      }
+    }
+  }
+
+  .save-cancel-qs {
+    display: none !important;
+  }
+}
+
+::ng-deep .mobile-question-wrapper td.align-top-checkbox {
+  padding-left: 10px !important;
+}
+
+::ng-deep td.right-align {
+  text-align: left !important;
+
+  .card-number {
+    padding: 0 10px;
+    display: none;
+  }
+}
+
+
+
+::ng-deep .mobile-view-question .mat-dialog-container {
+  //height: 400px;
+  max-width: 100vW;
+  border-radius: 1px;
+  background: lightcyan;
+  // color: #039be5;
+}
+
+cdk-overlay-dark-backdrop {
+  background: rgba(69, 69, 69, 0.96);
+}
+
+::ng-deep .cdk-overlay-pane.mat-menu-panel {
+  max-width: 100vW;
+}
+
+::ng-deep .cdk-overlay-dark-backdrop {
+  background: #000000ad;
+}

@@ -1,0 +1,107 @@
+<div class="customContextMenu">
+  <mat-menu #customMenu="matMenu" overlapTrigger="true" [xPosition]="'before'" class="custom-action-menu">
+    <button mat-menu-item class="options-menu-item" [matMenuTriggerFor]="moveQuestion"
+      *ngIf="selectedChip !== -2 && this.selectedQuestionsList.length" (mouseenter)="questionAction = 'move'">
+      <mat-icon>near_me</mat-icon>{{'move_to' | translate}}
+    </button>
+    <button mat-menu-item class="options-menu-item" [matMenuTriggerFor]="copyQuestion"
+      (mouseenter)="questionAction = 'copy'" *ngIf="this.selectedQuestionsList.length">
+      <mat-icon>layers</mat-icon>{{'copy_to' | translate}}
+    </button>
+    <button mat-menu-item class="options-menu-item" [matMenuTriggerFor]="timerQuestion"
+      *ngIf="selectedChip !== -2 && this.selectedQuestionsList.length" (mouseenter)="questionAction = 'time'">
+      <mat-icon>access_alarm</mat-icon>
+      {{'time' | translate}}
+    </button>
+    <button mat-menu-item class="options-menu-item" [matMenuTriggerFor]="pointQuestion"
+      *ngIf="selectedChip !== -2 && this.selectedQuestionsList.length" (mouseenter)="questionAction = 'points'">
+      <mat-icon>monetization_on</mat-icon>
+      {{'points' | translate}}
+    </button>
+    <button *ngIf="selectedChip !== -2 && !this.selectedQuestionsList.length" mat-menu-item class="options-menu-item"
+      (click)="questionsCsv('download')">
+      <mat-icon>get_app</mat-icon>{{'download_questions' | translate}}
+    </button>
+    <button *ngIf="selectedChip !== -2 && !this.selectedQuestionsList.length" mat-menu-item class="options-menu-item"
+      (click)="questionsCsv('upload')">
+      <mat-icon>publish</mat-icon>{{'upload_questions' | translate}}
+    </button>
+    <button mat-menu-item *ngIf="selectedChip !== -2  && this.selectedQuestionsList.length" class="options-menu-item"
+      (click)="categorySelected('inactive')" (mouseenter)="questionAction = 'inactive'">
+      <mat-icon style="margin-left: -6px;">visibility_off</mat-icon>{{'deactivate' | translate}}
+    </button>
+  </mat-menu>
+
+  <mat-menu #moveQuestion="matMenu" class="custom-action-value-menu">
+    <button mat-menu-item class="options-menu-item" *ngFor="let cat of allCategory"
+      [hidden]="!isCategory && category?.name === cat?.name"     
+      (click)="categorySelected('category', cat.question_category_id)">{{cat.name || '---'}}</button>
+  </mat-menu>
+  <mat-menu #copyQuestion="matMenu" class="custom-action-value-menu">
+    <button mat-menu-item class="options-menu-item" *ngFor="let cat of allCategory"
+      (click)="categorySelected('category', cat.question_category_id)">{{cat.name || '---'}}</button>
+  </mat-menu>
+
+  <mat-menu #pointQuestion="matMenu">
+    <button mat-menu-item class="options-menu-item" *ngFor="let point of points_options_inbulk_edit"
+      (click)="categorySelected('point',point)">{{point == 'Random' ? ('ai_gamegenius' | translate) : point || '---'}}</button>
+  </mat-menu>
+  <mat-menu #timerQuestion="matMenu">
+    <button mat-menu-item class="options-menu-item" *ngFor="let time of timer_options"
+      (click)="categorySelected('time',time)">{{time || '---'}}</button>
+  </mat-menu>
+</div>
+
+
+<div id="scrollToTop"></div>
+<span class="sticky-progress">
+  <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="isCheckClicked"></mat-progress-bar>
+</span>
+<table *ngIf="questions && questions.length">
+  <thead *ngIf="!showHeader">
+    <tr>
+      <th class="headerCheckbox select-all-checkbox">
+        <div class="check-box-wrapper">
+          <mat-checkbox (change)="getSelectedQuestionAll($event)"
+            [checked]="checked && questions.length == selectedQuestionsList.length"
+            [indeterminate]="!checked && selectedQuestionsList.length > 0"
+            matTooltip="{{'select_all' | translate}}" matTooltipPosition="left"></mat-checkbox>
+        </div>
+      </th>
+      <th>{{isfeedback ? ('date' | translate) : ('card' | translate) + ' #'}}</th>
+      <th class="fixed-width">{{'question' | translate}}</th>
+      <th class="fixed-width">
+        <div class="fixed-width" *ngIf="isfeedback">{{'comments' | translate}}</div>
+        <div class="action">
+          <mat-icon (click)="toggleExpansion(true)" *ngIf="isAllCollapsed && !isEditingQuestion" class="expand_more"
+            matTooltip="{{'expand_all' | translate}}" matTooltipPosition="left">add</mat-icon>
+          <mat-icon (click)="toggleExpansion(false)" *ngIf="!isAllCollapsed && !isEditingQuestion" class="expand_less"
+            matTooltip="{{'collapse_all' | translate}}" matTooltipPosition="left">remove</mat-icon>
+        </div>
+      </th>
+    </tr>
+  </thead>
+  <tbody
+    (contextmenu)="contextfrom && contextfrom == 'isGameScreen' && !question.is_editing ? onContextMenu($event, question) : $event.stopPropagation()"
+    app-single-question *ngFor="let question of questions;let i = index" [index]="i" [question]='question'
+    [allLanguage]="allLanguage" 
+    (click)="selectedChip === -2 ? $event.stopPropagation() : openMobileQuestionView(question,editMode)"
+    [timer_options]="timer_options" (questionToggled)="questionToggled()" [points_options]="points_options"
+    [imgInput]="imgInput" [audioInput]="audioInput" [isCategory]="isCategory" [isGame]="isGame"
+    [isfeedback]="isfeedback" [manage_options]="manage_options" [games]="games" (editQuestion)="editQuestion($event)"
+    [isCheckClicked]="isCheckClicked" (openImage)="openImage($event)" (playAudio)="playAudio($event)"
+    (openTagsEditor)="openTagsEditor($event)" (saveQuestion)="saveQuestion($event)"
+    (cancelEditing)="cancelEditing($event, i)" (selectGame)="onGameSelection($event)" [isAllCollapsed]='isAllCollapsed'
+    (questionCategory)="onCategorySelection($event)" (answerType)="selectedAnswerType = $event"
+    (selectedQuestion)="selectedQuestion($event)" [selectedQuestionsList]="selectedQuestionsList" [category]="category"
+    [selectedChip]="selectedChip" [isEditingQuestion]="isEditingQuestion" (cloneQuestion)="cloneQuestion($event)"
+    [isMobile]="isMobile" [hideEdit]="showHeader" [ngClass]="{'disabled-style': isCheckClicked}">
+
+  </tbody>
+</table>
+<button [matMenuTriggerFor]="customMenu" #rightClickMenu
+  style="position: fixed;z-index:9999;visibility: hidden;">{{'action' | translate}}</button>
+<input type="file" onclick="this.value=null" #imgInput id="upload_image" [hidden]="true" accept="image/*"
+  (change)="fileChangeEvent($event)" />
+<input type="file" onclick="this.value=null" #audioInput [hidden]="true" accept="audio/mp3"
+  (change)="audioPicked($event)" />

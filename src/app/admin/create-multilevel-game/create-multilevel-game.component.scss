@@ -1,0 +1,418 @@
+@import "../../../styles.scss";
+@import "../../../assets/colors";
+
+.wrapper {
+  padding: 5px 10px 0;
+  height: $multilevel_container_height;
+  max-height: $multilevel_container_height;
+  position: relative;
+
+  @include media-breakpoint-down(sm) {
+    padding: 5px 5px 0;
+  }
+
+  .container-card {
+    margin: 10px 40px 0 40px;
+    height: $multilevel_container_height;
+    max-height: $multilevel_container_height;
+    padding: 0;
+    position: relative;
+    @include i-pad-design;
+
+    @include media-breakpoint-down(sm) {
+      margin: 0 5px;
+      height: calc(100vh - 178px);
+      max-height: calc(100vh - 178px);
+    }
+
+    .mat-card-content {
+      margin: 0;
+      width: 100%;
+      overflow: auto;
+      min-height: $multilevel_container_height;
+      height: $multilevel_container_height;
+      max-height: $multilevel_container_height;
+      border-top: 1px solid $mat_border_color;
+      border-bottom: 1px solid $mat_border_color;
+      font-family: Roboto_Regular;
+      font-size: $text_size_med;
+
+      .no_messages {
+        padding: 0;
+        width: 100%;
+        height: 90%;
+        text-align: center;
+        padding-top: 20px;
+
+        font: {
+          family: Roboto_Regular;
+          size: $default_font_size;
+        }
+
+        @extend .center-align;
+      }
+    }
+
+    .add-game {
+      width: 50px;
+      height: 50px;
+      background-color: $add_icon_background;
+      color: $add_icon;
+      padding: 5px 20px;
+      border-radius: 30px;
+      font-size: $default_font_size;
+      position: absolute;
+      left: -26px;
+      top: 52px;
+      z-index: 101 !important;
+      @extend .center-align;
+      -webkit-transition: all 1s;
+      -moz-transition: all 1s;
+      -o-transition: all 1s;
+      -ms-transition: all 1s;
+      transition: all 1s;
+
+      &:disabled {
+        background: #aaaaaa;
+      }
+    }
+  }
+
+  .mat-card-actions:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  .disable-mlg-change {
+    pointer-events: none;
+  }
+
+  .criteria-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    min-width: 630px; // for scroll apply
+
+    @include media-breakpoint-down(sm) {
+      min-width: 655px;
+    }
+
+    @include media-breakpoint-down(lg) {
+      min-width: 655px;
+    }
+
+    .multiselectInput {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+  }
+
+  .limit-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 5px !important;
+    
+    .game-limit-input {
+      height: 30px;
+      max-width: 75px;
+      margin: 0;
+      text-align: end;
+      padding-right: 4px;
+      border: 1px solid $midGrey;
+      margin-right: 10px;
+
+      
+      @include media-breakpoint-down(sm) {
+        max-width: 60px;
+      }
+    }
+  }
+
+  ::ng-deep .mat-checkbox-layout {
+    margin-bottom: 0 !important;
+  }
+
+  tr {
+    display: table-row;
+    height: 50px;
+
+    &.disclaimer-class {
+      display: none;
+    }
+
+    button {
+      height: 24px !important;
+      font-size: 13px !important;
+    }
+  }
+
+  tr.game-row {
+    &:hover {
+      cursor: auto !important;
+    }
+  }
+
+  tr.header {
+    &:hover {
+      cursor: default !important;
+    }
+  }
+
+  td.mat-cell:last-of-type,
+  td.mat-footer-cell:last-of-type,
+  th.mat-header-cell:last-of-type {
+    padding-right: 10px;
+  }
+
+  td {
+    position: relative;
+
+    label {
+      margin-bottom: 0 !important;
+
+      .mat-checkbox-layout {
+        margin-bottom: 0 !important;
+      }
+    }
+
+    &:first-child {
+      padding: 5px;
+      text-align: center;
+    }
+
+    @include media-breakpoint-down(sm) {
+      &:first-child {
+        padding: 5px;
+      }
+    }
+  }
+
+  td.game-name-holder {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  td.game-criteria-holder {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0;
+  }
+
+  td.game-limit-holder {
+    padding: 0;
+  }
+
+  .mat-slider-horizontal {
+    width: 100%;
+  }
+
+  .delete-icon {
+    display: flex;
+    justify-content: flex-end;
+    color: #555;
+
+    mat-icon {
+      height: 20px;
+      width: 20px;
+      font-size: 20px;
+    }
+  }
+
+  .game-logo {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+  }
+
+  .date-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .slider-overlay {
+    position: absolute;
+    top: 24px;
+    height: 20px;
+    width: 100%;
+  }
+
+  .levelCount {
+    font-family: Drukwide_Bold !important;
+    font-size: 20px !important;
+  }
+
+  .chips-container {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    width: 100%;
+    margin-top: 2px;
+    overflow: auto;
+    overflow-x: overlay;
+
+    @include media-breakpoint-down(sm) {
+      margin-top: 0px;
+    }
+
+    mat-icon {
+      font-size: 21px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: -4px;
+      margin-left: 6px;
+    }
+  }
+}
+
+.chip-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+
+  mat-icon {
+    color: gray;
+    font-size: 22px;
+    padding-left: 8px;
+    padding-top: 1px;
+  }
+
+  .high-score-select {
+    display: block;
+    color: black;
+    width: 60px;
+    font-size: 12px;
+  }
+
+  select {
+    background-size: 8px;
+    padding: 3px 20px 2px 5px;
+    border: none;
+    background-position: calc(100% - 8px) center !important;
+    margin-left: 2px;
+  }
+
+  .editable-tag {
+    font-weight: 500;
+    font-size: 12px;
+    font-family: Roboto_Regular;
+    border: none;
+    touch-action: unset !important;
+    -webkit-user-drag: unset !important;
+    width: 65px;
+    height: 20px;
+    border-color: transparent;
+    padding: 2px 0 0 2px;
+    margin-left: 4px;
+    padding-right: 4px;
+    text-align: right;
+
+    &:focus {
+      background: white;
+      outline: none;
+    }
+
+    &:disabled {
+      background: #fff;
+    }
+  }
+
+  .view-only-tag {
+    background: white;
+    padding-top: 5px;
+
+    &:hover {
+      cursor: text !important;
+    }
+  }
+
+  .static-chip-align {
+    padding-top: 5px;
+  }
+}
+
+.disableLevel {
+  background: #f7f7f7 !important;
+  ;
+}
+
+::ng-deep .mat-chip-list-wrapper {
+  flex-wrap: nowrap !important;
+}
+
+.chip-list {
+  ::ng-deep .mat-chip-list-wrapper {
+    margin: -19px 1px 0 !important;
+  }
+}
+
+::ng-deep .mat-form-field-infix {
+  display: flex !important;
+}
+
+.img_inMatMenu {
+  width: 20px;
+  margin-right: 16px;
+}
+
+.disable-icon {
+  opacity: 0.5;
+}
+
+.showNudge {
+  position: relative;
+}
+
+.tooltiptext {
+  width: 144px;
+  height: 67px;
+  display: flex;
+  flex-direction: column;
+  background-color: #3A55D0;
+  color: #fff;
+  border-radius: 3px;
+  position: absolute;
+  top: 5px;
+  left: -150px;
+  font-size: 12px;
+  font-family: $Roboto_Regular_font;
+
+  .tooltipcontent {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 16px 0px 15px 15px;
+  }
+
+  .close-nudge {
+    position: absolute;
+    right: 0;
+    cursor: pointer;
+    font-size: 16px;
+    padding-left: 7px;
+  }
+
+
+}
+.tooltiptext::after {
+  content: "";
+  position: absolute;
+  bottom: 60%;
+  left: 48%;
+  margin-left: 75px;
+  border-width: 8px;
+  border-style: solid;
+  border-color: transparent transparent transparent #3A55D0 ;
+}
+
+.hidePatch {
+  display: none !important;
+}

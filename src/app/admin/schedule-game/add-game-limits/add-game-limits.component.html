@@ -1,0 +1,62 @@
+<div class="wrapper">
+  <mat-toolbar class="small-toolbar" color="primary">
+    <div>{{'schedule_game' | translate}}</div>
+  </mat-toolbar>
+
+  <mat-tab-group >
+    <mat-tab label="">
+      <div class="limits-container tab-container">
+        <div class="item-container">
+          <span class="label">{{'attempts' | translate}}:</span>
+          <input class="attempts-field" placeholder="{{isMultipleAttempts ? ('multiple_values' | translate) : ('enter_attempts' | translate )}}"
+          (keypress)="numberOnly($event)" [(ngModel)]="attempts" [value]="attempts" autocomplete="off" maxlength="4" />
+        </div>
+        <div class="item-container">
+          <span class="label">{{'game_limit' | translate}}:</span>
+          <mat-button-toggle-group class="toggle-group" #group="matButtonToggleGroup" [value]="limit_type">
+            <mat-button-toggle (change)="limit_type = 'daily'" value="daily">
+              {{'daily' | translate}}
+            </mat-button-toggle>
+            <mat-button-toggle (change)="limit_type = 'total'" value="total" selected>
+              {{'total' | translate}}
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+        <div class="item-container">
+          <span class="label">{{'start_date' | translate}}:</span>
+          <input class="date-picker-field" placeholder="{{'multiple_values' | translate}}" 
+          (click)="startDatePicker.open()" (open)="isDatePickerOpen" (keydown)="$event.preventDefault() ; isDatePickerOpen = true;"
+          [min]="minDate" [(ngModel)]="startDate" [max]="maxDate" (dateChange)="startDateChanged()" [matDatepicker]="startDatePicker" readonly>
+          <mat-datepicker #startDatePicker></mat-datepicker>
+        </div>
+        <div class="item-container">
+          <span class="label">{{'end_date' | translate}}:</span>
+          <input class="date-picker-field" placeholder="{{'multiple_values' | translate}}"
+          (click)="endDatePicker.open()" (open)="isDatePickerOpen" (keydown)="$event.preventDefault() ; isDatePickerOpen = true;"
+          [min]="startDate" [(ngModel)]="endDate" [max]="maxDate" (dateChange)="endDateChanged()" [matDatepicker]="endDatePicker" readonly>
+          <mat-datepicker #endDatePicker></mat-datepicker>
+        </div>
+        <div class="item-container" *ngIf="isFormInvalid">
+          <div class="error-message">
+            {{endDate ? ('start_date_cant_be_greater_than_end_date' | translate) : ('limit_less_than_this_end_date' | translate)}}
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+  <div class="button-row">
+    <div class="btn-right">
+      <button type="button" mat-button class="cancel-button" tabindex="-1" (click)="back()" *ngIf="!editAttempts">
+        {{'back_uppercase' | translate}}
+      </button>
+      <button type="button" mat-button class="cancel-button" tabindex="-1" (click)="cancel()" *ngIf="editAttempts">
+        {{'cancel_uppercase' | translate}}
+      </button>
+    </div>
+    <div>
+      <button type="submit" mat-button [disabled]="isFormInvalid || (!isMultipleAttempts && !attempts)" (click)="next()">
+          {{'apply_uppercase' | translate}}
+      </button>
+    </div>
+  </div>
+</div>

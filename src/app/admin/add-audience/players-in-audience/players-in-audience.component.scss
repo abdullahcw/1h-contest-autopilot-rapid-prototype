@@ -1,0 +1,400 @@
+@import "../../../../styles.scss";
+
+.wrapper {
+  padding: 20px 10px 0;
+  height: $header_height;
+  max-height: $header_height;
+  position: relative;
+
+  @include media-breakpoint-down(sm) {
+    padding: 10px 0px 0;
+  }
+
+  .user-logo {
+    width: 50px !important;
+
+    img {
+      margin-right: 0 !important;
+    }
+  }
+  .click-cursor{
+    cursor: pointer;
+  }
+  .game-name-holder {
+    .audiance-name {
+      width: calc(100vw - 450px);
+      height: 32px;
+      font-size: 20px;
+      font-family: $Roboto_Medium_font;
+      margin: 0 0 0 15px;
+      padding: 5px 5px 5px 10px;
+      border: 0;
+      outline: none;
+      border-radius: 2px;
+      color: #262b33;
+      background-color: #fff;
+
+      &:hover {
+        background: #e3e3e3;
+      }
+
+      &:focus-within {
+        background: #e3e3e3;
+      }
+
+      @include media-breakpoint-down(sm) {
+        width: calc(100vw - 70px);
+        padding: 0 0 0 5px;
+        margin: 0;
+      }
+    }
+  }
+
+  .container-card {
+    margin: 0 40px;
+    height: $header_height;
+    max-height: $header_height;
+    padding: 0;
+    @include i-pad-design-with-btn;
+
+    @include media-breakpoint-down(sm) {
+      margin: 0 10px;
+    }
+
+    .search-toolbar-row {
+      padding: 0;
+      height: 52px;
+      background: #f6f6f6;
+
+      .search-item {
+        height: 100%;
+        margin-left: 15px;
+        font-size: 14px;
+        font-family: $Roboto_Regular_font;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        max-height: 55px;
+        border-bottom: 1px solid #ccc;
+        background: #f6f6f6;
+        border: none;
+        outline: none;
+        padding: 0px 20px;
+
+        @include media-breakpoint-down(md) {
+          margin-left: 10px;
+        }
+      }
+    }
+
+    .details-icon {
+      color: #b7b7b7;
+      padding: 0 0 0 15px;
+
+      @include media-breakpoint-down(md) {
+        padding: 0 0 0 5px;
+
+      }
+    }
+
+    .mat-card-header {
+      .mat-card-header-text {
+        display: none !important;
+      }
+
+      .mat-toolbar {
+        padding: 0;
+        padding-left: 0px;
+        padding-right: 0px;
+        border: none;
+
+        .mat-toolbar-row {
+          height: $row_height;
+          border-bottom: 1px solid $mat_border_color;
+
+          .toolbar-icon-color {
+            cursor: pointer;
+            color: $disable_color;
+          }
+
+          .filter-chip {
+            margin-left: 16px;
+          }
+
+          &:last-child {
+            border-top: 1px solid transparent;
+            border-bottom: 1px solid transparent;
+          }
+
+          .title {
+            margin-left: 14px;
+
+            font: {
+              family: $Roboto_Regular_font;
+              size: $text_size_med;
+            }
+
+            .mat-toolbar {
+              padding: 0;
+              padding-left: 0px;
+              padding-right: 0px;
+              border: none;
+
+              .mat-toolbar-row {
+                height: $row_height;
+                border-bottom: 1px solid $mat_border_color;
+                
+                .toolbar-icon-color {
+                  cursor: pointer;
+                  color: $disable_color;
+                }
+
+                .filter-chip {
+                  margin-left: 16px;
+                }
+
+                &:last-child {
+                  border-top: 1px solid transparent;
+                  border-bottom: 1px solid transparent;
+                }
+
+                .title {
+                  margin-left: 14px;
+
+                  font: {
+                    family: $Roboto_Regular_font;
+                    size: $text_size_med;
+                  }
+
+                  .name {
+                    font: {
+                      family: $Roboto_Medium_font;
+                      size: $default_font_size;
+                    }
+
+                    color: $textMidGrey;
+                  }
+
+                  span {
+                    color: $textColor;
+                  }
+                }
+
+
+              }
+
+            }
+
+            span {
+              color: $textColor;
+            }
+          }
+        }
+      }
+    }
+
+    .icon-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      right: 20px;
+      position: absolute;
+    }
+
+    .mat-card-content {
+      width: 100%;
+      font-size: 14px;
+      min-height: $company_content_height;
+      height: $company_content_height;
+      max-height: $company_content_height;
+      overflow: auto;
+      margin: 0;
+      border-top: 1px solid $mat_border_color;
+      border-bottom: 1px solid $mat_border_color;
+
+      font-family: $Roboto_Regular_font;
+      font-size: $text_size_med;
+
+      @include media-breakpoint-down(sm) {
+        height: calc(100vh - 268px);
+        max-height: calc(100vh - 268px);
+      }
+
+      .no_messages {
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        padding-top: 20px;
+
+        font: {
+          family: $Roboto_Regular_font;
+          size: $default_font_size;
+        }
+
+        @extend .center-align;
+      }
+    }
+
+    .mat-card-actions {
+      margin: 0;
+      padding: 0;
+
+      .mat-paginator {
+        width: 95%;
+        margin: 0 auto;
+
+        .mat-paginator-page-size {
+          flex: 1;
+        }
+      }
+    }
+
+    .add-player {
+      width: 50px;
+      height: 50px;
+      background-color: $add_icon_background;
+      color: $add_icon;
+      padding: 5px 20px;
+      border-radius: 30px;
+
+      font-size: $default_font_size;
+      position: absolute;
+      left: -23px;
+      top: 24px;
+      @extend .center-align;
+      -webkit-transition: all 1s;
+      -moz-transition: all 1s;
+      -o-transition: all 1s;
+      -ms-transition: all 1s;
+      transition: all 1s;
+    }
+  }
+
+  .show-group {
+    width: 50px;
+    height: 50px;
+    background-color: $add_icon_background;
+    color: $add_icon;
+    padding: 5px 20px;
+    border-radius: 30px;
+
+    font-size: $default_font_size;
+    position: absolute;
+    left: -23px;
+    top: 24px;
+    @extend .center-align;
+    transition: all 1s;
+  }
+
+  .toolbar {
+    background-color: $secondary_bg_color;
+    border-bottom: 1px solid $mat_border_color;
+    padding: 5px 20px;
+    font-size: $text_size_med;
+    width: 100%;
+  }
+
+  .spacer {
+    flex: 1;
+  }
+
+  .toolbar-button {
+    font-size: 12px;
+    color: $add-filter-icon-color;
+  }
+
+  .mat-sort-header-container {
+    align-items: center;
+  }
+  th {
+    padding-left: 30px !important;
+  }
+
+  .imgColumn {
+    width: 20px !important;
+  }
+
+  .checkBoxColumn {
+    width: 60px !important;
+    padding: 15px 12px 8px 20px !important;
+  }
+
+  tr {
+    display: table-row;
+
+    &.disclaimer-class {
+      display: none;
+    }
+
+    td.select-all-row {
+      top: 45px !important; // to avoid transparent line above
+      text-align: center;
+      height: 45px;
+      padding: 8px 5px 8px 30px;
+    }
+
+    .select-all-row {
+      div {
+        padding-right: 30px;
+      }
+    }
+
+    button {
+      height: 24px !important;
+      font-size: 13px !important;
+    }
+  }
+
+  td {
+    position: relative;
+
+    label {
+      margin-bottom: 0 !important;
+
+      .mat-checkbox-layout {
+        margin-bottom: 0 !important;
+      }
+    }
+  }
+
+  .checkboxes {
+    width: 50px !important;
+  }
+
+  .selection-text {
+    background: #fff;
+    height: 50px;
+    text-align: center;
+    font-family: $Roboto_Regular_font;
+    font-size: 13px;
+  }
+
+  .player-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #eae9e9;
+  }
+
+  td:not(:first-child){
+    padding-left: 30px !important;
+  }
+}
+
+
+.pulse-row {
+  position: relative;
+  width: 100%;
+  border: none;
+  box-shadow: 0 0 0 0 rgba(232, 76, 61, 0.7);
+  background-color: #FFE1DF;
+
+  background-size: cover;
+  background-repeat: no-repeat;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #FFE1DF !important;
+  }
+}

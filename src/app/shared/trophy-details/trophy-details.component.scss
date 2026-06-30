@@ -1,0 +1,191 @@
+@import "../../../styles.scss";
+
+.action_icons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 5px 5px 0 0;
+
+  img {
+    width: 20px;
+    margin-right: 10px;
+    cursor: pointer;
+
+  }
+
+  mat-icon {
+    color: #363636;
+    cursor: pointer;
+  }
+}
+
+.trophy-details-wrapper {
+  padding: 25px 20px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+
+  .game_logo {
+    position: absolute;
+    width: 99.5px;
+    border-radius: 50%;
+  }
+
+  .game_logo_wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .trophy-icon {
+    width: 175px;
+    min-width: 70%;
+  }
+
+  .reward-icon {
+    width: 50%;
+    min-width: 50%;
+  }
+
+  .title {
+    font-size: 20px;
+    font-family: Roboto_Bold;
+    margin-top: 10px;
+  }
+
+  .description {
+    text-align: center;
+    font-size: 14px;
+    font-family: Roboto_Regular;
+    margin-top: 10px;
+  }
+
+  .trophy_title {
+    text-align: center;
+    display: flex;
+    line-height: 1;
+
+    span {
+      font-family: Drukwide_Bold;
+      font-size: 34px;
+      width: 270px;
+    }
+  }
+
+  .trophy_desc {
+    display: flex;
+    line-height: 1;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 5px;    
+    width: 340px;
+    span {
+      font-family: Archivo_Bold;
+      font-size: 11px;
+      width: 275px;    
+      text-transform: uppercase; 
+    }
+  }
+
+  .trophy_name {
+    margin-top: 15px;
+    width: 340px;
+    text-align: center;
+    line-height: 1.2;
+    overflow: hidden;
+    max-height: 50px;
+    span {
+      font-family: Archivo_Black;
+      font-size: 20px;
+      width: 275px;
+    }
+  }
+
+  .certificate_text {
+    margin-top: 20px;
+    border-top: 1px solid #3856D1;
+    padding-top: 8px;
+    width: 100%;
+    display: flex;    
+    justify-content: center;
+
+    span {
+      font-family: Drukwide_Bold;
+      font-size: 13px;
+    }
+  }
+
+  .player_name {
+    margin-top: 20px;
+
+    span {
+      font-family: $FaktPro_Black_font;
+      font-size: 18px;
+    }
+  }
+
+  .trophy_requirements {
+    .game_trophy_achived_details {
+      display: flex;
+      flex-direction: row;
+      padding: 16px 20px 20px 20px;
+      width: 350px;
+
+      .div1 {
+        display: flex;
+        flex-direction: column;
+        width: 60%;
+      }
+
+      .div2 {
+        display: flex;
+        flex-direction: column;
+        width: 40%;
+      }
+
+      .styling_title {
+        font-family: Archivo_Bold;
+        font-size: 12px;
+      }
+
+      .styling_value {
+        font-family: $Archivo_Regular_font;
+        font-size: 12px;
+      }
+
+      .createdby_text {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .mlgTrophy {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .alignement {
+        padding-top: 5px;
+      }
+
+      .mlg-alignement {
+        padding: 0 !important;
+      }
+
+      .mlg-alignement-change {
+        width: 50%;
+      }
+    }
+  }
+}
+
+
+#download {
+  display: none;
+}

@@ -1,0 +1,32 @@
+<mat-toolbar class="small-toolbar" color="primary">
+  <div class="title">
+    {{title}}
+  </div>
+  <div class="closeIcon">
+    <i class="material-icons" (click)="closePopUp()"> close </i>
+  </div>
+</mat-toolbar>
+<section class="content">
+  <div class="message">
+    {{message}}
+    <div *ngIf="!shouldDisable()">
+      <a href="mailto:support@1huddle.co">support@1huddle.co</a>.
+    </div>
+  </div>
+  <div class="button-row" *ngIf="shouldDisable()">
+    <div class="btn-left" *ngIf="sdr.sdr_name">
+      <span class="font-size">{{'sales_representative' | translate}}</span><br>
+      <div class="user-info">
+        <span>{{'name' | translate}}: {{sdr.sdr_name}}</span>
+        <span>{{'email' | translate}}: <a href="{{'mailto:' + sdr.sdr_email }}">{{sdr.sdr_email}}</a></span>
+      </div>
+    </div>
+    <div class="btn-right" *ngIf="csr.csr_name">
+      <span class="font-size">{{'customer_success_representative' | translate}}</span><br>
+      <div class="user-info">
+        <span>{{'name' | translate}}: {{csr.csr_name}}</span>
+        <span>{{'email' | translate}}: <a href="{{'mailto:' + csr.csr_email }}">{{csr.csr_email}}</a></span>
+      </div>
+    </div>
+  </div>
+</section>

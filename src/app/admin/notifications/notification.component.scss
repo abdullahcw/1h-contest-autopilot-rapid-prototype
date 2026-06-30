@@ -1,0 +1,196 @@
+@import '../../../styles.scss';
+
+.wrapper {
+    padding: 20px 10px 0; 
+    height: $notifications_height;   
+    max-height: $notifications_height;   
+    position: relative; 
+    @include media-breakpoint-down(sm) {
+        padding: 10px 0px 0;        
+    }
+    .container-card {
+        margin:0 40px;
+        border-radius: 0;
+        height: $notifications_height;   
+        max-height: $notifications_height;
+        padding: 0;
+        color: rgb(19, 19, 19);
+        @include i-pad-design;
+        @include media-breakpoint-down(sm){
+            margin: 0 10px;
+        }
+        .mat-card-content{
+            // max-height: calc 
+            width: 100%;
+            min-height: $notifications_height;
+            height: $notifications_height;
+            max-height: $notifications_height;
+            overflow: auto;
+            margin: 0;
+            border-top: 1px solid $mat_border_color;
+            border-bottom: 1px solid $mat_border_color;
+
+            font-family: Roboto_Regular;
+            font-size: $text_size_med;
+            .mat-tab-group.tabs-container {
+                height: 100% !important;
+                ::ng-deep .mat-tab-body-wrapper {
+                    flex: 1 1 auto !important;
+                }
+            }
+            .no_messages{
+                padding: 0;
+                width: 100%;
+                height: 100%;
+                text-align: center;
+                padding-top: 20px;
+                font: {
+                    family: Roboto_Regular;
+                    size: $default_font_size;
+                }
+                @extend .center-align;
+                .mat-spinner {
+                    margin-bottom: 10px;
+                }
+            }
+            .settings-tab {
+                display: flex;
+                flex-direction: column;
+                .notification-header {
+                    display: flex;
+                    height: 40px;
+                    align-items: center;
+                    background: #f6f6f6;
+                    font-family: Roboto_Bold;
+                    color: #333;
+                    font-size: 0.875rem;
+                    border-bottom: 1px solid #eee;
+                    .title-header {
+                        flex: 1;
+                        margin-left: 20px;
+                    }
+                    .toggle-header {
+                        flex: 0.2;
+                        @include media-breakpoint-down(xs){
+                            flex: 0.3;                            
+                        }
+                    }
+                }
+                .setting-container {
+                    display: flex;
+                    flex-direction: column;
+                    .setting {
+                        min-height: 60px;
+                        display: flex;
+                        align-items: center;
+                        .notification-details {
+                            flex: 1;
+                            font-family: Roboto_Medium;
+                            margin-left: 20px;
+                            .subtitle {
+                                font-family: Roboto_Regular;
+                                font-size: 12px;
+                                color: #8a8a8a;
+                            }
+                        }
+                        .toggle-container {
+                            flex: 0.2;
+                            @include media-breakpoint-down(xs){
+                                flex: 0.3;                            
+                            }
+                        }
+                    }
+                    .separator {
+                        height: 1px;
+                        background: #efefef;
+                    }
+                }
+            }
+
+            .custom-notifications-tab {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                .toolbar {
+                    height: 55px;
+                    border-bottom: 1px solid #efefef;
+                    .toggle-container {
+                        padding-left: 10px;
+                        display: flex;
+                        align-items: center;
+                        .mat-checkbox {
+                            margin-top: 8px;
+                        }
+                        .toggle-text{
+                            margin: 0 30px 0 10px;
+                            font-family: Roboto_Medium;
+                        }
+                    }
+                    .label {
+                        color: #555;
+                        margin: 0 10px;
+                        font-family: Roboto_Medium;
+                        font-size: 14px;
+                        min-width: 35px; 
+                    }
+                    input {
+                        border: none;
+                    }
+                }  
+                .body-container {
+                    display: flex;
+                    flex-direction: column;
+                    width: 100%;
+                    // flex: 0.5;
+                    height: 200px;
+                    padding: 20px;
+                    .body-wrapper{
+                        height: 100%;
+                    .body {
+                        width: 100%;
+                        height: 100%;
+                        resize: none;
+                        padding: 10px;
+                        font-size: 14px;
+                        background: #f7f7f7;
+                        border: 1px solid #ddd;
+                    }
+                }
+                    .disclaimer{
+                        color: $brand_color;
+                        background-color: $secondary_bg_color;
+                        font-size: 12px;
+                        // text-align: right;
+                        margin-top: 4px;
+                    }
+                }
+                .footer {
+                    display: flex;
+                    margin-right: 20px;
+                    // margin: 20px 20px 0px;
+                    .spacer {
+                        flex: 1;
+                    }
+                }
+                .bottom-bar {
+                    height: 55px;
+                    border-top: 1px solid #efefef;
+                    padding: 0 20px;
+                    display: flex;
+                }
+            }
+            .disabled-tab {
+                opacity: 0.5;  
+                pointer-events: none;
+            }
+        }
+    }
+}
+
+.toolbar {
+    background-color: $secondary_bg_color;
+    border-bottom: 1px solid $mat_border_color;
+    padding: 5px 20px;
+    font-size: $text_size_med;
+    width: 100%;
+}

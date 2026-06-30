@@ -1,0 +1,272 @@
+<div class="main-container-create-aiAssist">
+    <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+    <section class="content" [ngClass]="{'disabled-style': is_loading}">
+      <div style="width: 100%;" *ngIf="!showAIAssistPlusBaner">
+      <div class="contentWrapper" > 
+
+        <div class="left" [ngClass]="{'fullWidthChanges': loading || showRetryBox,'fullWidthForMobile':isMobile}">
+          <form class="aiAssist-info" #aiAssistDetails="ngForm" >
+            <div class="aiAssist-container" *ngIf="!loading && !showRetryBox">
+              <div class="form-group department-container">
+                <label for="topic"><span class="optionText">{{ 'option_1_title'| translate }}</span></label>
+                <input type="text" class="holder form-inputs" placeholder="{{'enter_topic' | translate}}" id="topic"
+                  name="topic" [(ngModel)]="aiAssist.topic" minlength="1" appValidateInput required>
+              </div>
+    
+              <div class="form-group department-container">
+                <label for="add_description"><span class="option">{{'optionalText' | translate}}</span> <span class="optionText">{{ 'option_2_title'| translate }}</span></label>            
+                  <textarea type="text" class="add-description form-inputs" style="resize: none;"
+                placeholder="{{'enter_detailed_text' | translate}}" id="add_description"
+                name="add_description" [(ngModel)]="aiAssist.detailedText" appValidateInput  minlength="1" maxlength="1000"
+                [required]="false"></textarea>
+                <div class="disclaimer"><i>{{aiAssist.detailedText.length}}/1000</i></div>
+                <!-- <span class="rules">{{'maxChar' | translate}}</span> -->
+              </div>
+                                                
+              
+              <div class="uploadPDFComponentWrapper">
+                <label for="add_description"><span class="option">{{'optionalText' | translate}}</span> <span class="optionText">{{ 'option_3_title'| translate }}</span></label>            
+                <div class="uploadPDFComponent" appDragDrop (files)="filesDropped($event)"  *ngIf="!showPDFProcessing">
+                  <div class="uploadFile">
+                    <img src="assets/img/uploadPDF_icon.png" alt="upload" class="uploadIcon" *ngIf="!aiAssist.files && !isMobile">
+                    <span class="uploadText" *ngIf="!aiAssist.files && !isMobile">{{ 'upload_pdf' | translate }}</span>
+                    <span class="uploadButton" (click)="pdfInput && pdfInput?.click()">{{'upload' | translate}}</span>
+                  </div>
+                  <div *ngIf="aiAssist.files" class="fileNameWrapper">
+                    <mat-divider [vertical]="true" class="vertical-divider"></mat-divider>
+                    <div class="fileNameWrapper">
+                      <input type="text" class="fileName" name="pdf" [(ngModel)]="aiAssist.fileName" readonly>
+                      <mat-icon class="closeIcon" (click)="clearFiles()">close</mat-icon>
+                    </div>
+    
+                  </div>
+                  
+                </div>
+                <div class="uploadPDFProcessing" *ngIf="showPDFProcessing"> 
+                    <div class="closeIcon" (click)="stopProcessing()">
+                      <mat-icon>close</mat-icon>
+                    </div>
+                  <div class="processingContent">
+                    <div class="leftContent">
+                      <div class="processingLoader">
+                        <mat-spinner *ngIf="pdfProcessingInProgress" class="spinner" mode="indeterminate" diameter="25"></mat-spinner>
+                        <img src="assets/img/completed.png"  *ngIf="pdfProcessSuccess" style="width: 30px;" alt="completed" />
+                        <img src="assets/img/aiAssist/ai_error.png"  *ngIf="pdfProcessFailed" style="width: 30px;" alt="completed" />
+                      </div>
+                    </div>
+                    <div class="rightContent">
+                      <div class="pdfProcessingTimer">
+                        <span class="pdfNameText" [matTooltip]="pdfNameWithText" >{{pdfNameWithText}}</span>
+                      </div>                    
+                      <span *ngIf="remainingTime > 0" class="timer">
+                        {{ formattedTime }}
+                      </span>                        
+                    </div>
+                    
+                  </div>
+                  
+                </div>
+                <div class="rulesWrapper">
+    
+                  <span class="rules" [ngClass]="{'errorRules' : isInvalidFileSize}">
+                    <span *ngIf="aiAssist_type == 'AI_ASSIST'">{{'maxFileSize' | translate}}</span>
+                    <span *ngIf="aiAssist_type == 'AI_ASSIST_PLUS'">{{'maxFileSize10' | translate}}</span>
+                    
+                  </span>
+                  <!-- <span class="rules">{{'pdfConsent' | translate}}</span> -->
+                </div>
+    
+              </div>
+    
+              <div class="optionsWrapper">
+    
+                <div class="form-group ai-dropdown-wrapper">
+                    <label for="maximum_questions" class="title">{{ 'maximum_questions' | translate }}</label>
+                    <app-search-select [items]="maxQuestions" [selectedId]="aiAssist.max_question"
+                     [shouldAllowSearch]="false"
+                      placeholderText="{{('select_max_question_no' | translate)}}" (change)="onMaxQuestionChange($event)"
+                      [isRequired]="true">
+                    </app-search-select>                
+                </div>
+                       
+              </div>
+              <div class="optionsCategotyList">
+                <span>{{'suggest_new_cat' | translate}}</span>
+                <div class="optionsCategotyWrapper">
+                  
+                  <div *ngFor="let category of categoryCountList;let i = index" class="categoryWrapper" 
+                  [ngClass]="{'disabled-category': category?.is_premium && aiAssist_type == 'AI_ASSIST'}"
+                  (click)="category?.is_premium && aiAssist_type == 'AI_ASSIST' ? showAIAssistPlusBanerInfo('fromCat') : categoryCountSelected(category,i)">
+                    <div class="category1"  *ngIf="i == 0"
+                    [ngStyle]="{'background-color': aiAssist.categories_count == '-2' ? '#3856d1' : '#fff'}"
+                    [ngClass]="{'chip-active': (aiAssist.categories_count == '-2' && categoryCountList.length < 6)  ,'disable-none-category': (categoryCountList.length == 6 && i == 0) }" >                
+                      <span [ngClass]="{'changeWidthOfChip1': categoryCountList.length == 6}"> 
+                        {{category.title}}</span>
+                    </div>
+                    <div class="category" *ngIf="i > 0" [ngStyle]="{'color': categoryColors[i - 1],'border' : '1.2px solid categoryColors[i - 1] !important','border-color': categoryColors[i - 1],
+                      'background-color': aiAssist.categories_count == i ? categoryColors[i - 1] : '#fff'}"
+                    [ngClass]="{'chip-active': aiAssist.categories_count == category?.id}" >
+                      <span [ngClass]="{'changeWidthOfChip': categoryCountList.length == 6}">                        
+                        {{category.title}}</span>
+                      <div class="premiumIcon" *ngIf="category?.is_premium && aiAssist_type == 'AI_ASSIST'">
+                        <svg id="circle_16615349" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                          <g id="Group_119" data-name="Group 119">
+                            <circle id="Ellipse_7" data-name="Ellipse 7" cx="12" cy="12" r="12" fill="#3856d1"/>
+                          </g>
+                          <g id="Group_120" data-name="Group 120">
+                            <path id="Path_64" data-name="Path 64" d="M17.163,17H6.837a.75.75,0,0,1-.739-.623L5.011,10.044a.75.75,0,0,1,1.068-.8l2.894,1.409,2.372-4.267a.779.779,0,0,1,1.311,0l2.372,4.267,2.894-1.409a.75.75,0,0,1,1.068.8L17.9,16.377a.752.752,0,0,1-.74.623Z" fill="#ffc109"/>
+                          </g>
+                          <g id="Group_121" data-name="Group 121">
+                            <path id="Path_65" data-name="Path 65" d="M12,24A12,12,0,1,1,24,12,12.013,12.013,0,0,1,12,24ZM12,1.5A10.5,10.5,0,1,0,22.5,12,10.512,10.512,0,0,0,12,1.5Z" fill="#ffc109"/>
+                          </g>
+                          <g id="Group_122" data-name="Group 122">
+                            <path id="Path_66" data-name="Path 66" d="M17.163,17H6.837a.75.75,0,0,1-.739-.623L5.011,10.044a.75.75,0,0,1,1.068-.8l2.894,1.409,2.372-4.267a.779.779,0,0,1,1.311,0l2.372,4.267,2.894-1.409a.75.75,0,0,1,1.068.8L17.9,16.377a.752.752,0,0,1-.74.623ZM7.469,15.5h9.062l.732-4.269-2.217,1.08a.747.747,0,0,1-.984-.31L12,8.294,9.938,12a.749.749,0,0,1-.984.31l-2.217-1.08Z" fill="#ffc109"/>
+                          </g>
+                        </svg>
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+    
+            </div>
+    
+            <div *ngIf="loading" class="loaderWrapper">
+    
+              <div class="aiLoaderContent">
+                <div class="spinnerWrapper">
+                  <img src="/assets/img/short_logo.png" alt="short_logo" class="short_logo">
+                  <mat-spinner class="spinner" mode="indeterminate"  diameter="80"></mat-spinner>
+                </div>
+                <!-- <div class="spinnerWrapper">
+                <ng-lottie class="animationObejct" width='100%' height='100%' [options]="options" 
+                (complete)="complete($event)" >
+                </ng-lottie>
+                </div> -->
+                <!-- <span class="spinnerText">
+                  <span class="spinner_loading_title">{{'spinner_loading_title' | translate}}</span>
+                  <span class="spinner_loading_subTitle">{{'spinner_loading_text' | translate}}</span>
+                  
+                </span> -->
+                <span class="spinnerText">
+                  <span class="spinner_loading_title"><b>{{'spinner_loading_title' | translate}}</b><span>
+                    {{'spinner_loading_text' | translate}}
+                  </span></span>
+                  <span *ngIf="showMoreWaitText" style="padding-top: 5px;">{{'moreWaitText' | translate}}</span>
+                </span>
+
+                <!-- <div class="progress-bar-container">
+                  <mat-progress-bar class="progress-bar-AI" mode="determinate" [value]="progressBarValue"></mat-progress-bar>
+                  
+                </div>
+                <div class="progress-bar-count">
+                  <span class="textComplete">{{percentageCompletion}}% Completed</span>
+                </div> -->
+              </div>
+            </div>
+
+            <div *ngIf="showRetryBox && !loading" class="retryBoxWrapper"> 
+
+              <div class="errorImg">
+                <img src="assets/img/aiAssist/aiErrorCase.png"/>
+              </div>
+              <div class="errorText">
+                <span class="text1">{{'somethingWentWrongTxt' | translate}}</span>
+                <span class="text2">{{'somethingWentWrongDesc' | translate}}</span>
+              </div>
+              <div class="errorBtn">
+                <button mat-button type="button" class="retryBtn"
+                (click)="retryBtn()">{{ 'retryBtn'| translate }}</button>
+              </div>
+            </div>
+           
+          </form>
+        </div>
+        <div class="right" *ngIf="!loading && !isMobile && !showRetryBox">
+          <img [src]="aiAssist_type === 'AI_ASSIST_PLUS' ? '/assets/img/aiAssist/aiAssistPlusInfoImg.png' : '/assets/img/aiAssist/aiAssistInfoImg.png'" 
+               alt="aiAssist" 
+               class="aiAssistImage">
+        </div>
+      </div>            
+      <mat-card-actions class="footer">
+            
+        <div class="button-row" [ngClass]="{'button-row-mobile': textShowingPermission}">
+          <div class="btn-left" *ngIf="loading || showRetryBox">
+            <button mat-button type="button" class="cancel-button" tabindex="-1"
+              (click)="backPopUp()">{{ 'back_uppercase'| translate }}</button>
+          </div>
+          <div class="note-left" *ngIf="textShowingPermission">
+            <span class="noteTxt">{{'noteText' | translate}}</span>
+            <span class="node-desc">{{noteDescription}}</span>
+            
+          </div>
+          <div class="buttonWrapper">
+
+          
+          <div class="btn-right">
+            
+            <button mat-button type="button" class="cancel-button" tabindex="-1"
+              (click)="closePopUp()">{{ 'cancel_uppercase'| translate }}</button>
+          </div>                    
+          <div class="btn-right-generate">
+            <button mat-button type="button" (click)="generateQuiz(aiAssist)" [disabled]="!aiAssistDetails?.valid || !aiAssist.max_question ||
+            !aiAssist?.categories_count || loading || pdfProcessingInProgress">
+              {{ 'generate_uppercase'| translate }}
+            </button>
+          </div>
+        </div>
+        </div>
+      </mat-card-actions>
+    </div>
+    <div *ngIf="showAIAssistPlusBaner" class="aiUpgradeWrapper">
+      <div class="scrollableAiUpgradeContent">
+      <div class="titleWrapper">
+
+        <div class="pdfMoreThan2mb" *ngIf="fileMoreThan2mb">
+          <!-- <mat-icon class="material-symbols-outlined">lock</mat-icon> -->
+          <div class="lockPDFImg">
+            <img src="assets/img/aiAssist/lockPDF.png" alt="aiAissistPlusText" class="aiAissistPlusImg">
+          </div>
+          <div class="textnInfo">
+            <span> <span class="spanWithBold">{{'fileIsTooLarge' | translate}}</span>{{'fileIsTooLarge_text1' | translate}}</span>
+            <span style="margin-top: 10px;">{{'fileIsTooLarge_text2' | translate}}</span>
+          </div>
+        </div>
+        <div class="ai_titles" [ngClass]="{'changeAi_titlesWidth': fileMoreThan2mb}">
+          <!-- <span class="text">{{'ai_upgrade_title_1'| translate}}</span> -->
+          <!-- <span class="text">{{'ai_upgrade_title_2'| translate}}</span> -->
+          <img src="assets/img/aiAssist/aiAissistPlusText.png" alt="aiAissistPlusText" class="aiAissistPlusImg">
+          <!-- <span class="desc" *ngIf="!fileMoreThan2mb">{{'ai_upgrade_desc' | translate}}</span> -->
+        </div>
+      </div>
+      <div class="aiImgWrapperContainer">
+        <div class="aiImgWrapper" (click)="openRequest()">
+          <img src="assets/img/aiAssist/aiAssistPricing.png" *ngIf="!isMobile" alt="aiAssist" class="aiAssistImage">
+          <img src="assets/img/aiAssist/aiAssistPricingMobile.png" *ngIf="isMobile" alt="aiAssist" class="aiAssistImage">
+        </div>
+        </div>
+      </div>
+      <!-- </div> -->
+      <mat-card-actions class="footer">
+            
+        <div class="button-row">          
+          <div class="btn-right">
+            
+            <button mat-button type="button" class="cancel-button" tabindex="-1"
+              (click)="closePopUp()">{{ 'cancel_uppercase'| translate }}</button>
+          </div>
+
+          <div>            
+            <button mat-button type="button"  tabindex="-1"
+              (click)="showAIAssistPlusBanerInfo()">{{ 'goBack'| translate }}</button>
+          </div>                    
+        </div>
+      </mat-card-actions>
+    </div>
+    </section>
+  </div>
+
+  <input type="file" onclick="this.value=null" #pdfInput id="upload_image" [hidden]="true" accept="application/pdf"
+  (change)="fileChangeEvent($event)">

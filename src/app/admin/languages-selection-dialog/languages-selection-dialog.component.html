@@ -1,0 +1,29 @@
+<div class="wrapper">
+  <div class="header">
+    <p>Language Preferences</p>
+  </div>
+        <section class="progress-section">
+            <p class="text-title">Choose the languages you would like to create your game in:</p>
+           <div class="lang-checkbox-wrap">
+            <mat-checkbox class="box" *ngFor="let lang of allLang; let i=index" [(ngModel)]="lang.checked"
+           (click)="$event.stopPropagation()" (change)="onItemClick(lang)" [ngClass]="{'disabled-style': gameStatus && defaultSelectedLangId == lang.id}">
+            <img [src]="lang.img"> &nbsp; {{lang.text}}
+            </mat-checkbox>
+           </div> 
+        </section>
+      
+      <section class="progress-section">
+        <p class="text-title">Choose the default language for your game</p>
+      <div class="lang-switch-wraper">
+        <app-language-selection [game_id]="this.game_id" class="lang-wraper" [(items)]="selectedLang" [selectedId]="defaultSelectedLangId" [gameStatus]="gameStatus" [langDialog]="true" (change)="onLangChange($event)" style="color: black;"></app-language-selection>
+      </div>
+    </section>
+    <div class="button-row" *ngIf="selectedLang.length > 0">
+      <div class="btn-right">
+        <button mat-button class="cancel-button" (click)="cancel()">{{'cancel' | translate}}</button>
+      </div>
+      <div>
+        <button mat-button (click)="actionConfirmed()">{{'save' | translate}}</button>
+      </div>
+    </div>
+</div>

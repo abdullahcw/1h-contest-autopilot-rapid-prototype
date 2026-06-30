@@ -1,0 +1,27 @@
+<div class="content">
+  <div class="left-side">
+    <img class="company_logo" [src]="gameData.game_logo" *ngIf="gameData.game_logo" alt=""
+      onError="this.src='/assets/img/default.png'" />
+  </div>
+  <div class="right-side">
+    <div class="btn-wrapper">
+      <div class="btn-library" (click)="copyGameToMyLibrary();" matTooltip="Add to my library"
+        matTooltipPosition="below" [ngClass]="{'added-to-library': gameData?.is_added }">
+        <mat-icon>{{ gameData?.is_added ? 'done' : 'add'}}</mat-icon>
+      </div>
+    </div>
+
+    <div class="top-right-content"
+      (click)="!gameData?.polling_identifier && gameData?.is_editable ? navigateToEditGamePage(gameData) :''">
+      <mat-card-title class="robotoRegular"> {{gameData?.game_name}}</mat-card-title>
+      <mat-card-subtitle class="robotoRegular" style="font-size: 14px; color: #333333"> {{gameData?.game_category}}
+      </mat-card-subtitle>
+      <mat-card-subtitle class="robotoRegular" style="overflow: hidden;line-height: 1.4;padding-top: 5px;">
+        This game has 15 questions on workplace precautions by WHO.
+      </mat-card-subtitle>
+    </div>
+  </div>
+  <div class="overlay">
+
+  </div>
+</div>

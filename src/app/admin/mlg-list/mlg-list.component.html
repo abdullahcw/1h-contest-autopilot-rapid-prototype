@@ -1,0 +1,124 @@
+<mat-card class="container-card" *ngIf="!isMultilevelTab">
+  <mat-card-header>
+    <mat-toolbar class="toolbar">
+      <mat-toolbar-row>
+        <span class="title">
+          {{'game_library' | translate}}
+        </span>
+        <span class="spacer"></span>
+        <button class="add-game addEntity" matTooltip="{{'add_new_multilevel_games' | translate}}"
+          matTooltipPosition="below" (click)="navigateToGamePage()" mat-fab>
+          <mat-icon>add</mat-icon>
+        </button>
+        <mat-button-toggle-group class="game-toggle-switch" name="fontStyle" aria-label="Font Style"
+          [value]="isMultilevelTab" #group="matButtonToggleGroup" (change)="onValChange(group.value)">
+          <mat-button-toggle [value]="true">{{'singlelevel_uppercase' | translate}}</mat-button-toggle>
+          <mat-button-toggle [value]="false">{{'multilevel_uppercase' | translate}}</mat-button-toggle>
+        </mat-button-toggle-group>
+        <mat-button-toggle-group class="game-mobile-toggle-switch" name="fontStyle" aria-label="Font Style"
+          [value]="isMultilevelTab" #groupTab="matButtonToggleGroup" (change)="onValChange(groupTab.value)">
+          <mat-button-toggle [value]="true">
+            <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" class="level">
+              <circle cx="12.5" cy="12.5" r="10.78" [style.fill]="isMultilevelTab ? '#f6f6f6' : '#3956D1'" />
+            </svg>
+          </mat-button-toggle>
+          <mat-button-toggle [value]="false">
+            <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" class="level">
+              <circle cx="13.87" cy="11.81" r="10.59" [style.fill]="isMultilevelTab ? '#3956D1' : '#f6f6f6'" />
+              <circle cx="11.31" cy="13.72" r="10.19" [style.fill]="isMultilevelTab ? '#3956D1' : '#f6f6f6'"
+                [style.stroke]="isMultilevelTab ? '#f6f6f6' : '#3956D1'" [style.stroke-miterlimit]="'10'" />
+            </svg>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </mat-toolbar-row>
+      <mat-toolbar-row>
+        <app-search class="filter-chip" style="width:100%" [filter_options]="filter_options" [dataSource]="menuList"
+          (getDataSourceWithFilterDetails)="getDataSource($event)" [applied_filters]="appliedFilters"
+          (filtersUpdated)="refreshListOnFilterChange($event)" [context]="context"
+          (filterOptionUpdated)="filterOptionUpdated($event)">
+        </app-search>
+      </mat-toolbar-row>
+      <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+      <mat-toolbar-row class="library-toolbar">
+        <span class="title"><span class="">{{'multilevel_game_library' | translate}}</span></span>
+      </mat-toolbar-row>
+    </mat-toolbar>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="no_messages" *ngIf="!multilevelGames?.length">
+      <p>
+        {{is_loading ? ('please_wait' | translate) : ('no_record_found' | translate)}}
+      </p>
+    </div>
+    <mat-grid-list cols="{{breakpoint}}" rowHeight="2:1" [gutterSize]="'20px'" matSort matSortActive="game"
+      matSortDirection="asc" matSortDisableClear>
+      <div class="gameListRow asset-card">
+        <mat-grid-tile *ngFor="let multilevelGame of multilevelGames;let i=index;" class="matGridTile"
+          [ngClass]="{'tileFocus': selectedGame == i,'tileCopying':multilevelGame?.polling_identifier}">
+          <div class="content">
+            <div class="left-side" (click)="navigateToEditGamePage(multilevelGame)">
+              <div class="logo-wrapper">
+                <img class="mlg-logo" appSignedUrl [imgSelector]="'changeImageSrc'" [imgSrcValue]="multilevelGame.level1_logo" onError="this.src='/assets/img/default.png'" src="/assets/img/default.png" alt=""/>
+              <img class="game-icon" appSignedUrl [imgSelector]="'changeImageSrc'" [imgSrcValue]="multilevelGame.level2_logo" onError="this.src='/assets/img/default.png'" src="/assets/img/default.png" alt=""/>
+              </div>
+            </div>
+            <div class="right-side">
+              <div class="topRight">
+                <span class="gameMode" *ngIf="!multilevelGame?.polling_identifier" [ngClass]="{'draft-color': multilevelGame?.mlg_state == 'DRAFT',
+                'closed-color': multilevelGame?.mlg_state == 'CLOSED', 'live-color': multilevelGame?.mlg_state == 'LIVE',
+                'ready-color': multilevelGame?.mlg_state == 'READY',
+                'offsetMargin': access_type === 'MM'}">
+                  {{multilevelGame?.mlg_state}}
+                </span>
+                <span *ngIf="multilevelGame?.polling_identifier"
+                class="gameCopy gameModeSelected">{{'duplicating' | translate}}...</span>
+                <button class="moreBtnSize" mat-icon-button *ngIf="access_type != 'MM'"
+                  [matMenuTriggerFor]="gameMenuBtn" (menuOpened)="menuOpened(i,multilevelGame)"
+                  (menuClosed)="menuClosed()">
+                  <mat-icon class="fontMore" style="z-index: 999;" *ngIf="!multilevelGame?.polling_identifier">
+                    more_vert
+                  </mat-icon>
+                </button>
+              </div>
+              <div class="top-right-content" (click)="navigateToEditGamePage(multilevelGame)">
+                <mat-card-title class="robotoBold">
+                  {{multilevelGame?.mlg_name}}
+                </mat-card-title>
+                <mat-card-subtitle class="robotoRegular">
+                  {{'multilevel' | translate}}
+                </mat-card-subtitle>
+                <mat-card-subtitle>
+                  {{multilevelGame?.owner_firstname}} {{multilevelGame?.owner_lastname}}
+                </mat-card-subtitle>
+              </div>
+            </div>
+            <div class="overlay"> </div>
+          </div>
+        </mat-grid-tile>
+      </div>
+    </mat-grid-list>
+  </mat-card-content>
+  <mat-card-actions>
+    <mat-paginator #paginator [length]="totalGames" [pageSize]="noOfItemsPerPage" [pageSizeOptions]="pageSizeOptions"
+      (page)="getGamesOverPagination($event)">
+    </mat-paginator>
+  </mat-card-actions>
+</mat-card>
+<mat-menu class="matMenuCustom" #gameMenuBtn="matMenu" overlapTrigger="false" [xPosition]="'before'">
+  <span>
+    <button mat-menu-item class="options-menu-item" (click)="duplicateGame(selectedGame)"
+      *ngIf="selectedgameState != 'DRAFT'">
+      <mat-icon>file_copy</mat-icon>
+      <span>{{'clone' | translate}}</span>
+    </button>
+    <button mat-menu-item class="options-menu-item" (click)="navigateToEditGamePage(selectedGame)">
+      <mat-icon>edit</mat-icon>
+      <span>{{'edit' | translate}}</span>
+    </button>
+    <button mat-menu-item class="options-menu-item" (click)="confirmDeletion(selectedGame)"
+      *ngIf="selectedGame?.owner_id === storageService?.getLoginUserID() || storageService?.getAccessType() === role.ADMIN">
+      <mat-icon>delete</mat-icon>
+      <span>{{'delete' | translate}}</span>
+    </button>
+  </span>
+</mat-menu>

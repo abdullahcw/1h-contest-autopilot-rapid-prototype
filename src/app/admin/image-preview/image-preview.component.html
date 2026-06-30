@@ -1,0 +1,15 @@
+<div class="content">
+    <div>
+      <img id="previewImage"  [src]="image" style="width: 100%;min-width: 300px;" [ngClass]="{'setPreviewImageHeight': setCustomHeight}"
+      onError="this.src='/assets/img/default.png'" src="/assets/img/default.png" alt=""  *ngIf="!isimageAssetsBase64"/>
+      <img id="previewImage" [src]="image" style="width: 100%;min-width: 300px;" [ngClass]="{'setPreviewImageHeight': setCustomHeight}"
+      onError="this.src='/assets/img/default.png'" src="/assets/img/default.png" alt=""
+      *ngIf="isimageAssetsBase64"/>
+
+    </div>
+  <div class="options-container">
+  <mat-icon (click)="delete()" *ngIf="shouldAllowEditing">delete</mat-icon>
+  <mat-icon (click)="edit()" *ngIf="shouldAllowEditing">edit</mat-icon>
+  <mat-icon (click)="dialogRef.close()">close</mat-icon>
+</div>
+</div>

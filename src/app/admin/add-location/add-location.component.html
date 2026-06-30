@@ -1,0 +1,101 @@
+<div class="main-container">
+  <mat-toolbar class="small-toolbar" color="primary">
+    <div>{{titleToBeDisplayed}}</div>
+  </mat-toolbar>
+  <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading || loadingCount > 0"></mat-progress-bar>
+  <section class="add-location-content" [ngClass]="{'disabled-style': is_loading || loadingCount > 0}">
+    <form #addLocationForm="ngForm">
+      <div [ngClass]="{ 'header-less-tabs': !(editableItems.indexOf('all') > -1)}">
+        <mat-tab-group mat-stretch-tabs backgroundColor="white" animationDuration="0ms" class="custom-tab-label" [(selectedIndex)]= "selectedTab">
+          <mat-tab label="{{'basic_details' | translate}}" #tab [disabled]='tab.isActive'
+            *ngIf=" this.editableItems.indexOf('all') !== -1 || !canEdit('departments')">
+            <div class="container" [ngClass]="{'wrap-height' : (this.editableItems.indexOf('all') !== -1)}">
+              <div class="form-group" *ngIf="!this.selectedLocations || this.selectedLocations?.length == 1">
+                <label
+                  for="location">{{selectedLocations?.length > 1 ? ('locations' | translate) : ('location' | translate)}}
+                </label>
+                <input type="text" tabindex="0" class="holder form-inputs" [disabled]="location.head_location"
+                  placeholder="{{'enter_name' | translate}}" name="location_name" [(ngModel)]="location.name"
+                  maxlength="23" minlength="1" appValidateInput required>
+              </div>
+
+              <div class="form-group" *ngIf="canEdit('timezone')">
+                <label for="timezone">{{'timezone' | translate}}</label>
+
+                <app-search-select [items]="timeZoneList" [selectedId]="location.tz_id"
+                  placeholderText="{{'select_timezone' | translate}}" (change)="onTimeZoneSelectionChanged($event)"
+                  [isRequired]="true"></app-search-select>
+              </div>
+
+              <div class="form-group" *ngIf="canEdit('address')">
+                <label for="country">{{'country' | translate}}</label>
+
+
+
+                <app-search-select [items]="countryList" [selectedId]="location.country_id"
+                  placeholderText="{{'select_country' | translate}}" (change)="onCountrySelectionChanged($event)">
+                </app-search-select>
+
+              </div>
+
+              <div class="form-group" *ngIf="canEdit('address')">
+                <label for="state">{{'state' | translate}}</label>
+
+                <app-search-select [items]="stateList" [selectedId]="location.state_id"
+                  placeholderText="{{'select_state' | translate}}" [disabled]="!location.country_name"
+                  (change)="onStateSelectionChanged($event)"></app-search-select>
+
+              </div>
+
+
+              <div class="form-group" *ngIf="canEdit('address')">
+                <label for="city">{{'city' | translate}}</label>
+                <input type="text" class="holder form-inputs" placeholder="{{'enter_city' | translate }}" name="city"
+                  #city="ngModel" [(ngModel)]="location.city" pattern="[A-Za-z0-9\- ]*" appValidateInput>
+              </div>
+            </div>
+          </mat-tab>
+
+          <mat-tab *ngIf="canEdit('departments')" label="{{'departments' | translate}}">
+
+            <ng-template mat-tab-label>
+              <span [matBadge]="selectedItems.length === 0 ? '' : selectedItems.length" matBadgeOverlap="false"
+                color="warn">{{'departments' | translate}}</span>
+            </ng-template>
+            <div class="selection-container">
+              <app-list-selection *ngIf="showDepartmentMenu" [itemsToBeDisplayed]="prepareDataSourceForDepartments"
+                [searchPlaceHolder]="searchPlaceHolder" (selectedItems)="selectedDepartments($event)" [isListSelection]="true"
+                [fixedHeightContextMenu]="false">
+              </app-list-selection>
+              <div class="no_messages" *ngIf="!ishowDepartmentMenu">
+                {{'please_wait' | translate}}
+              </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+      <div class="button-row">
+        <div *ngIf="(locationPermission && locationPermission?.delete) && this.selectedLocations?.length 
+        && !isHeadLocation && this.editableItems.indexOf('all') !== -1">
+          <button type="button" class="delete-button" (click)="deleteLocation()" mat-button>
+            {{'delete_uppercase' | translate}}
+          </button>
+        </div>
+        <div class="btn-right">
+          <button type="button" mat-button class="cancel-button" tabindex="-1"
+            (click)="cancel()">{{'cancel_uppercase' | translate}}</button>
+        </div>
+        <div>
+          <button type="submit" mat-button
+            [disabled]="shouldDisableAction() || !addLocationForm.valid || !addLocationForm.dirty"
+            (click)="this.selectedLocations?.length ? updateLocation() : addLocation()">
+            <div *ngIf="!this.selectedLocations?.length; else other_content">
+              {{'add_uppercase' | translate}}
+            </div>
+            <ng-template #other_content>{{'done_uppercase' | translate}}</ng-template>
+          </button>
+        </div>
+      </div>
+    </form>
+  </section>
+</div>

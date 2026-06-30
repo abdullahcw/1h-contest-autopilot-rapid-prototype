@@ -1,0 +1,97 @@
+<div class="uploader-container">
+  <mat-toolbar class="small-toolbar" color="primary">
+    <div *ngIf="is_game_validation">
+      Game Incomplete
+    </div>
+    <div *ngIf="!is_game_validation">
+      Contest Incomplete
+    </div>
+  </mat-toolbar>
+  <section class="content" [ngClass]="{'disabled-style': is_loading}">
+    <div class="container">
+
+      <div class="content-validation" *ngIf="is_game_validation">
+        <div>
+          <div style="padding: 5px 0;">
+            <span class="title">Please make sure that game has:</span>
+          </div>
+          <div class="validation-message">
+            <mat-icon *ngIf="validationMessage.category_check" class="green-color">done</mat-icon>
+            <mat-icon *ngIf="!validationMessage.category_check" class="red-color">close</mat-icon>
+            <span> at least one category</span>
+          </div>
+          <div class="validation-message">
+            <mat-icon *ngIf="validationMessage.profile_check" class="green-color">done</mat-icon>
+            <mat-icon *ngIf="!validationMessage.profile_check" class="red-color">close</mat-icon>
+            <span *ngIf="validationMessage.game_type === 2"> at least one profile</span>
+            <span *ngIf="validationMessage.game_type === 1"> a preview</span>
+
+          </div>
+          <div class="validation-message">
+            <mat-icon *ngIf="validationMessage.question_check" class="green-color">done</mat-icon>
+            <mat-icon *ngIf="!validationMessage.question_check" class="red-color">close</mat-icon>
+            <span> at least one question</span>
+          </div>
+
+          <div class="validation-message">
+            <mat-icon *ngIf="validationMessage.default_lang_check" class="green-color">done</mat-icon>
+            <mat-icon *ngIf="!validationMessage.default_lang_check" class="red-color">close</mat-icon>
+            <span> all questions completed in default language</span>
+          </div>
+          <div class="validation-message">
+            <mat-icon *ngIf="validationMessage.game_category_check" class="green-color">done</mat-icon>
+            <mat-icon *ngIf="!validationMessage.game_category_check" class="red-color">close</mat-icon>
+            <span> at least one game category</span>
+          </div>
+          
+        </div>
+      </div>
+      <div class="content-validation" *ngIf="!is_game_validation">
+        <div>
+          <div style="padding: 5px 0;">
+            <span class="title">{{'contest_readiness_title' | translate }}:</span>
+          </div>
+          <div class="validation-message">
+            <mat-icon *ngIf="validationMessage?.validContestDate" class="green-color">done</mat-icon>
+            <mat-icon *ngIf="!validationMessage?.validContestDate" class="red-color">close</mat-icon>
+            <span> {{'a_valid_date' | translate}}</span>
+          </div>
+          <div class="validation-message">
+            <mat-icon *ngIf="validationMessage?.isRulesExist" class="green-color">done</mat-icon>
+            <mat-icon *ngIf="!validationMessage?.isRulesExist" class="red-color">close</mat-icon>
+            <span> {{'rules' | translate | lowercase }}</span>
+          </div>
+          <div class="validation-message">
+            <mat-icon *ngIf="validationMessage?.isRewardExist" class="green-color">done</mat-icon>
+            <mat-icon *ngIf="!validationMessage?.isRewardExist" class="red-color">close</mat-icon>
+            <span> {{'reward_for_winner' | translate}} </span>
+          </div>
+          <div class="validation-message">
+            <mat-icon *ngIf="validationMessage?.isMinimumOnegameExist" class="green-color">done</mat-icon>
+            <mat-icon *ngIf="!validationMessage?.isMinimumOnegameExist" class="red-color">close</mat-icon>
+            <span> {{'at_least_one_game' | translate}}</span>
+          </div>
+
+          <div class="validation-message">
+            <mat-icon *ngIf="validationMessage?.isGameStartDateValid" class="green-color">done</mat-icon>
+            <mat-icon *ngIf="!validationMessage?.isGameStartDateValid" class="red-color">close</mat-icon>
+            <span>{{'at_least_one_game_with_start_date' | translate}} </span>
+          </div>
+          <div class="validation-message">
+            <mat-icon *ngIf="validationMessage?.playerCount !== 0" class="green-color">done</mat-icon>
+            <mat-icon *ngIf="validationMessage?.playerCount === 0" class="red-color">close</mat-icon>
+            <span>{{'players_selected' | translate}}</span>
+          </div>
+        </div>
+      </div>
+      <mat-card-actions class="footer">
+        <div>
+          <button mat-button type="submit" color="primary" (click)="cancel()">
+            OK
+          </button>
+        </div>
+      </mat-card-actions>
+    </div>
+  </section>
+
+</div>

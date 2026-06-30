@@ -1,0 +1,30 @@
+@import '../../../../styles.scss';
+
+.content {
+  padding: 20px;
+  padding-bottom: 6px;
+  min-width: 500px;
+  max-width: 500px;
+
+  .title {
+    margin-bottom: 20px;
+  }
+
+  .button-row {
+    width: auto;
+    display: flex;
+    margin-top: 30px;
+
+    .btn-right {
+      margin-left: auto;
+    }
+
+    .cancel-button {
+      border: 0px;
+      // margin-right: 10px;
+      background: white;
+
+      cursor: pointer;
+    }
+  }
+}

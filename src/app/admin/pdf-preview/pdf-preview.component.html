@@ -1,0 +1,19 @@
+<div class="main-container">
+  <mat-toolbar class="small-toolbar">
+    {{data?.document_name}}
+    <div class="closeIcon">
+      <mat-icon class="handCursor" (click)="close()">
+        close
+      </mat-icon>
+    </div>
+  </mat-toolbar>
+  <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading" diameter="100">
+  </mat-progress-bar>
+  
+  <div class="please-wait" mode="indeterminate" *ngIf="is_loading" diameter="100">
+    {{ 'please_wait' | translate }}
+  </div>
+  <pdf-viewer [ngClass]="{'hide-pdf-viewer': is_loading}" (on-progress)="onProgress($event)" [src]="pdfDataSource"
+    (click)="pdfClicked($event)">
+  </pdf-viewer>
+</div>

@@ -1,0 +1,227 @@
+@import '../../../styles.scss';
+
+.main-container {
+  .wrapper {
+    padding: 20px 10px 0;
+    height: $header_height;
+    max-height: $header_height;
+    position: relative;
+
+    @include media-breakpoint-down(sm) {
+      padding: 10px 0px 0;
+    }
+
+    .container-card {
+      margin: 0 40px; // padding: 0px;
+      @include i-pad-design;
+
+      @include media-breakpoint-down(sm) {
+        margin: 0 10px;
+      }
+
+      height: $header_height;
+      max-height: $header_height;
+      padding: 0;
+      overflow: hidden;
+
+      .tableDisplay {
+        @include media-breakpoint-down(xs) {
+          display: block !important;
+        }
+      }
+
+      .mat-card-header {
+        .mat-card-header-text {
+          display: none !important;
+        }
+
+        .mat-toolbar {
+          padding: 0;
+          padding-left: 0px;
+          padding-right: 0px;
+          border: none;
+
+          .trophyButtons {
+            padding: 0;
+          }
+
+          .mat-toolbar-row {
+            height: $row_height;
+            border-bottom: 1px solid $mat_border_color; // padding-top: 30px;
+
+            // padding-bottom: 30px;
+            .toolbar-icon-color {
+              cursor: pointer;
+              color: $disable_color;
+            }
+
+            .title {
+              margin-left: 14px;
+              display: flex;
+              flex: 1;
+
+              font: {
+                family: Roboto_Regular;
+                size: $text_size_med;
+              }
+
+              .name {
+                font: {
+                  family: Roboto_Medium;
+                  size: $default_font_size;
+                }
+
+                color: $textMidGrey;
+              }
+
+              span {
+                color: $textColor;
+              }
+            }
+          }
+        }
+      }
+
+      // .add-game {
+      //     width: 50px;
+      //     height: 50px;
+      //     background-color: $add_icon_background;
+      //     color: $add_icon;
+      //     padding: 5px 20px;
+      //     border-radius: 30px;
+      //     font-size: $default_font_size;
+      //     position: absolute;
+      //     left: -23px;
+      //     top: 24px;
+      //     @extend .center-align;
+      //     -webkit-transition: all 1s;
+      //     -moz-transition: all 1s;
+      //     -o-transition: all 1s;
+      //     -ms-transition: all 1s;
+      //     transition: all 1s;
+      // }
+      .toolbar {
+        background-color: $secondary_bg_color;
+        border-bottom: 1px solid $mat_border_color;
+        padding: 5px 20px;
+        font-size: $text_size_med;
+        width: 100%;
+      }
+
+      .menu-options {
+        position: absolute;
+        top: 6px;
+        right: 16px;
+        z-index: 3;
+        cursor: pointer;
+
+        &.mat-icon {
+          font-size: 16px;
+        }
+      }
+
+      .trophy-container {
+        background: #fff;
+        display: flex;
+        justify-content: center;
+        overflow-y: auto;
+        // height: 100%;
+      }
+
+      .player_photo {
+        // display: flex;
+        // align-items: center;
+        // justify-content: center;
+        // border: none;
+        padding: 5px 30px !important;
+
+        .profile-pic {
+          height: 45px;
+          border-radius: 50%;
+        }
+      }
+
+      .mlg_photo {
+        width: 80px;
+        height: 60px;
+        position: relative;
+
+        .pic1 {
+          left: 20px;
+          bottom: 4px;
+          z-index: 1;
+          background: #fff;
+          border: 1px solid #d4d2d2;
+          box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.4), 0 1px 5px 0 rgba(0, 0, 0, 0.2), 0 0px 2px -1px rgba(0, 0, 0, 0.1);     
+        }
+
+        .pic2 {
+          top: 5px;
+          right: 9px;
+          border: 1px solid #d4d2d2;
+          box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.4), 0 1px 5px 0 rgba(0, 0, 0, 0.2), 0 0px 2px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        img {
+          height: 45px;
+          border-radius: 50%;
+          position: absolute;
+        }
+      }
+
+      .no_messages {
+        padding: 0;
+        width: 100%; 
+        height: 100%;
+        text-align: center; // padding-top: 120px;
+
+        font: {
+          family: Roboto_Regular;
+          size: $default_font_size;
+        }
+
+        @extend .center-align;
+      }
+    }
+
+    .mat-card-actions:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .text-content-style {
+      text-align: left;
+    }
+
+    .number-content-style {
+      text-align: right;
+    }
+
+    .small-content {
+      max-width: 35px;
+    }
+
+    .medium-content {
+      max-width: 55px;
+    }
+
+    .long-content {
+      max-width: 66px;
+    }
+  }
+
+  // .trophy-row {
+  //     cursor: default !important;
+  // }
+  // .mat-column-fixed-photo {
+  //     width: 50px;
+  // }
+  // .mat-column-fixed-trophy_name {
+  //     width: 50px;
+  // }
+  // player_photo mat-cell cdk-column-fixed-photo mat-column-fixed-photo ng-star-inserted
+  // mat-cell cdk-column-fixed-trophy_name mat-column-fixed-trophy_name ng-star-inserted"
+  .headerHeight {
+    height: 40px !important;
+  }
+}

@@ -1,0 +1,24 @@
+<mat-toolbar color="primary" class="small-toolbar">
+  <mat-icon *ngIf="icon">{{icon}}</mat-icon>
+  <img *ngIf="imgAsIcon" class="img-icon" [src]="imgAsIcon" alt="">
+  {{title}}
+</mat-toolbar>
+<section class="content" [ngClass]="{'linked': isLinked}">
+  <div class="title" innerHtml={{message}}>
+    {{message}}
+  </div>
+  <div class="toggle-section" *ngIf="isCheckbox || messageForCheckbox">
+    <mat-checkbox class="example-margin" [(ngModel)]="isCheckbox">
+      {{messageForCheckbox}}
+    </mat-checkbox>
+  </div>
+  <div class="button-row">
+    <div class="btn-right">
+      <button mat-button *ngIf="isMultiOption" class="cancel-button" tabindex="-1"
+        (click)="cancel()">{{negativeButtonText}}</button>
+    </div>
+    <div>
+      <button mat-button tabindex="-1" (click)="actionConfirmed()">{{positiveButtonText}}</button>
+    </div>
+  </div>
+</section>

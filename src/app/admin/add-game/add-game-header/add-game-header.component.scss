@@ -1,0 +1,487 @@
+@import '../../../../styles.scss';
+
+.header {
+  height: 45px !important;
+  display: flex;
+  padding: 0 40px;
+
+  @include media-breakpoint-down(xs) {
+    height: auto !important;
+    padding: 0 5px;
+  }
+
+  .disable-game-change {
+    pointer-events: none;
+  }
+
+  .game-title-conatiner {
+    display: flex;
+    width: 100%;
+
+    @include media-breakpoint-down(xs) {
+      flex: 1;
+      margin-bottom: 2px;
+    }
+
+    .game-icon-container {
+      position: relative;
+
+      .game-icon {
+        height: 48px;
+        width: 48px;
+        border-radius: 50%;
+        border: 1px solid $midGrey;
+
+        @include media-breakpoint-down(xs) {
+          height: 45px;
+          width: 45px;
+        }
+      }
+
+      .game-icon-overlay {
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        color: white;
+        position: absolute;
+        background: rgba(0, 0, 0, 0.5);
+        width: 100%;
+        height: 100%;
+        height: 48px;
+        width: 48px;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        border-radius: 50%;
+      }
+
+      &:hover .game-icon-overlay {
+        opacity: 1;
+        cursor: pointer;
+      }
+    }
+
+    .game-name-holder {
+      width: 100%;
+      margin-right: 18px;
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      @include media-breakpoint-down(xs) {
+        margin-right: 0;
+      }
+
+      .game-name {
+        width: 100%;
+        height: 40px;
+        font-size: 20px;
+        font-family: Roboto_Medium;
+        margin: 0 6px;
+        padding: 5px;
+        padding-left: 10px;
+        border: 0;
+        outline: none;
+        background: none;
+        border-radius: 2px;
+        color: #262B33;
+
+        @include media-breakpoint-down(md) {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        @include media-breakpoint-down(xs) {
+          font-size: 15px;
+          flex: 1;
+        }
+
+        &:hover {
+          cursor: text;
+          border: 1px solid #aaa;
+          background: #e6e6e6;
+          border: none; 
+        }
+
+        &:focus-within {
+          border: 1px solid #aaa;
+          padding: 5px 5px;
+          background: white;
+          height: 40px;
+        }
+      }
+
+      .edit-input-icon {
+        color: #767676;
+        font-size: 16px;
+        position: absolute;
+        top: 11px;
+        right: 8px;
+        justify-content: center;
+        align-items: center;
+        z-index: 9;
+
+        @include media-breakpoint-down(sm) {
+          display: none !important;
+        }
+      }
+
+      mat-icon {
+        display: none;
+      }
+
+      &:hover {
+        mat-icon {
+          display: flex;
+        }
+      }
+
+      &:focus-within {
+        mat-icon {
+          display: none;
+        }
+      }
+    }
+
+  }
+
+
+
+  .game-option-container {
+    display: flex;
+    width: 100%;
+    flex: 1;
+
+    .pinimg {
+      display: flex;
+
+      .pingame-actions-unpin {
+        margin: 0px 8px 0px 15px;
+
+        img {
+          width: 32px;
+          height: 32px;
+        }
+        cursor: pointer;
+        @include media-breakpoint-down(sm) {
+          margin: 0px 8px 0px 10px;
+        }
+
+      }
+
+      .pingame-actions-pin {
+        margin: 0px 8px 0px 15px;
+
+        img {
+          width: 32px;
+          height: 32px;
+        }
+        cursor: pointer;
+
+        @include media-breakpoint-down(sm) {
+          margin: 0px 8px 0px 10px;
+        }
+      }
+
+      .disable-svg {
+        cursor: not-allowed !important;
+        pointer-events: none !important;
+      }
+    }
+
+    @include media-breakpoint-down(xs) {
+      flex: 0;
+      display: flex;
+    }
+
+    .game-type-wrapper {
+      display: flex;
+      align-items: center;
+
+      .game-type-icon {
+        color: #ababab;
+        font-size: 18px;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+      }
+
+      .game-type {
+        font-family: Roboto_Regular;
+        color: #ababab;
+        font-size: 14px;
+        margin-left: 2px;
+        margin-top: 2px;
+
+        @include media-breakpoint-down(sm) {
+          display: none;
+        }
+
+        @include media-breakpoint-down(xs) {
+          display: none;
+        }
+      }
+    }
+
+    .divider {
+      width: 2px;
+      background: #d7d7d7;
+      margin: 6px;
+    }
+
+    .lang-wraper {
+      display: flex;
+      height: 31px;
+      font-size: 14px;
+      padding: 0 !important;
+      border-top: 0px;
+      font-family: Roboto_Regular;
+      align-items: center;
+      .lang-switch-wraper {
+        height: 31px;
+        background: #3956d1;
+        font-size: 14px;
+        padding: 0 !important;
+        border-top: 0px;
+        font-family: Roboto_Regular;
+        align-items: center;
+      }
+
+      .lang-edit-btn {
+        max-height: 31px;
+        width: 30px;
+        font-size: 14px;
+        padding: 0;
+        background: #3856D1;
+        color: #fff;
+        border-radius: 4px;
+        border: none;
+        margin-left: 1px;
+
+        mat-icon {
+          font-size: 15px;
+          padding-top: 6px;
+        }
+      }
+
+      .lang-switch {
+        padding: 5px 0px 0 5px;
+
+        ::ng-deep .mat-select-value-text {
+          color: #fff;
+        }
+
+        ::ng-deep .mat-select-arrow {
+          color: #fff;
+        }
+
+      }
+
+    }
+    .game-category-container{     
+      width: 200px;
+      padding-right: 10px;
+      ::ng-deep .search-wrapper{
+        height: 30px !important;
+      }
+
+        @include media-breakpoint-down(xs) {
+          width: 42px !important;
+          padding-right: 10px !important;                
+                  
+        }
+
+        @include media-breakpoint-down(md) {
+          width: 100px;
+        }
+        
+   
+    }
+
+    .pathwayMobile{
+      display: flex;
+      align-items: center;
+      
+      .pathwayIcon{
+        height: 27px;
+        border: 1px solid #CCCCCC;
+        background: white;
+        border-radius: 3px;
+      }
+    }
+
+    .categporyMobile{
+      display: flex;
+      align-items: center;
+      margin-right: 5px;
+      
+
+      .categoryIcon{
+        height: 27px;
+        border: 1px solid #CCCCCC;
+        background: white;
+        border-radius: 3px;
+      }
+      .categoryIconRed{        
+        border: 1px solid red;
+      }
+    }
+    .game-pathway-container{     
+      width: 220px;
+      ::ng-deep .search-wrapper{
+        height: 30px !important;
+      }
+        @include media-breakpoint-down(md) {
+          width: 100px;
+        }
+    }
+   
+    .custom-button-wrapper {
+      margin: 0 5px 0 6px;
+      max-height: 31px;
+      width: 100px;
+      font-size: 14px;
+      padding: 0;
+      background: $brand_color;
+      color: #fff;
+      border-radius: 4px;
+
+      @include media-breakpoint-down(xs) {
+        margin: 0;
+        max-height: 30px;
+        width: 32px;
+        font-size: 12px;
+        min-width: 20px;
+        padding-right: 6px;
+        margin-left: 1px;
+
+      }
+
+      .customeBtnDiv {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-left: 7px;
+      }
+
+      .custom-button {
+        display: flex;
+        justify-content: center;
+        padding-top: 1px;
+        display: block;
+
+        @include media-breakpoint-down(xs) {
+          flex: 1;
+          display: none;
+        }
+      }
+
+      &:disabled {
+        background: #d2d2d2;
+      }
+    }
+  }
+
+  .arrow-right-icon {
+    width: 23px;
+    height: auto;
+  }
+
+  select {
+    cursor: pointer;
+    background-color: transparent;
+    border: 1px solid rgba(0, 0, 0, .12);
+    border-radius: 4px;
+    font-family: Roboto_Regular;
+    color: #555;
+    font-size: 14px; 
+  }
+
+  .button-save {
+    padding: 0 5px;
+    margin: 0 0 0 5px;
+    max-height: 35px;
+  }
+
+
+  .game-category {
+    border: none;
+    height: 20px;
+    padding: 5px;
+    outline: none;
+    min-width: 200px;
+    margin-right: 20px;
+    background: none;
+    color: #555;
+    font-size: 14px;
+    border-radius: 2px;
+    cursor: pointer !important;
+    color: transparent;
+    text-shadow: 0 0 0 #555;
+
+    &:hover,
+    &:focus-within {
+      cursor: pointer;
+      border: 1px solid #aaa;
+      background: #cecece;
+    }
+  }
+}
+.customOption {
+  font-size: 14px !important;
+  line-height: 48px !important;
+  height: 32px !important;
+}
+
+::ng-deep .mat-form-field-infix {
+  width: 140px !important;
+}
+
+::ng-deep .mat-select-value {
+  display: block !important;
+  max-width: 100% !important;
+
+  @include media-breakpoint-down(xs) {
+    display: none !important;
+  }
+}
+
+.game-category-wrapper {
+  ::ng-deep .mat-select-value {
+    width: 180px !important;
+    padding-left: 4px !important;
+  }
+}
+
+.addEntity {
+  @include media-breakpoint-only(sm) {
+    bottom: 35px !important;
+    right: 0px !important;
+    left: unset !important;
+    top: unset !important;
+    z-index: 1 !important;
+  }
+}
+.lang-option{
+  img{
+  width: 20px;
+  margin-right: 4px;
+  padding-bottom: 2px;
+  }
+}
+
+::ng-deep .mat-tooltip {
+  width: auto !important;
+  height: auto !important;
+}
+
+::ng-deep .mat-snack-bar-container {
+  min-width: auto !important;
+  max-width: auto !important;
+}
+.lang-active{
+  transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2), 0px 8px 10px 1px rgba(0,0,0,0.14), 0px 3px 14px 2px rgba(0,0,0,0.12);
+  z-index: 10000;
+}

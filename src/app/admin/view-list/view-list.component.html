@@ -1,0 +1,14 @@
+<mat-menu #customMenu="matMenu">
+  <form #search="ngForm" (click)="$event.stopPropagation()">
+    <input *ngIf="manager && manager?.link_departments && manager?.link_departments.length > 1" name="search-key"
+      [(ngModel)]="selectedSearchKey" [value]="selectedSearchKey" autocomplete="off" placeholder="Enter Department">
+  </form>
+  <mat-list role="list">
+    <mat-list-item *ngFor="let item of manager?.link_departments | search:selectSearchFilterKey: selectedSearchKey"
+      role="listitem">{{item.department_name}}
+    </mat-list-item>
+  </mat-list>
+</mat-menu>
+
+<button [matMenuTriggerFor]="customMenu" #rightClickMenu
+  style="position: fixed;z-index:9999;visibility: hidden;">Action</button>

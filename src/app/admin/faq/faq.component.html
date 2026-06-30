@@ -1,0 +1,63 @@
+<div class="wrapper">
+  <mat-card class="content-card">
+    <mat-card-header>
+      <mat-toolbar class="toolbar">
+        <mat-toolbar-row class="title_container">
+          <span class="company_title"><span>Showing All FAQ</span></span>
+          <span class="spacer"></span>
+          <button class="add-company" #addButton matTooltip="Add New FAQ" (click)="addEmptyFaq()"
+             *ngIf="faqPermission && faqPermission.edit && !faqPermission.edit_details" matTooltipPosition="below" mat-fab>
+            <mat-icon>add</mat-icon>
+          </button>
+        
+        </mat-toolbar-row>
+        <mat-toolbar-row>
+          <app-search [class]="setCompanyPermission(true) ? 'filter-chip' : 'filter-chip1'" style="width:100%" [dataSource]="dataSource"
+          [context]="context" [filter_options]="filter_options" (filtersUpdated)="refreshListOnFilterChange($event)">
+          </app-search>
+        </mat-toolbar-row>
+      </mat-toolbar>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+<mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading" ></mat-progress-bar>
+
+    <mat-tab-group (selectedTabChange)="getFaqs($event.index)">
+
+      <mat-tab  *ngFor="let tab of tabs; let index = index" [label]="tab" >
+          
+     
+        <div class="faq-styling">
+            <div class="no_messages" *ngIf="is_loading">
+                <p></p>
+              </div>
+            <div class="no_messages" *ngIf="!is_loading && faqs_of_tab?.length === 0">
+              <p>{{is_loading ? 'Please wait...' : 'No record found.'}}</p>
+            </div>
+              
+          <mat-accordion multi="true" class="responsive-panel" >
+            <div *ngFor="let faq of faqs_of_tab">
+                
+                  
+            <app-text-editor [faq]="faq" (deleteFAQ)='deleteFaq($event)' (updateFAQ)='updateFaq($event)'
+            (addFAQ)="addFaq($event)" (isCancel)="isCancel = $event">
+                  
+                </app-text-editor>
+                
+            </div>
+            
+              
+          </mat-accordion>
+
+        </div>
+
+
+      </mat-tab>
+
+    </mat-tab-group>
+    <mat-card-actions>
+        <mat-paginator [length]="totalFaqs" [pageSize]="noOfItemsPerPage" [pageSizeOptions]="pageSizeOptions"
+          (page)="getFaqsOverPagination($event)">
+        </mat-paginator>
+      </mat-card-actions>
+  </mat-card>
+</div>

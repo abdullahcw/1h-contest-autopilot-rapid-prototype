@@ -1,0 +1,60 @@
+<div class="main-container">
+  <mat-toolbar class="small-toolbar" color="primary">
+    <div>{{titleToBeDisplayed}}</div>
+  </mat-toolbar>
+  <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+  <section class="content" [ngClass]="{'disabled-style': is_loading}">
+    <form #departmentForm="ngForm" name="departmentForm">
+      <div class="container"
+        [ngClass]="{'only-list-selection': !(!this.selectedDepartments || this.selectedDepartments?.length == 1)}">
+        <div class="form-group department-container"
+          *ngIf="!this.selectedDepartments || this.selectedDepartments?.length == 1">
+          <label for="department">{{this.selectedDepartments?.length > 1 ? ('departments' | translate) : ('department' | translate)}}</label>
+          <input type="text" class="holder form-inputs" placeholder="{{'enter_name' | translate}}" name="department_name"
+            [(ngModel)]="department.name" maxlength="40" minlength="1"
+            [readonly]="departmentPermissions && !departmentPermissions?.edit" #departmentName autofocus
+            pattern="^(?!\s*$).+" appValidateInput required>
+        </div>
+
+        <div class="form-group location-selection-container">
+          <label for="locations"
+            *ngIf="!this.selectedDepartments || this.selectedDepartments?.length == 1">{{'locations' | translate}}<span
+              class="required-label" *ngIf="selectedItems.length === 0">*</span>
+          </label>
+          <div class="location-container">
+            <div class="selection-container">
+              <app-list-selection *ngIf="showLocationMenu" [itemsToBeDisplayed]="prepareDataSourceForLocations" 
+                id="locations" [searchPlaceHolder]="searchPlaceHolder" (selectedItems)="selectedLocations($event)" [isListSelection]="true"
+                [fixedHeightContextMenu]="false"></app-list-selection>
+              <div class="no_messages" *ngIf="is_loading">
+                <p>{{'Please wait...' | translate}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="button-row">
+          <div
+            *ngIf="(departmentPermissions && departmentPermissions?.delete) && this.selectedDepartments?.length === 1">
+            <button type="button" class="delete-button" (click)="deleteDepartment()" mat-button>
+             {{'delete_uppercase' | translate}}
+            </button>
+          </div>
+          <div class="btn-right">
+            <button type="button" mat-button class="cancel-button" tabindex="-1" (click)="cancel()">{{'cancel_uppercase' | translate}}</button>
+          </div>
+          <div>
+            <button type="submit" mat-button
+              (click)="this.selectedDepartments?.length ? updateDepartment() : addDepartment()"
+              [disabled]="shouldDisableAction() || !departmentForm?.valid || !departmentForm?.dirty">
+              <div *ngIf="!this.selectedDepartments?.length; else other_content">
+                {{'add_uppercase' | translate}}
+              </div>
+              <ng-template #other_content>{{'done_uppercase' | translate}}</ng-template>
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </section>
+</div>

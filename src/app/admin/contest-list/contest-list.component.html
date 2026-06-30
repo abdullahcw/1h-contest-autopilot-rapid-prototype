@@ -1,0 +1,138 @@
+<div class="main_container">
+  <div class="wrapper">
+    <mat-card class="container-card">
+      <mat-card-header>
+        <mat-toolbar class="toolbar">
+          <mat-toolbar-row>
+            <span class="title"><span class="">{{ 'showing_all_contests' | translate}}</span></span>
+            <span class="spacer"></span>
+            <button *ngIf="contestPermissions?.add" class="add-contest addEntity"
+              matTooltip="{{'add_new_contest' | translate}}" matTooltipPosition="below" (click)="createContest()"
+              mat-fab>
+              <mat-icon>add</mat-icon>
+            </button>
+          </mat-toolbar-row>
+          <mat-toolbar-row class="search-toolbar-row">
+            <app-search class="filter-chip" style="width:100%" [filter_options]="filter_options" [dataSource]="menuList"
+              (getDataSourceWithFilterDetails)="getDataSource($event)" [applied_filters]="appliedFilters"
+              (filtersUpdated)="refreshListOnFilterChange($event)" (datePicker)="openDatePicker()" [context]="context">
+            </app-search>
+          </mat-toolbar-row>
+        </mat-toolbar>
+      </mat-card-header>
+      <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+      <mat-card-content>
+        <div class="no_messages" *ngIf="!contests?.length">
+          <p>{{is_loading ? ('please_wait' | translate) : ('no_record_found' | translate) }}</p>
+        </div>
+        <mat-grid-list class="contest-list-container" cols="{{breakpoint}}" rowHeight="2:1" gutterSize="20px"  [ngClass]="{'click-disabled': click_disabled }">
+          <mat-grid-tile class="contest-container" *ngFor="let contest of contests;let i=index;"
+            [ngClass]="{'tile-hovered': selectedContest == i, 'tileFocus': selectedContest == i,'tileCopying':contest?.polling_identifier}">
+
+            <span class="robotoRegular contest-mode" [ngClass]="{'draft-color': contest?.contest_state == 'DRAFT', 'closed-color': contest?.contest_state == 'CLOSED',
+                    'ready-color': contest?.contest_state == 'READY','live-color': contest?.contest_state == 'LIVE',
+                    'editable-position': !(contest?.contest_state == 'DRAFT' && storageService.getAccessType() == 'MM')
+                    || (contest.is_editable && contest?.is_authorized)}" *ngIf="!contest?.polling_identifier">
+              {{contest?.contest_state}}</span>
+
+            <span *ngIf="contest?.polling_identifier"
+              class="contestCopy contestModeSelected">{{'duplicating' | translate}}...</span>
+            <button class="contest-option" mat-icon-button [matMenuTriggerFor]="contestMenuBtn"
+              (menuOpened)="menuOpened(i, contest)" (menuClosed)="menuClosed()" *ngIf="!contest?.polling_identifier && !(contest?.contest_state == 'DRAFT' && storageService.getAccessType() == 'MM')">
+              <mat-icon class="fontMore more-options-icon" style="z-index:2;" *ngIf="true">
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="22.584"
+                  height="30" viewBox="0 0 22.584 38">
+                  <defs>
+                    <filter id="Combined_Shape" x="0" y="0" width="22.584" height="38" filterUnits="userSpaceOnUse">
+                      <feOffset dy="3" input="SourceAlpha" />
+                      <feGaussianBlur stdDeviation="3" result="blur" />
+                      <feFlood flood-opacity="0.302" />
+                      <feComposite operator="in" in2="blur" />
+                      <feComposite in="SourceGraphic" />
+                    </filter>
+                  </defs>
+                  <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#Combined_Shape)">
+                    <path id="Combined_Shape-2" data-name="Combined Shape"
+                      d="M0,17.708A2.292,2.292,0,1,1,2.291,20,2.292,2.292,0,0,1,0,17.708ZM0,10a2.292,2.292,0,1,1,2.291,2.291A2.292,2.292,0,0,1,0,10ZM0,2.291A2.292,2.292,0,1,1,2.291,4.584,2.292,2.292,0,0,1,0,2.291Z"
+                      transform="translate(9 6)" fill="#fff" />
+                  </g>
+                </svg>
+              </mat-icon>
+            </button>
+            <div class="image-wrapper">
+                <img class="contest-image" appSignedUrl [imgSelector]="'changeImageSrc'" [imgSrcValue]="contest?.contest_image_url"
+                *ngIf="true" alt="" onError="this.src='/assets/img/contest-banner-image.png'"
+                src="/assets/img/contest-banner-image.png" />
+
+            </div>
+            <div class="contest-wrapper" (click)="routeToAddContestPage(contest)">
+              <div class="contest-stats">
+                <div class="stats-section">
+
+                  <div class="status-indicator" *ngIf="contest.is_new">
+                    {{'new_uppercase' | translate}}
+                  </div>
+
+                </div>
+
+                <div class="info-section">
+                  <div class="contest-info">
+                    <div class="contest-title">
+                      {{contest?.contest_name}}
+                    </div>
+                    <div class="text_wrapper">
+                      <div class="contest-end-date" style="width: 50%;">
+                        {{(contest?.contest_state === 'ENDED' || contest?.contest_state === 'CLOSED') ? 
+                      ('ended_on' | translate) : ('ends_on' | translate)}}
+                        {{contest?.contest_end_date | date:'mediumDate'}}
+                      </div>
+                      <div class="divider"></div>
+                      <div class="contest-owner">
+                        {{contest?.owner_firstname}} {{contest?.owner_lastname}}
+
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </mat-grid-tile>
+        </mat-grid-list>
+      </mat-card-content>
+      <mat-card-actions>
+        <mat-paginator #paginator [length]="totalContests" [pageSize]="noOfItemsPerPage"
+          [pageSizeOptions]="pageSizeOptions" (page)="getContestsOverPagination($event)">
+        </mat-paginator>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
+<mat-menu class="matMenuCustom" #contestMenuBtn="matMenu" overlapTrigger="false" [xPosition]="'before'">
+  <button mat-menu-item class="options-menu-item" (click)="duplicateContest(selectedContest)"
+    *ngIf="selectedContest?.can_clone">
+    <mat-icon>file_copy</mat-icon>
+    <span>{{'clone' | translate}}</span>
+  </button>
+  <button mat-menu-item class="options-menu-item" (click)="editContest()"
+    *ngIf="(selectedContest?.is_editable && selectedContest?.is_authorized)">
+    <mat-icon>{{ (selectedContest?.is_editable && selectedContest?.is_authorized) ? 'edit' : 'visibility' }}</mat-icon>
+    <span>{{ (selectedContest?.is_editable && selectedContest?.is_authorized) ? ('edit' | translate) : ('view' | translate) }}</span>
+  </button>
+  <button mat-menu-item class="options-menu-item" (click)="deleteContest()"
+    *ngIf="(selectedContest?.is_editable && selectedContest?.is_authorized)">
+    <mat-icon>delete</mat-icon>
+    <span>{{'delete' | translate}}</span>
+  </button>
+  <button mat-menu-item class="options-menu-item" (click)="forceCloseContest()"
+    *ngIf="selectedContest?.is_authorized && selectedContest?.contest_state === 'LIVE'">
+    <mat-icon>remove_circle_outline</mat-icon>
+    <span>{{'force_close' | translate}}</span>
+  </button>
+  <button mat-menu-item class="options-menu-item" (click)="moveToDraft()"
+    *ngIf="selectedContest?.is_authorized && selectedContest?.contest_state === 'READY'">
+    <mat-icon>drafts</mat-icon>
+    <span>{{'move_to_draft' | translate}}</span>
+  </button>
+</mat-menu>

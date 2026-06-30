@@ -1,0 +1,130 @@
+<div class="main-wrapper">
+  <form #resetLeaderboardForm="ngForm" class="reset-form">
+    <div class="form-wrapper">
+    <mat-card class="main-card" [ngClass]="{'disabled-style': is_loading || !leaderboardPermission?.edit}">
+      <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+      <div class="leaderboard-wrapper">
+        <div>
+          <div class="main-card-holder">
+            <div class="logo-holder">
+              <h5 class="main-name">{{'leaderboard_settings_uppercase' | translate}}</h5>
+            </div>
+            <div class="form-content">
+              <div class="date-container">
+                <div class="item-container">
+                  <div class="item-title">{{'start_date' | translate}}: </div>
+                  <div class="calendar-input-wrapper" [ngClass]="{'inputSelected': leaderboardSettings.nextReset && !isLastResetDateSelected, 'inputUnselected': isLastResetDateSelected}">
+                    <input matInput class="holder form-inputs calendar-input" [matDatepicker]="pastDatePicker"
+                      placeholder="{{'date_format_mmddyyyy' | translate}}" name="pastReset" [(ngModel)]="leaderboardSettings.lastReset"
+                      (click)="pastDatePicker.open();" (open)="isDatePickerOpen" [max]="today" (blur)="isLastDateSelected()"
+                      (keydown)="isDatePickerOpen = true;" readonly>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15.032" height="17.18" viewBox="0 0 15.032 17.18" class="calendar-icon" (click)="pastDatePicker.open()">
+                      <path id="Icon_awesome-calendar-alt" [ngClass]="{'dateSelected': leaderboardSettings.lastReset && !isLastResetDateSelected, 'unselected': isLastResetDateSelected }" data-name="Icon awesome-calendar-alt" d="M0,15.569A1.611,1.611,0,0,0,1.611,17.18H13.422a1.611,1.611,0,0,0,1.611-1.611V6.442H0ZM10.737,8.992a.4.4,0,0,1,.4-.4h1.342a.4.4,0,0,1,.4.4v1.342a.4.4,0,0,1-.4.4H11.14a.4.4,0,0,1-.4-.4Zm0,4.295a.4.4,0,0,1,.4-.4h1.342a.4.4,0,0,1,.4.4V14.63a.4.4,0,0,1-.4.4H11.14a.4.4,0,0,1-.4-.4ZM6.442,8.992a.4.4,0,0,1,.4-.4H8.187a.4.4,0,0,1,.4.4v1.342a.4.4,0,0,1-.4.4H6.845a.4.4,0,0,1-.4-.4Zm0,4.295a.4.4,0,0,1,.4-.4H8.187a.4.4,0,0,1,.4.4V14.63a.4.4,0,0,1-.4.4H6.845a.4.4,0,0,1-.4-.4ZM2.147,8.992a.4.4,0,0,1,.4-.4H3.892a.4.4,0,0,1,.4.4v1.342a.4.4,0,0,1-.4.4H2.55a.4.4,0,0,1-.4-.4Zm0,4.295a.4.4,0,0,1,.4-.4H3.892a.4.4,0,0,1,.4.4V14.63a.4.4,0,0,1-.4.4H2.55a.4.4,0,0,1-.4-.4ZM13.422,2.147H11.811V.537A.538.538,0,0,0,11.274,0H10.2a.538.538,0,0,0-.537.537V2.147H5.369V.537A.538.538,0,0,0,4.832,0H3.758a.538.538,0,0,0-.537.537V2.147H1.611A1.611,1.611,0,0,0,0,3.758V5.369H15.032V3.758A1.611,1.611,0,0,0,13.422,2.147Z" fill="#747474"/>
+                    </svg>
+                    <mat-datepicker #pastDatePicker>
+                    </mat-datepicker>
+                  </div>
+                </div>
+                <div class="item-container customMargin">
+                  <div class="item-title">{{'next_reset' | translate}}: </div>
+                  <div class="calendar-input-wrapper" [ngClass]="{'inputSelected': leaderboardSettings.nextReset && !isNextResetDateSelected, 'inputUnselected': isNextResetDateSelected}">
+                    <input matInput class="holder form-inputs calendar-input" [matDatepicker]="futureDatePicker" 
+                      placeholder="{{'date_format_mmddyyyy' | translate}}" name="futureReset" [(ngModel)]="leaderboardSettings.nextReset"
+                      (click)="futureDatePicker.open();" (open)="isDatePickerOpen" [min]="tomorrow" (blur)="isNextDateSelected()"
+                      (keydown)="isDatePickerOpen = true;" (dateChange)="updateSettings()" readonly>
+                    <mat-icon *ngIf="leaderboardSettings.nextReset" class="clear-icon" (click)="clearNextReset()">clear</mat-icon>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15.032" height="17.18" viewBox="0 0 15.032 17.18" class="calendar-icon" (click)="futureDatePicker.open()">
+                      <path id="Icon_awesome-calendar-alt" [ngClass]="{'dateSelected': leaderboardSettings.nextReset && !isNextResetDateSelected, 'unselected': isNextResetDateSelected}" data-name="Icon awesome-calendar-alt" d="M0,15.569A1.611,1.611,0,0,0,1.611,17.18H13.422a1.611,1.611,0,0,0,1.611-1.611V6.442H0ZM10.737,8.992a.4.4,0,0,1,.4-.4h1.342a.4.4,0,0,1,.4.4v1.342a.4.4,0,0,1-.4.4H11.14a.4.4,0,0,1-.4-.4Zm0,4.295a.4.4,0,0,1,.4-.4h1.342a.4.4,0,0,1,.4.4V14.63a.4.4,0,0,1-.4.4H11.14a.4.4,0,0,1-.4-.4ZM6.442,8.992a.4.4,0,0,1,.4-.4H8.187a.4.4,0,0,1,.4.4v1.342a.4.4,0,0,1-.4.4H6.845a.4.4,0,0,1-.4-.4Zm0,4.295a.4.4,0,0,1,.4-.4H8.187a.4.4,0,0,1,.4.4V14.63a.4.4,0,0,1-.4.4H6.845a.4.4,0,0,1-.4-.4ZM2.147,8.992a.4.4,0,0,1,.4-.4H3.892a.4.4,0,0,1,.4.4v1.342a.4.4,0,0,1-.4.4H2.55a.4.4,0,0,1-.4-.4Zm0,4.295a.4.4,0,0,1,.4-.4H3.892a.4.4,0,0,1,.4.4V14.63a.4.4,0,0,1-.4.4H2.55a.4.4,0,0,1-.4-.4ZM13.422,2.147H11.811V.537A.538.538,0,0,0,11.274,0H10.2a.538.538,0,0,0-.537.537V2.147H5.369V.537A.538.538,0,0,0,4.832,0H3.758a.538.538,0,0,0-.537.537V2.147H1.611A1.611,1.611,0,0,0,0,3.758V5.369H15.032V3.758A1.611,1.611,0,0,0,13.422,2.147Z" fill="#747474"/>
+                    </svg>
+                    <mat-datepicker #futureDatePicker>
+                    </mat-datepicker>
+                  </div>
+                </div>
+              </div>
+              <div class="cycle-container" [ngClass]="{'disabled-style': !leaderboardSettings.nextReset}">
+                <div class="item-container">
+                  <div class="item-title">{{'repeat' | translate}}: </div>
+                  <ng-container *ngIf="nextResetCleared">
+                    <mat-select id="repeat-field" class="select-item" name="repeat" [(ngModel)]="leaderboardSettings.repeat" (blur)="isRepeatSelected()"
+                      (selectionChange)="updateSettings();" [ngClass]="{'optionSelected': !isRepeatOptionSelected, 'optionUnselected': isRepeatOptionSelected}">
+                      <mat-option class="frequency-option" *ngFor="let repeatOption of repeatOptions" [ngClass]="{'selectedOption': leaderboardSettings.repeat == repeatOption}"
+                        [value]="repeatOption">
+                        {{getCapitalized(repeatOption)}}
+                      </mat-option>
+                    </mat-select>
+                  </ng-container>
+                </div>
+                <div class="item-container customMargin">
+                  <div class="item-title">{{'every' | translate}}: </div>
+                  <ng-container *ngIf="frequencyCleared">
+                    <mat-select id="frequency-field" class="select-item" name="frequency" [(ngModel)]="leaderboardSettings.frequency" (blur)="isFrequencyOptionSelected()"
+                      (selectionChange)="updateSettings();" [ngClass]="{'optionSelected': !isFrequencySelected, 'optionUnselected': isFrequencySelected, 'disableWhenNeverSelected': leaderboardSettings.repeat == 'never'}">
+                      <mat-option class="frequency-count-options" *ngFor="let frequency of frequencies" [value]="frequency" [ngClass]="{'selectedOption': leaderboardSettings.frequency == frequency}">
+                        <span *ngIf="leaderboardSettings.repeat !== 'never'">{{frequency}}</span>
+                        <span>{{getPeriodText(frequency)}}</span>
+                      </mat-option>
+                    </mat-select>
+                  </ng-container>
+                </div>
+              </div>
+              <hr class="separator" />
+              <div class="customleaderboard-title">{{'customize_layout' | translate}}</div>
+              <div class="customleaderboard-container" *ngFor="let leaderboard of leaderboardSettings.leaderboards; let i = index">
+                <div class="item-container leaderboard-container" [ngClass]="{'customHeight': leaderboard.key != 'all'}">
+                  <div class="item-title" *ngIf="leaderboard.key == 'all'" [ngClass]="{'customPadding': i == 0}">{{'lead_settings' | translate}}: </div>
+                  <div class="leaderboard-content" [ngClass]="{'customHeight': leaderboard.key != 'all'}">
+                    <span class="leaderboard-count">#{{i+1}}</span>
+                    <div class="leaderboard-input-wrapper">
+                      <input matInput class="holder form-inputs calendar-input" [ngClass]="{'readOnly': leaderboard.key == 'all'}" *ngIf="leaderboard.key == 'all'" 
+                      value="{{'all' | translate}}">
+                      <input matInput class="holder form-inputs calendar-input" *ngIf="leaderboard.key != 'all'" [ngClass]="{'ng-invalid': leaderboard.hasInvalidName || (leaderboard.option && !leaderboard.text), 'ng-custom-valid': !leaderboard.hasInvalidName && leaderboard.text}" maxlength="12" minlength="1"
+                        placeholder="{{'enter_display_name' | translate}}" [(ngModel)]="leaderboard.text" [name]="'leaderboard_name' + i" (input)="checkLeaderboardName()" (keypress)="noSpace($event)" (click)="leaderboardEvent()">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="16.9" viewBox="0 0 13 16.9" *ngIf="leaderboard.key == 'all'" class="lock-icon">
+                        <path id="Icon_ionic-ios-lock" data-name="Icon ionic-ios-lock" d="M18.125,9.225H17.15v-1.9a3.9,3.9,0,1,0-7.8-.053v1.95H8.375A1.63,1.63,0,0,0,6.75,10.85v7.8a1.63,1.63,0,0,0,1.625,1.625h9.75A1.63,1.63,0,0,0,19.75,18.65v-7.8A1.63,1.63,0,0,0,18.125,9.225Zm-4.306,5.07v2.8a.583.583,0,0,1-.54.585.569.569,0,0,1-.6-.569V14.295a1.3,1.3,0,1,1,1.138,0Zm2.194-5.07H10.488V7.275a2.763,2.763,0,0,1,5.525,0Z" transform="translate(-6.75 -3.374)" fill="#747474"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div class="item-container criteria-container" [ngClass]="{'customHeight': leaderboard.key != 'all', 'edit-leaderboard-field': i==2 && leaderboard.text && leaderboard.option}">
+                  <div class="item-title" *ngIf="leaderboard.key == 'all'">{{'criteria' | translate}}: </div>
+                  <div class="leaderboard-content" [ngClass]="{'customHeight': leaderboard.key != 'all'}">
+                    <div class="leaderboard-input-wrapper" *ngIf="leaderboard.key == 'all'">
+                      <input matInput class="holder form-inputs calendar-input" [ngClass]="{'readOnly': leaderboard.key == 'all' }"
+                        name="criteria_name" value="{{'all' | translate}}">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="16.9" viewBox="0 0 13 16.9" class="lock-icon">
+                        <path id="Icon_ionic-ios-lock" data-name="Icon ionic-ios-lock" d="M18.125,9.225H17.15v-1.9a3.9,3.9,0,1,0-7.8-.053v1.95H8.375A1.63,1.63,0,0,0,6.75,10.85v7.8a1.63,1.63,0,0,0,1.625,1.625h9.75A1.63,1.63,0,0,0,19.75,18.65v-7.8A1.63,1.63,0,0,0,18.125,9.225Zm-4.306,5.07v2.8a.583.583,0,0,1-.54.585.569.569,0,0,1-.6-.569V14.295a1.3,1.3,0,1,1,1.138,0Zm2.194-5.07H10.488V7.275a2.763,2.763,0,0,1,5.525,0Z" transform="translate(-6.75 -3.374)" fill="#747474"/>
+                      </svg>
+                    </div>
+                    <mat-select id="leaderboard.key" class="select-field" [name]="'criteria_name' + i" [(ngModel)]="leaderboard && leaderboard.option" (click)="leaderboardEvent()"
+                      placeholder="{{'select_criteria' | translate}}" [ngClass]="{'ng-custom-valid': leaderboard.option, 'ng-invalid': (leaderboard.text && !leaderboard.option)}"
+                      (selectionChange)="filterList(leaderboard.option, i);" *ngIf="leaderboard.key != 'all' && i != 0">
+                      <ng-container *ngFor="let field of leaderboard.fields;">
+                        <mat-option class="criteria-options" [value]="field.option" [ngClass]="{ 'hideOption': !field.selected, 'selectedOption': leaderboard.option == field.option}">
+                          <span>{{field.text}}</span>
+                        </mat-option>
+                      </ng-container>
+                    </mat-select>
+                  </div>
+                  <mat-icon class="cancel-icon" *ngIf="i==2 && (leaderboard.text || leaderboard.option)" (click)="clearLeaderboard(i)">cancel</mat-icon>
+                </div>
+              </div>
+              <div class="note" *ngIf="leaderboardSettings.nextReset && leaderboardSettings.repeat !== 'never'">
+                Repeats {{footerTextFrequency}} starting {{footerTextDate}}.
+              </div>
+              <div class="footer-row">
+                <div class="button-row">
+                  <div class="right-button">
+                    <button type="submit" mat-button (click)="confirmChange()" [disabled]="!resetLeaderboardForm.dirty || shouldDisable()">
+                     {{'save_uppercase' | translate}}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+  </form>
+</div>

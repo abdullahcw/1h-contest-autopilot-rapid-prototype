@@ -1,0 +1,22 @@
+@import "../../../../../../src/assets/main.scss";
+@import "../../../../../styles.scss";
+
+.winRateInfoWraper{
+
+    width: 800px;
+    position: relative;
+    mat-icon{
+        position: absolute;
+        right: 0;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+    }
+
+    @include media-breakpoint-down(md) {
+        width: 500px;
+      }
+    @include media-breakpoint-down(xs) {
+        width: 300px;
+      }
+}

@@ -1,0 +1,27 @@
+<div class="wrapper">
+  <mat-toolbar class="small-toolbar" color="primary">
+    <div>{{title}}</div>
+  </mat-toolbar>
+  <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="list_loaded"></mat-progress-bar>
+
+  <div class="list-container" [ngClass]="{'disabled-style': list_loaded }">
+    <app-list-selection (click)="$event.stopPropagation();" [itemsToBeDisplayed]="dataSourceItems"
+      [shouldRequestDataSource]="true" (requestedDataSource)="requestedItems($event)"
+      searchPlaceHolder="{{'search' | translate}}" (itemsAdded)="itemsSelected($event)" (itemsRemoved)="itemsDeselected($event)"
+      [needsIndividualEvents]="true" (itemAdded)="itemSelected($event)" (itemRemoved)="itemDeselected($event)">
+    </app-list-selection>
+  </div>
+
+
+  <div class="button-row">
+    <div class="btn-right">
+      <button type="button" mat-button class="cancel-button" tabindex="-1"
+        (click)="cancel()">{{'cancel_uppercase' | translate }}</button>
+    </div>
+    <div>
+      <button type="submit" mat-button (click)="save()" [disabled]="!selectedItemIds.length">
+        {{'add_uppercase' | translate}}
+      </button>
+    </div>
+  </div>
+</div>

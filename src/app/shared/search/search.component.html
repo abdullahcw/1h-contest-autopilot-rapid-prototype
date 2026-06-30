@@ -1,0 +1,328 @@
+<!-- This menu appears for first time while adding new filter -->
+<mat-menu #menu="matMenu" class="search_menu" >
+  <form class="search-form" #search="ngForm" (click)="$event.stopPropagation()" [ngClass]="{'view-mode': viewMode}"> 
+    <input
+      *ngIf="localFilters.indexOf(selectSearchFilterKey) === -1 && dataSource?.length > 6 || !currentFilter?.is_default
+        && !currentFilter?.remove_search"
+      class="searchPopUp" name="search-key" [(ngModel)]="selectedSearchKey" [value]="selectedSearchKey"
+      autocomplete="off" placeholder="{{currentFilter && currentFilter.placeholder}}">
+  </form>
+  <!-- If filter menu contains same key as API key, REMOVE ME once replace all menu with Generic format(id, value) -->
+  <!-- Generic filter menu -->
+  <div class="menu_container" [ngClass]="{'view-mode': viewModeFossilManager || viewMode}">
+    <mat-list role="list" *ngIf="selectSearchFilterKey && currentFilter && !currentFilter.is_generic_menu"
+      class="handCursor">
+      <mat-list-item role="listitem" [ngClass]="{'display-none' : data['value']}"
+        *ngFor="let data of dataSource | search:selectSearchFilterKey: selectedSearchKey"
+        [hidden]="!data[selectSearchFilterKey]" (click)="addChip(data); isCountryValidKey = true;">
+        
+        {{data[selectSearchFilterKey]}}
+      </mat-list-item>
+    </mat-list>
+    <mat-list role="list" *ngIf="selectSearchFilterKey && currentFilter && currentFilter.is_generic_menu"
+      class="handCursor">
+      <mat-list-item role="listitem" *ngFor="let data of dataSource | search:'value': selectedSearchKey"
+        (click)="addChip(data)">
+        <p  matLine  *ngIf="data?.isMatICon">
+          <span >
+            <mat-icon class="mat-icon-flag" [ngStyle]="{'color': data.id == 'QUESTION_SUGGESTION' ? 'orange' :
+            data.id == 'QUESTION_WRONG' ? 'red' : 'green'}">feedback</mat-icon>
+          </span>          
+          <span>{{data['value']}}</span>          
+        </p>
+        <p matLine *ngIf="!data?.isMatICon">                  
+          <span>{{data['value']}}</span>
+          <span class="delete-game-text" *ngIf="data?.is_deleted">(Deleted)</span>
+        </p>
+
+        
+      </mat-list-item>
+    </mat-list>
+  </div>
+
+  <div class="sppinerDiv" *ngIf="showLoader && localFilters.indexOf(selectSearchFilterKey) === -1">
+    <mat-spinner color="primary" strokeWidth="3" diameter="30"></mat-spinner>
+  </div>
+  <div class="emptyDiv" *ngIf="emptyData && !showLoader">
+    <p>No data found.</p>
+  </div>
+</mat-menu>
+
+<!-- This menu is appeared when filter with multi_selection -->
+<mat-menu #alterFilter1="matMenu" class="selection-menu menu_container matMenuAlignment" overlapTrigger="true"
+  (closed)="additionalMenuClosed()">
+  <div class="popupSppinerDiv" *ngIf="showLoader && localFilters.indexOf(selectSearchFilterKey) === -1">
+    <mat-spinner color="primary" strokeWidth="3" diameter="30"></mat-spinner>
+  </div>
+  <div *ngIf="!showLoader">
+    <app-list-selection #multiSelection class="select-list" (click)="$event.stopPropagation();" [isDashboard]="isDashboard"
+      [itemsToBeDisplayed]="dataSource" [searchPlaceHolder]="'Search...'" (selectedItems)="selectedItems($event)"
+      [fixedHeightContextMenu]="true" [(searchKeyword)]="selectedSearchKey" [viewMode]="viewMode"
+      [isCompanyBelongsToCustomField]="globalService.isCompanyBelongsToCustomField()"
+      [isFossilCustomField]="isFossilCustomField"
+      ></app-list-selection>
+    <mat-toolbar class="done-toolbar search-apply-button" mat-raised-button color="primary"
+      (click)="applyAdditionalFilters(selectedSearchKey)" [ngClass]="{'disable_event': shouldDisable()}"
+      *ngIf="!viewMode">DONE</mat-toolbar>
+  </div>
+</mat-menu>
+
+<!-- This menu is appeared while updating existing filter -->
+<mat-menu #alterFilter="matMenu" class="search-menu matMenuAlignment" >
+  <mat-toolbar class="search-toolbar" color="primary" (click)="$event.stopPropagation()">{{selectedSearchHeader}}
+  </mat-toolbar>
+  <div *ngIf="currentFilter && !currentFilter.is_list_search">
+    <form class="search-form" #search="ngForm" (click)="$event.stopPropagation()"
+      (ngSubmit)="!selectedOptionEmpty ? changeSearchKey(alterSearchKey, alterSearchId) : addSearchKey($event, selectedOptionEmpty, alterSearchKey, true);">
+      <input class="searchPopUp" placeholder="{{currentFilter && currentFilter.placeholder}}" #alterSearchField
+        name="search-key" required [(ngModel)]="alterSearchKey" [value]="alterSearchKey" autocomplete="off" autofocus>
+
+      <section class="footer">
+        <button type="submit" mat-raised-button class="apply-button" color="primary"
+          [disabled]="!search?.valid">
+          <mat-icon>done</mat-icon>
+        </button>
+      </section>
+    </form>
+  </div>
+  <div *ngIf="currentFilter && currentFilter.is_list_search" [ngClass]="{'view-mode': viewMode}">
+    <form class="search-form" #search="ngForm" (click)="$event.stopPropagation()">
+      <input *ngIf="dataSource?.length > 6 || !currentFilter?.is_default && !currentFilter?.remove_search" class="searchPopUp"
+        placeholder="{{currentFilter && currentFilter.placeholder}}" name="search-key" [(ngModel)]="selectedSearchKey"
+        [value]="selectedSearchKey" autocomplete="off">
+    </form>
+    <div class="menu_container" [ngClass]="{'view-mode': viewModeFossilManager}">
+      <!-- If filter menu contains same key as API key, REMOVE ME once replace all menu with Generic format(id, value) -->
+      <mat-list role="list" class="handCursor">
+        <mat-list-item role="listitem" [ngClass]="{'display-none' : data['value']}" *ngFor="let data of (currentFilter.shouldRequestDataSourceWithSearchKey ? dataSource : 
+           (dataSource | search:selectSearchFilterKey: selectedSearchKey))" [hidden]="!data[selectSearchFilterKey]"
+          (click)="changeSearchKey(data[selectSearchFilterKey], data['id']); isCountryValidKey = true;">
+          {{data[selectSearchFilterKey]}}
+        </mat-list-item>
+      </mat-list>
+      <!-- Generic filter menu -->
+      <mat-list role="list" class="handCursor" *ngIf="currentFilter && currentFilter.is_generic_menu">
+        <mat-list-item role="listitem" *ngFor="let data of dataSource | search:'value': selectedSearchKey"
+          (click)="changeSearchKey(data['value'], data['id'])">
+          <p  matLine  *ngIf="data?.isMatICon">
+            <span >
+              <mat-icon class="mat-icon-flag" [ngStyle]="{'color': data.id == 'QUESTION_SUGGESTION' ? 'orange' :
+              data.id == 'QUESTION_WRONG' ? 'red' : 'green'}">feedback</mat-icon>
+            </span>          
+            <span>{{data['value']}}</span>          
+          </p>
+          <p matLine *ngIf="!data?.isMatICon">
+            <span>{{data['value']}}</span>
+            <span class="delete-game-text" *ngIf="data?.is_deleted">(Deleted)</span>
+          </p>
+        </mat-list-item>
+      </mat-list>
+    </div>
+    <div class="emptyDiv" *ngIf="!dataSource?.length && !showLoader">
+      No data found
+    </div>
+    <div class="popupSppinerDiv" *ngIf="showLoader && localFilters.indexOf(selectSearchFilterKey) === -1">
+      <mat-spinner color="primary" strokeWidth="3" diameter="30"></mat-spinner>
+    </div>
+  </div>
+</mat-menu>
+
+<mat-menu class="search_menu" #filterMenu="matMenu" overlapTrigger="false">
+
+  <ng-container *ngFor="let option of filter_options;let i = index">
+    <mat-option [class.disable_event]="!shouldAllowAddMore || shouldDisableOptions()" class="options" 
+      (click)="addSearchKey($event, option, searchField , searchField?.value ? true : false);" [value]="option"
+      [hidden]="!shouldShowOption(option)" (mouseenter)="callTochiprequest($event, option, searchField, i)"
+      (mouseleave)="option.is_list_search ? chipLeaveRequest() : $event.stopPropagation()"
+      [ngClass]="{'disabled-menu': option?.is_filter_disabled, 'apply-border': option?.is_border}">
+      {{option.value}}
+      <button mat-menu-item #popupMenu [matMenuTriggerFor]="alterFilter1"
+        [hidden]="!(option.is_list_search && option.is_multi_selection && !option.is_multi_option_menu)" class="menu_search"
+        style="pointer-events:none;background: none !important;">
+      </button>
+      <button mat-menu-item #popupMenu1 [matMenuTriggerFor]="menu"
+        [hidden]="!(option.is_list_search && !option.is_multi_selection && !option.is_multi_option_menu)" class="menu_search"
+        style="pointer-events:none;background: none !important">
+      </button>
+      <button mat-menu-item #multiOptionMenu [matMenuTriggerFor]="multiMenu" 
+        [hidden]="!(option.is_list_search && !option.is_multi_selection && option.is_multi_option_menu)" class="menu_search"
+        style="pointer-events:none;background: none !important">
+      </button>
+    </mat-option>
+  </ng-container>
+</mat-menu>
+
+
+
+
+
+<mat-toolbar class="search-wrapper" [ngClass]="{'fixed-height': !shouldAllowMultiline}">
+  <mat-form-field class="search-string" [ngClass]="{'scrollable': !shouldAllowMultiline}" #scrollable>
+    <mat-chip-list #chipList>
+
+      <mat-chip class="handCursor" *ngFor="let filter of findUniqueFilters()" [selectable]="selectable" [ngClass]="{'disable-click': shouldAllowChipSelection}"
+        [removable]="!filter.isDefault" (removed)="removeFilter(filter)" (click)="smartSearch(filter, $event)">
+        <span *ngIf="filter.isMultiDependantOn">{{filter.isMultiDependantOn | translate}} ></span>&nbsp;
+        <span *ngIf="!is_pick_only else use_filter_name">{{filter.searchingIn}}<span *ngIf="!filter?.is_static">:
+            {{filter.value}}</span></span>
+        <ng-template #use_filter_name>{{filter.searchingIn}}</ng-template>
+        <div class="additional-filter" *ngIf="getBadgeCount(filter) > 0"> +{{getBadgeCount(filter)}}</div>
+        <mat-icon matChipRemove *ngIf="!filter.isDefault && !viewMode && !chipCloseButtonHide">cancel</mat-icon>
+      </mat-chip>
+      <label for="chips" class="chips-input-wrapper" [matMenuTriggerFor]="filterMenu" #triggerMatMenu="matMenuTrigger"
+        #filterOptionMenu (click)="searchField.focus(); hideAddFilterChip()" [hidden]="hideMode"
+        [ngClass]="{'disable_event': !shouldAllowAddMore || shouldDisableOptions()}">
+        <input matInput class="search-input" [matChipInputFor]="chipList" #searchField name="chip-search"
+          [(ngModel)]="selectedSearchKey" id="chips" (input)="onSearchChange($event.target.value);" autocomplete="off"
+          [hidden]="!shouldAllowAddMore || shouldDisableOptions()"
+          [readonly]="!shouldAllowAddMore || shouldDisableOptions()" [formControl]="menuSearchInput">
+        <div class="search-indicator" *ngIf="!selectedSearchKey && is_search_placeholder && !hideTypeToSearch">
+          Type to search
+        </div>
+        <div class="add-filter-indicator" (click)="openFilterMenu($event)"
+          [style.opacity]="(addFilterChip && is_editing == false && !selectedSearchKey) ? 1 : 0"
+          [ngClass]="{'disable_event': !shouldAllowAddMore || shouldDisableOptions()}" matBadgeColor="primary"
+          matBadgeSize="medium">
+          <mat-icon>add</mat-icon><span>{{placeholder_text}}</span>
+        </div>
+      </label>
+      <button [matMenuTriggerFor]="alterFilter" #updateFilterMenu class="emptyFilterSearch"></button>
+      <button [matMenuTriggerFor]="alterFilter3" #updateFilterMultiMenu class="emptyFilterSearch"></button>
+    </mat-chip-list>
+  </mat-form-field>
+</mat-toolbar>
+<button [matMenuTriggerFor]="alterFilter1" #selectionMenu class="emptyFilterSearch"></button>
+<button [matMenuTriggerFor]="alterFilter2" #selectionMultiMenu class="emptyFilterSearch"></button>
+
+
+<!-- the code below this is added for handling multi menu scenario -->
+<mat-menu class="search_menu" #multiMenu="matMenu" overlapTrigger="false">
+
+  <ng-container *ngFor="let data of dataSource;let i=index;">
+    <mat-option [class.disable_event]="!shouldAllowAddMore || shouldDisableOptions()" class="options"
+      (click)="addSearchKey($event, data, searchField , searchField?.value ? true : false);" [value]="data"
+      [hidden]="!shouldShowOption(data)" (mouseenter)="callTochiprequest($event, data, searchField, i)"
+      (mouseleave)="data.is_multi_menu_dependant ? chipLeaveRequest() : $event.stopPropagation()">
+      {{data.value}}
+      <button mat-menu-item #popupMenu2 [matMenuTriggerFor]="alterFilter2" *ngIf="data.is_multi_menu_dependant"
+        [hidden]="!(data.is_list_search && data.is_multi_selection)" class="menu_search"
+        style="pointer-events:none;background: none !important;">
+      </button>
+      <button mat-menu-item #popupMultiMenu [matMenuTriggerFor]="menu1" *ngIf="data.is_multi_menu_dependant"
+        [hidden]="!(data.is_list_search && !data.is_multi_selection)" class="menu_search"
+        style="pointer-events:none;background: none !important">
+      </button>
+    </mat-option>
+  </ng-container>
+</mat-menu>
+
+
+<mat-menu #alterFilter2="matMenu" class="selection-menu menu_container matMenuAlignment" overlapTrigger="true"
+  (closed)="additionalMenuClosedForMultiMenu()">
+  <div class="popupSppinerDiv" *ngIf="showLoader && localFilters.indexOf(selectSearchFilterKey) === -1">
+    <mat-spinner color="primary" strokeWidth="3" diameter="30"></mat-spinner>
+  </div>
+  <div *ngIf="!showLoader">
+    <app-list-selection #multiSelection class="select-list" (click)="$event.stopPropagation();" [isMultiMenu]="true"
+      [itemsToBeDisplayed]="multiMenuDataSource" [searchPlaceHolder]="'Search...'" (selectedItems)="selectedItems($event)"
+      [fixedHeightContextMenu]="true" [(searchKeyword)]="selectedSearchKey" [viewMode]="viewMode"
+      [isCompanyBelongsToCustomField]="globalService.isCompanyBelongsToCustomField()"
+      [isFossilCustomField]="isFossilCustomField"></app-list-selection>
+    <mat-toolbar class="done-toolbar search-apply-button" mat-raised-button color="primary"
+      (click)="applyAdditionalFiltersForMultiMenu(selectedSearchKey)" [ngClass]="{'disable_event': shouldDisableForMultiMenu()}"
+      *ngIf="!viewMode">DONE</mat-toolbar>
+   
+  </div>
+</mat-menu>
+
+<mat-menu #menu1="matMenu" class="search_menu">
+  <!-- This condition is added for removing input search for win rate filter. -->
+  <form class="search-form" #search="ngForm" (click)="$event.stopPropagation()" [ngClass]="{'view-mode': viewMode}"> 
+    <input
+      *ngIf="localFilters.indexOf(selectSearchFilterKey) === -1 && multiMenuDataSource?.length > 6 || !currentFilter?.is_default"
+      class="searchPopUp" name="search-key" [(ngModel)]="selectedSearchKey" [value]="selectedSearchKey"
+      autocomplete="off" placeholder="{{currentFilter && currentFilter.placeholder}}">
+  </form>
+  <div class="menu_container" [ngClass]="{'view-mode': viewModeFossilManager || viewMode}"> 
+    <!-- If filter menu contains same key as API key, REMOVE ME once replace all menu with Generic format(id, value) -->
+    <mat-list role="list" *ngIf="selectSearchFilterKey && currentFilter && !currentFilter.is_generic_menu"
+      class="handCursor">
+      <mat-list-item role="listitem" [ngClass]="{'display-none' : data['value']}"
+        *ngFor="let data of multiMenuDataSource | search:selectSearchFilterKey: selectedSearchKey"
+        [hidden]="!data[selectSearchFilterKey]" (click)="addChip(data); isCountryValidKey = true;">
+        {{data[selectSearchFilterKey]}}
+      </mat-list-item>
+    </mat-list>
+    <!-- Generic filter menu -->
+    <mat-list role="list" *ngIf="selectSearchFilterKey && currentFilter && currentFilter.is_generic_menu"
+      class="handCursor">
+      <mat-list-item role="listitem" *ngFor="let data of multiMenuDataSource | search:'value': selectedSearchKey"
+        (click)="addChip(data)">
+        <p matLine>
+          <span>{{data['value']}}</span>
+          <span class="delete-game-text" *ngIf="data?.is_deleted">(Deleted)</span>
+        </p>
+      </mat-list-item>
+    </mat-list>
+  </div>
+
+  <div class="sppinerDiv" *ngIf="showLoader && localFilters.indexOf(selectSearchFilterKey) === -1">
+    <mat-spinner color="primary" strokeWidth="3" diameter="30"></mat-spinner>
+  </div>
+  <div class="emptyDiv" *ngIf="emptyData && !showLoader">
+    <p>No data found.</p>
+  </div>
+</mat-menu>
+
+<!-- This menu is appeared while updating existing filter for multi menu -->
+<mat-menu #alterFilter3="matMenu" class="search-menu matMenuAlignment" >
+  <mat-toolbar class="search-toolbar" color="primary" (click)="$event.stopPropagation()">{{selectedSearchHeader}}
+  </mat-toolbar>
+  <div *ngIf="currentFilter && !currentFilter.is_list_search">
+    <form class="search-form" #search="ngForm" (click)="$event.stopPropagation()"
+      (ngSubmit)="!selectedOptionEmpty ? changeSearchKey(alterSearchKey, alterSearchId) : addSearchKey($event, selectedOptionEmpty, alterSearchKey, true);">
+      <input class="searchPopUp" placeholder="{{currentFilter && currentFilter.placeholder}}" #alterSearchField
+        name="search-key" required [(ngModel)]="alterSearchKey" [value]="alterSearchKey" autocomplete="off" autofocus>
+
+      <section class="footer">
+        <button type="submit" mat-raised-button class="apply-button" color="primary"
+          [disabled]="!search?.valid">
+          <mat-icon>done</mat-icon>
+        </button>
+      </section>
+    </form>
+  </div>
+  <div *ngIf="currentFilter && currentFilter.is_list_search">
+    <form class="search-form" #search="ngForm" (click)="$event.stopPropagation()">
+      <input *ngIf="multiMenuDataSource?.length > 6 || !currentFilter?.is_default" class="searchPopUp"
+        placeholder="{{currentFilter && currentFilter.placeholder}}" name="search-key" [(ngModel)]="selectedSearchKey"
+        [value]="selectedSearchKey" autocomplete="off">
+    </form>
+    <div class="menu_container" [ngClass]="{'view-mode': viewModeFossilManager}">
+      <!-- If filter menu contains same key as API key, REMOVE ME once replace all menu with Generic format(id, value) -->
+      <mat-list role="list" class="handCursor">
+        <mat-list-item role="listitem" [ngClass]="{'display-none' : data['value']}" *ngFor="let data of (currentFilter.shouldRequestDataSourceWithSearchKey ? multiMenuDataSource : 
+           (multiMenuDataSource | search:selectSearchFilterKey: selectedSearchKey))" [hidden]="!data[selectSearchFilterKey]"
+          (click)="changeSearchKey(data[selectSearchFilterKey], data['id']); isCountryValidKey = true;">
+          {{data[selectSearchFilterKey]}}
+        </mat-list-item>
+      </mat-list>
+      <!-- Generic filter menu -->
+      <mat-list role="list" class="handCursor" *ngIf="currentFilter && currentFilter.is_generic_menu">
+        <mat-list-item role="listitem" *ngFor="let data of multiMenuDataSource | search:'value': selectedSearchKey"
+          (click)="changeSearchKey(data['value'], data['id'])">
+          <p matLine>
+            <span>{{data['value']}}</span>
+            <span class="delete-game-text" *ngIf="data?.is_deleted">(Deleted)</span>
+          </p>
+        </mat-list-item>
+      </mat-list>
+    </div>
+    <div class="emptyDiv" *ngIf="!multiMenuDataSource?.length && !showLoader">
+      No data found
+    </div>
+    <div class="popupSppinerDiv" *ngIf="showLoader && localFilters.indexOf(selectSearchFilterKey) === -1">
+      <mat-spinner color="primary" strokeWidth="3" diameter="30"></mat-spinner>
+    </div>
+  </div>
+</mat-menu>

@@ -1,0 +1,46 @@
+@import '../../../assets/main.scss';
+
+.breadcrumb {
+  margin: 0;
+  padding-top: 5px;
+  padding-left: 48px;
+  padding-bottom: 5px;
+  background: $secondary_bg_color;
+  border-radius: 0;
+  -moz-box-shadow: 0 1px 1px 1px #e0e0e0;
+  -webkit-box-shadow: 0 1px 1px 1px #e0e0e0;
+  box-shadow: 0 1px 1px 1px #e0e0e0;
+
+  @include media-breakpoint-down(xs) {
+    padding-left: 20px;
+  }
+
+  font: {
+    size: $default_font_size;
+    family: Roboto_Regular;
+  }
+
+  .breadcrumb-item {
+    padding: 0;
+    font-family: Roboto_Regular;
+    font-size: $text_size_small;
+    color: $breadcrumb_text_color;
+
+    &::before {
+      padding: 0px;
+    }
+  }
+
+  .breadcrumb-item:last-child {
+    color: $textMidGrey;
+  }
+
+  .arrow-space {
+    padding: 0 6px;
+    font-family: Roboto_Bold;
+
+    :last-child {
+      visibility: hidden;
+    }
+  }
+}

@@ -1,0 +1,43 @@
+@import '../../../styles.scss';
+
+::ng-deep .mat-menu-panel.customeMenu {
+    max-height: 300px !important;
+    max-width: 300px !important;
+    min-width: 200px;
+
+    .inputSearch {
+        width: 100%;
+        @extend .form-inputs;
+        border: none !important;
+        border-bottom: 1px solid #ccc !important;
+        margin-bottom: 0;
+        height: 48px;
+        min-width: 250px;
+    }
+}
+
+.menu_container {
+    height: auto;
+    min-width: 160px;
+    min-height: 50px;
+    max-height: 260px;
+    overflow-y: auto;
+
+    mat-list-item {
+        font-size: 14px;
+        font-family: 'Roboto_Regular';
+        height: 40px;
+    }   
+}
+.spinner_container{
+    height: 50px;
+    width: 150px;
+    background: #fff;
+    position: relative;
+    .spinner {
+        position: absolute;
+        top: 10px;
+        left: 60px;
+        margin: 0 auto;
+      }
+}

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>1Huddle Admin</title>
+  <base href="/">
+  <meta name="viewport"
+    content="user-scalable=0, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico?v=2">
+  <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
+  <link href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" rel="stylesheet">
+  <script>
+    var global = global || window;
+  </script>
+</head>
+
+<body>
+  <app-root></app-root>
+  <script>
+    /*<![CDATA[*/
+    // HubSpot chat feature disabled - To re-enable: uncomment the code below
+    window.loadHelp = function () {
+      // if (window.HubSpotConversations) {
+      //  window.HubSpotConversations.widget.load({
+      //     widgetOpen: false
+      //   });
+      // }
+    }
+    window.unloadHelp = function () {
+      // if (window.HubSpotConversations) {
+      //  window.HubSpotConversations.widget.remove();
+      // }
+    }
+    
+    function detectMob() {
+      const toMatch = [
+        /Android/i,
+        /webOS/i,
+        /iPhone/i,
+        /iPad/i,
+        /iPod/i,
+        /BlackBerry/i,
+        /Windows Phone/i
+      ];
+
+      return toMatch.some((toMatchItem) => {
+        return navigator.userAgent.match(toMatchItem);
+      });
+    }
+
+    
+    // console.log('mobile_detect', detectMob())
+    if (!detectMob()) {
+
+      // prod link
+      // document.write('<script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/6675388.js"><\/script>');
+
+      // test link
+      // document.write('<script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/7403037.js"><\/script>');
+    }
+    
+
+  </script>
+</body>
+
+</html>

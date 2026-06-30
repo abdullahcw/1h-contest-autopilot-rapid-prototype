@@ -1,0 +1,25 @@
+<mat-menu #customMenu="matMenu">
+  <div class="spinner_container" *ngIf="!listOfObject?.length">
+    <mat-spinner class="spinner"  color="primary" strokeWidth="3" diameter="30"></mat-spinner>
+</div>
+  <div class="menu_container" *ngIf="listOfObject?.length">
+    <mat-list role="list" *ngIf="fieldType === 'location_id'">
+      <mat-list-item class="mat-item"
+        *ngFor="let item of listOfObject | search:fieldType: searchKeyValue"
+        role="listitem">{{item?.location_name}}
+      </mat-list-item>
+
+    </mat-list>
+    <mat-list role="list" *ngIf="fieldType === 'department_id'">
+      <mat-list-item class="mat-item"
+        *ngFor="let item of listOfObject | search:fieldType: searchKeyValue"
+        role="listitem">{{item?.department_name}}
+      </mat-list-item>
+
+    </mat-list>
+  </div>
+</mat-menu>
+<button [matMenuTriggerFor]="customMenu" #menuTrigger
+  style="position: fixed;z-index:9999;visibility: hidden;">{{'action' | translate}}</button>
+
+

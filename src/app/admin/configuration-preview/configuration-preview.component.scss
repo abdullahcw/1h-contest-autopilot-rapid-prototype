@@ -1,0 +1,104 @@
+@import "../../../styles.scss";
+
+.uploader-container {
+    min-width: 410px;
+    max-width: 410px;
+    position: relative;
+    overflow: hidden;
+
+    @include media-breakpoint-down(sm) {
+        min-width: 260px;
+    }
+
+    .small-toolbar {
+        height: 50px;
+        font-size: 16px;
+    }
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        padding: 0 0;
+
+        .container {
+            .content-validation {
+                display: flex;
+                flex-direction: column;
+
+                .title {
+                    font-family: Roboto_Medium;
+                    font-size: 16px;
+                }
+                .preview-bullet-list {
+                    padding-left: 20px;
+                }
+                .config-message {
+                    font-family: Roboto_Regular;
+                    font-size: 14px;
+                    display: flex;
+                    padding: 2px 0;
+                    span {
+                        font-family: Roboto_Bold;
+                        padding-right: 5px;
+                    }
+                    p {
+                        word-wrap: break-word;
+                        max-width: 320px;
+                        margin-bottom: 0;
+                    }
+                    .mat-icon {
+                        font-size: 16px;
+                        height: 16px;
+                        width: 16px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        padding-left: 20px;
+                    }
+
+                    .green-color {
+                        color: green;
+                    }
+
+                    .red-color {
+                        color: red;
+                    }
+                }
+            }
+        }
+
+        .footer {
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px;
+            background-color: $secondary_bg_color;
+            position: sticky;
+            z-index: 5;
+            div {
+                button {
+                    font-size: 16px;
+                    font-family: Roboto_Bold;
+                }
+            }
+            .button-row {
+                width: 100%;
+                display: flex;
+
+                .btn-right {
+                    margin-left: auto;
+                }
+
+                .cancel-button {
+                    border: 0px;
+                    margin-right: 10px;
+                    background: white;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+
+    .container > * {
+        width: 100%;
+    }
+}

@@ -1,0 +1,32 @@
+<div class="content" (click)="colorPickerInput.focus();">
+  <div class="preview-container">
+    <div class="background-image">
+        <img src="/assets/img/mobile-app-frame.png" style="border:0px; max-width: none;">
+    </div>
+    <div class="foreground-image">
+      <img id="main_bg" src="/assets/img/mobile-app-content.png" [style.background]="backgroundColor">
+    </div>
+    <div class="cell-container"> 
+        <label class="rank" [style.color]="textColor">6</label>
+        <img id="round_profile_pic" src="/assets/img/theme-editor-user-logo.png">
+        <label class="roboto_regular txt_color" [style.color]="textColor" class="name">Sam Caucci</label>
+        <label class="roboto_bold txt_color" [style.color]="textColor" class="score">53,000</label>
+    </div>
+  </div>
+  <div class="manage-preview-container">
+    <div class="custom-colorpicker" style="position: relative;width: 260px;height: 100%;">
+        <div class="toggle-container">
+            <mat-button-toggle-group class="toggle" name="fontStyle" aria-label="Font Style" value="background">
+                <mat-button-toggle value="background"(change)="onValChange($event.value)">Background</mat-button-toggle>
+                <mat-button-toggle value="text" (change)="onValChange($event.value)">Text</mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+    <input #colorPickerInput [(colorPicker)]="selectedMode == 0 ? backgroundColor : textColor" [style.background]="color" readonly
+    (colorPickerChange)="cmykColor=onChangeColorCmyk($event);color=$event" [cpPosition]="'bottom'" [cpToggle]="'true'" [cpAlphaChannel]="'disabled'"/>
+  </div>
+    <div class="footer button-row">
+      <button mat-button class="cancel-button" tabindex="-1" (click)="dialogRef.close()">CANCEL</button>
+      <button mat-button class="apply-button" color="primary" [disabled]="" (click)="saveBranding()">APPLY</button>
+    </div>
+  </div>
+</div>

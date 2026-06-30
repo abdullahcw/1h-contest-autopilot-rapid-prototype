@@ -1,0 +1,431 @@
+@import '../../../../styles.scss';
+
+.dashboard-wrapper {
+  padding: 20px 10px 0;
+  margin: 0 38px;
+
+
+  @include media-breakpoint-down(sm) {
+    padding: 10px 0px 0;
+    margin: 0 10px;
+  }
+
+  // height: $dashboard_height;
+  // max-height: $dashboard_height;
+  height: calc(100vh - 160px);
+  max-height: calc(100vh - 160px);
+  // max-height: $header_height;
+  position: relative;
+
+  .svg-img {
+    margin-right: 10px;
+  }
+
+  .wrapper {
+    padding: 0;
+    height: calc(100vh - 200px);
+    max-height: calc(100vh - 200px);
+    // max-height: $header_height;
+    position: relative;
+
+    @include media-breakpoint-down(xs) {
+      padding: 0;
+    }
+
+    .dashboard-card {
+      // margin: 0 2px;
+      height: calc(100vh - 170px);
+      max-height: calc(100vh - 170px);
+      // padding: 0px;
+      // height: $header_height;
+      // max-height: $header_height;
+      padding: 0;
+
+      // @include media-breakpoint-down(xs) {
+      //   margin: 0 10px;
+      // }
+
+      .mat-card-content {
+        // max-height: calc 
+        width: 100%;
+        min-height: calc(100vh - 275px);
+        height: calc(100vh - 275px);
+        max-height: calc(100vh - 275px);
+        overflow: auto;
+        margin: 0;
+        border-top: 1px solid $mat_border_color;
+        border-bottom: 1px solid $mat_border_color;
+
+        font-family: Roboto_Regular;
+        font-size: $text_size_med;
+
+        .no_messages {
+          padding: 0;
+          width: 100%;
+          height: 100%;
+          text-align: center;
+          padding-top: 20px;
+
+          font: {
+            family: Roboto_Regular;
+            size: $default_font_size;
+          }
+
+          @extend .center-align;
+        }
+
+        .responsive-table {
+
+          td,
+          first-child {
+            padding-right: 20px !important;
+          }
+
+          .question-row-item {
+            min-width: 400px;
+            cursor: default;
+          }
+
+          .small-number-content {
+            max-width: 35px;
+            text-align: right;
+          }
+
+          .question_title {
+            max-width: calc(100% - 80px) !important;
+            white-space: normal;
+          }
+
+          .result-indicator {
+            color: red;
+          }
+
+          .correct-result-indicator {
+            color: green;
+          }
+        }
+      }
+
+      .mat-card-header {
+        display: flex;
+        flex-direction: column;
+      }
+
+
+      .mat-card-header {
+        .mat-card-header-text {
+          display: none !important;
+        }
+
+        .mat-toolbar {
+          padding: 0;
+          padding-left: 0px;
+          padding-right: 0px;
+          border: none;
+          position: relative;
+
+          .mat-toolbar-row {
+            width: 100%;
+            display: inline-flex;
+            flex-direction: row;
+            height: $row_height;
+            border-bottom: 1px solid $mat_border_color;
+
+            .view-details-report {
+              display: flex;
+              justify-content: flex-end;
+              flex: 1;
+
+              button {
+                right: -12px;
+              }
+            }
+
+            
+
+            .toolbar-icon-color {
+              cursor: pointer;
+              color: $disable_color;
+            }
+
+            &:last-child {
+              border-bottom: 1px solid transparent;
+              border-top: 1px solid transparent;
+            }
+
+            .filter-by {
+              margin-left: 14px;
+
+              font: {
+                family: Roboto_Regular;
+                size: $text_size_med;
+              }
+
+              .name {
+                font: {
+                  family: Roboto_Medium;
+                  size: $default_font_size;
+                }
+
+                color: $textMidGrey;
+              }
+
+              .points {
+                font-family: $Roboto_Bold_font;
+                font-size: 32px;
+              }
+
+              span {
+                color: $textColor;
+              }
+            }
+          }
+        }
+      }
+
+
+      .icon-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: absolute;
+
+        .open-video {
+          background: none;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          color: #555;
+          cursor: pointer;
+
+          mat-icon {
+            font-size: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+        }
+
+        .view-video {
+          right: 0px;
+          margin-right: 10px;
+        }
+
+        .download-report {
+          font-size: 25px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          .download-icon {
+            color: #666666;
+          }
+
+          .disabled-icon {
+            color: #E7E7E7;
+            opacity: 0.45;
+          }
+        }
+      }
+    }
+
+
+    .masterCardTable {
+      width: 100%;
+      background: #eee;
+      height: calc(100vh - 271px);
+      overflow: auto;
+      margin: 0;
+      border-top: 1px solid $mat_border_color;
+      border-bottom: 1px solid $mat_border_color;
+      font-family: Roboto_Regular;
+      font-size: $text_size_med;
+
+      table {
+
+        tr {
+          @include media-breakpoint-down(sm) {
+            // display: block;
+            display: table-row;
+            // flex-direction: column;
+            // flex: 1;
+            // width: auto;
+            // border-bottom: 1px solid $mat_border_color;
+            // height: auto;
+            padding: 10px 0;
+          }
+        }
+      }
+
+      .profile-pic {
+        height: 40px;
+        width: 40px;
+        object-fit: contain;
+        border-radius: 50%;
+      }
+
+      .no_messages {
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        padding-top: 20px;
+
+        font: {
+          family: Roboto_Regular;
+          size: $default_font_size;
+        }
+
+        @extend .center-align;
+      }
+
+      .headerHeight {
+        height: 40px !important;
+      }
+
+      .disable-click {
+        cursor: default;
+        pointer-events: none;
+      }
+
+
+      th,
+      td {
+        font-size: 12px;
+        text-align: left;
+
+        &:first-child {
+          padding-left: 20px;
+        }
+      }
+
+      .text-content-style {
+        text-align: left;
+      }
+
+      .number-content-style {
+        text-align: right;
+      }
+
+      .small-content {
+        max-width: 35px;
+      }
+
+      .medium-content {
+        max-width: 50px;
+      }
+
+      .medium-content-percentage {
+        max-width: 70px;
+      }
+
+      .long-content {
+        max-width: 185px;
+      }
+
+      .hyphen-styling {
+        margin-left: 40px;
+      }
+
+      .hyphen-styling-number {
+        margin-right: 26px;
+        text-align: right;
+      }
+    }
+  }
+
+  .spacer {
+    flex: 1;
+  }
+
+  .quick-nav-bar {
+    padding: 5px 40px;
+    background-color: $secondary_bg_color;
+    font-size: $text_size_med;
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05), 0 1px 10px 0 rgba(0, 0, 0, 0.05), 0 3px 5px -1px rgba(0, 0, 0, 0.05);
+  }
+
+  .toolbar {
+    background-color: $secondary_bg_color;
+    border-bottom: 1px solid $mat_border_color;
+    padding: 5px 20px;
+
+    @include media-breakpoint-down(sm) {
+      padding: 5px 0 !important;
+
+    }
+
+
+    font-size: $text_size_med;
+    width: 100%;
+    display: flex;
+    min-height: 50px !important;
+
+    .stats {
+      color: #444;
+      display: flex;
+      justify-content: center;
+      flex: 1;
+      font-size: 14px;
+
+      @include media-breakpoint-down(xs) {
+        font-size: 9px;
+      }
+
+    }
+
+    .separator {
+      width: 1px;
+      height: 50%;
+      background: #ccc;
+    }
+
+    .title {
+      font-family: Roboto_Regular;
+      font-size: 13px;
+    }
+  }
+
+
+  .toolbar {
+    background-color: $secondary_bg_color;
+    border-bottom: 1px solid $mat_border_color;
+    padding: 5px;
+    font-size: $text_size_med;
+    width: 100%;
+
+    display: flex;
+    height: 50px;
+    flex-direction: row;
+
+    .mat-toolbar-row {
+      height: 40px;
+      padding: 0;
+    }
+    .download-icon{
+      width: 32px;
+      margin-top: 4px;
+      height: 40px;
+    }
+    
+  }
+
+  .spacer {
+    flex: 1;
+  }
+
+  .toolbar-button {
+    font-size: 12px;
+    color: $add-filter-icon-color;
+  }
+
+  .mat-sort-header-container {
+    align-items: center;
+  }
+  .plaer-row{
+    cursor: default;
+  }
+  .handCursor{
+    cursor: pointer;
+  }
+}

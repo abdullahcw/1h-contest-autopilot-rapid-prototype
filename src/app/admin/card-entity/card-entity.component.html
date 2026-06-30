@@ -1,0 +1,75 @@
+<div class="main-card">
+  <div class="game-card">
+    <div class="img_wrapper">
+      <img appSignedUrl [imgSelector]="'changeImageSrc'" [imgSrcValue]="cardData.cardImg" alt="card-image" class="card-image"
+        src="/assets/img/Placeholder-game.png" onerror="this.src='/assets/img/Placeholder-game.png'"> 
+    </div>
+    
+  </div>
+  <div class="shopcard-content" >
+    <div *ngIf="cardData.cardAddPermission">
+      <button class="add-button" [matTooltip]="cardData.cardAdded ? '' : 'Add to my library'" matTooltipPosition="below"
+        (click)="add(cardData)"  [disabled]="cardData.cardAdded" style="z-index: 9;">
+        <mat-icon>{{cardData.cardAdded ? 'done' : 'add'}}</mat-icon>
+      </button>
+    </div>
+    <div *ngIf="storageService?.getAccessType() === role.ADMIN">
+      <button class="edit-button" mat-icon-button [matMenuTriggerFor]="shopMenuBtn">
+        <img style="width: 27px;" src="/assets/img/shop_more_option.png" alt="">
+      </button>
+    </div>
+    <div (click)="cardClick(cardData)">
+      <div class="shopcard-wrapper">
+        <div class="shopcard-title">
+          <span style="overflow: hidden;
+          text-overflow: ellipsis;
+          -webkit-line-clamp: 2;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;">
+            {{cardData.cardTitle}}
+          </span>
+        </div>
+        <div class="shopcard-subtitle">
+          <span style="overflow: hidden;
+          text-overflow: ellipsis;
+          -webkit-line-clamp: 3;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;">
+            {{cardData.cardSubtitle}}
+          </span>
+        </div>
+      </div>
+  
+      <div class="shopcard-owner-wrapper">
+        <div class="divider-owner">
+          <mat-divider></mat-divider>
+        </div>
+  
+        <div class="owner-wrapper">
+          <mat-icon style="display: flex;
+          align-items: center;">person</mat-icon>
+          <span class="owner-name">{{cardData.cardOwnerName}}</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<mat-menu class="matMenuCustom" #shopMenuBtn="matMenu" overlapTrigger="false" [xPosition]="'before'">
+  <span>
+    <button mat-menu-item class="options-menu-item" (click)="edit(cardData)">
+      <mat-icon>edit</mat-icon>
+      <span>{{'edit' | translate}}</span>
+    </button>
+
+    <button mat-menu-item class="options-menu-item" (click)="changePosition(cardData)">
+      <img class="img_inMatMenu" src="assets/img/position_icon.png">
+      <span>{{'position_text' | translate}}&nbsp;({{cardData?.shop_current_position}})</span>
+    </button>
+    <button mat-menu-item class="options-menu-item" (click)="remove(cardData)">
+      <mat-icon>delete</mat-icon>
+      <span>{{'delete' | translate}}</span>
+    </button>
+  </span>
+</mat-menu>

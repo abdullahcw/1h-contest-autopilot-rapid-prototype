@@ -1,0 +1,67 @@
+<div class="wrapper">
+  <mat-toolbar class="small-toolbar" color="primary">
+    <div>{{title}}</div>
+  </mat-toolbar>
+  <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+  <mat-tab-group [selectedIndex]="selectedTab">
+    <mat-tab label="">
+      <div class="tab-container" [ngClass]="{'disabled-style': is_loading}">
+        <app-list-selection style="flex: 1" (click)="$event.stopPropagation();" [itemsToBeDisplayed]="dataSourceGames"
+          [shouldRequestDataSource]="true" (requestedDataSource)="requestedGames($event)"
+          searchPlaceHolder="{{'search' | translate}}" (itemsAdded)="gamesSelected($event)"
+          (itemsRemoved)="gamesDeselected($event)"
+          [needsIndividualEvents]="true" (itemAdded)="gameSelected($event)" (itemRemoved)="gameDeselected($event)">
+        </app-list-selection>
+      </div>
+    </mat-tab>
+    <mat-tab label="">
+      <div class="tab-container" *ngIf="selectedTab === 1">
+        <div class="header-container"
+          *ngIf="!is_loading && isAllSelected() && (totalPlayersCount > noOfPlayersPerPage)">
+          <div *ngIf="!isAllNextPlayersSelected">
+            <span>{{selectionBasedText(('players_selected_without_on_this_page' | translate), totalPlayersCount, selectedPlayers.length)}}</span>
+            <button (click)="isAllNextPlayersSelected = true" mat-button class="highlight-text" color="primary">
+              {{selectionBasedText(('select_all_players' | translate), totalPlayersCount)}}</button>
+          </div>
+          <div *ngIf="isAllNextPlayersSelected">
+            <span>{{selectionBasedText(('all_players_are_selected' | translate), totalPlayersCount)}}</span>
+            <button (click)="isAllNextPlayersSelected = false; masterToggle()" mat-button class="highlight-text"
+              color="primary">
+              {{'clear_all' | translate}}</button>
+          </div>
+        </div>
+        <div class="search-container">
+          <mat-checkbox (change)="$event ? masterToggle() : null; isAllNextPlayersSelected = false"
+            [checked]="isAllSelected()" [disabled]="!dataSourcePlayers?.length"
+            [indeterminate]="isItemSelected()"></mat-checkbox>
+          <app-search class="search" [shouldAllowMultiline]="true" [filter_options]="filter_options"
+            [dataSource]="menuList" (getDataSourceWithFilterDetails)="getDataSource($event)" 
+            (getDataSourceWithSearchKey)="getDataSourceWithSearchKey($event)" [shouldAllowMultiline]="false"
+            [shouldAllowAddMore]="dataSourcePlayers?.length" (filtersUpdated)="refreshListOnFilterChange($event)"
+            [context]="context"></app-search>
+        </div>
+        <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading_players"></mat-progress-bar>
+        <app-list-selection #playerSelectionComponent [shouldAllowSearch]="false" class="select-list"
+          (click)="$event.stopPropagation();" [itemsToBeDisplayed]="dataSourcePlayers"
+          searchPlaceHolder="{{'search' | translate}}" (selectedItems)="playersSelected($event)"></app-list-selection>
+      </div>
+    </mat-tab>
+    <mat-tab label="">
+      <div class="tab-container">
+        <div class="item-container">
+          <span class="label">{{'attempts' | translate}}:</span>
+          <input class="attempts-field" placeholder="{{'enter_attempts_range' | translate}}"
+            (keypress)="numberOnly($event)" [(ngModel)]="attempts" [(value)]="attempts" autocomplete="off" />
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+  <div class="button-row">
+    <div class="btn-right">
+      <button type="button" mat-button class="cancel-button" tabindex="-1" (click)="back()">{{backButtonTitle}}</button>
+    </div>
+    <div>
+      <button type="submit" mat-button [disabled]="!canGoNext()" (click)="next()">{{nextButtonTitle}}</button>
+    </div>
+  </div>
+</div>

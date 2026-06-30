@@ -1,0 +1,115 @@
+<div class="wrapper">
+  <mat-card class="companies-card">
+    <mat-card-header>
+      <mat-toolbar class="toolbar">
+        <mat-toolbar-row>
+          <span class="company_title"><span class="">{{'showing_all_companies' | translate}}</span></span>
+          <span class="spacer"></span>
+          <button (click)="navigateToCompanyDetailsPage()" class="add-company addEntity" matTooltip="{{'add_new_company' | translate}}"
+            matTooltipPosition="below" mat-fab>
+            <mat-icon>add</mat-icon>
+          </button>	
+        </mat-toolbar-row>
+        <mat-toolbar-row>
+          <app-search class="filter-chip" style="width:100%" [filter_options]="filter_options"
+            [shouldAllowAddMore]="dataSource?.data?.length" [dataSource]="menuList"
+            (getDataSourceWithFilterDetails)="getDataSource($event)"
+            (filtersUpdated)="refreshListOnFilterChange($event)" [context]="context"></app-search>
+          <span class="agreement-end">{{'end_date' | translate}}: </span>
+          <app-date-range-filter [showCustom]="true" [showRange]="true"
+            (getGenericDateRange)="getGenericDateRange($event)" [isCustomRequired]="true"
+            (getCustomDateRange)="getCustomDateRange($event)">
+          </app-date-range-filter>
+        </mat-toolbar-row>
+      </mat-toolbar>
+    </mat-card-header>
+    <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+    <mat-card-content>
+      <div class="no_messages" *ngIf="!dataSource?.data.length">
+        <p>{{is_loading ? ('please_wait' | translate) : ('no_record_found' | translate)}}</p>
+      </div>
+      <table mat-table [dataSource]="dataSource" class="responsive-table" matSort (matSortChange)="sortData($event)"
+        matSortActive="company" matSortDirection="asc" matSortDisableClear *ngIf="dataSource?.data.length">
+        <ng-container matColumnDef="company_logo">
+          <th mat-header-cell *matHeaderCellDef class="imgColumn"></th>
+          <td mat-cell *matCellDef="let company">
+              <app-custom-images-table-static class="img-wrapper" [ImageSrc]="company.company_logo" >  </app-custom-images-table-static>
+         </td>
+        </ng-container>
+        <ng-container matColumnDef="company">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'company' | translate}} </th>
+          <td mat-cell *matCellDef="let company">{{company.company_name}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="csr">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'csr' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let company" class="csr-name-holder">{{(company?.csr_name || '---') | titlecase}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="sdr">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'sdr' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let company" class="sdr-name-holder">{{(company?.sdr_name || '---') | titlecase}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="account_type">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'account_type' | translate}}
+          </th>
+          <td mat-cell *matCellDef="let company">{{(company?.account_type || '---') | titlecase}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="paywall_status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'paywall' | translate}}
+          </th>
+          <td mat-cell *matCellDef="let company">{{company?.paywall_status | titlecase}}
+          </td>
+
+        </ng-container>
+        <ng-container matColumnDef="end_date">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'end_date' | translate}}
+          </th>
+          <td mat-cell *matCellDef="let company">{{getDateTime(company?.paywall_end_date)}}
+          </td>
+
+        </ng-container>
+        <ng-container matColumnDef="webapp">
+          <th mat-header-cell *matHeaderCellDef class="disable_small_devices pointerDefault">{{'link' | translate}}
+          </th>
+          <td mat-cell *matCellDef="let company" (click)="$event.stopPropagation()" class="disable_small_devices">
+            <div><a href="{{company.web_app_url}}" target="_blank">{{'web_app' | translate}}</a></div>
+          </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="shop">
+          <th mat-header-cell *matHeaderCellDef class="pointerDefault">{{'shop' | translate}} </th>
+          <td mat-cell *matCellDef="let company">
+
+            <mat-form-field class="shop-status-wrapper"  (click)="$event.stopPropagation()">
+              <mat-select id="game-category" [(ngModel)]="company && company.shop_for_players" #categorySelect
+                (selectionChange)="onSelectionChanged(company);">
+                <mat-option class="shop-for-player-option" value="ON">{{'unlocked' | translate}} </mat-option>
+                <mat-option class="shop-for-player-option" value="OFF">{{'locked' | translate}}</mat-option>
+                <mat-option class="shop-for-player-option" value="DISABLED">{{'disabled' | translate}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header"></tr>
+        <tr mat-row *matRowDef="let company; columns: displayedColumns;"
+          (click)="navigateToCompanyDetailsPage(company)"></tr>
+
+      </table>
+      <span class="spacer"></span>
+    </mat-card-content>
+    <mat-card-actions>
+      <mat-paginator #paginator [length]="totalCompanies" [pageSize]="noOfItemsPerPage"
+        [pageSizeOptions]="pageSizeOptions" (page)="getCompaniesOverPagination($event)">
+      </mat-paginator>
+    </mat-card-actions>
+  </mat-card>
+</div>
+

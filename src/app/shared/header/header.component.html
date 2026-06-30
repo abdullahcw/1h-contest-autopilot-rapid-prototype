@@ -1,0 +1,103 @@
+<mat-toolbar color="primary" class="header-toolbar">
+  <div class="left-content-holder">
+    <img src="/assets/img/header-pattern.svg" class="header-pattern" alt="">
+    <div class="headerHolder">
+      <button mat-icon-button (click)="toggleDrawable()" [ngClass]="{'disable-drawer': isPaywallAcivated}">
+        <mat-icon class="side-nav-icon">menu</mat-icon>
+      </button>
+      <img src="/assets/img/1huddle_tm.png" alt="1Huddle" class="logo small_name">
+      <img src="/assets/img/company_logo_1.png" class="small-company-logo" alt="">
+    </div>
+  </div>
+
+  <div *ngIf="showCompanyFilter" class="search-company-wrapper">
+    <div>
+      <div class="company-name" [ngClass]="{'panel-open': auto.isOpen}"
+        (click)="activateAutocomplete($event, auto.isOpen)">
+        <mat-icon class="search">business</mat-icon>
+        <div matInput class="search-company" name="search" #company readonly>{{searchKey}}</div>
+        <mat-icon class="drop-down-icon handCursor" (click)="activateAutocomplete($event, auto.isOpen)">arrow_drop_down
+        </mat-icon>
+      </div>
+      <input class="fake-input" #search [matAutocomplete]="auto">
+    </div>
+  </div>
+
+  <div class="company_autocomplete">
+    <mat-autocomplete #auto="matAutocomplete" class="country-dropdown">
+      <input type="text" [formControl]="filterCompany" #searchInput class="searchCompany"
+        placeholder="{{'search_company' | translate}}" autofocus>
+      <div class="options-wrapper">
+        <mat-option class="options" [value]="option" *ngFor="let company of filteredCompanies"
+          (click)="changeCompany(company, true)">
+          <span class="company">
+            {{company.company_name}}
+          </span>
+          <span class="icon" *ngIf="selectedCompanyId == company.company_id">
+            <mat-icon>check</mat-icon>
+          </span>
+        </mat-option>
+        <mat-option class="disabled-list" (click)="$event.stopPropagation()" *ngIf="filteredCompanies?.length == 0"
+          disabled>
+          <span class="company">{{'no_record_found' | translate}}</span></mat-option>
+      </div>
+    </mat-autocomplete>
+  </div>
+
+
+  <div class="nav-icons">
+    <div class="paywall-wrapper" *ngIf="isPaywallAcivated">
+      <span class="paywall-activated-text">{{ countdownText }}</span>
+    </div>
+    <div class="paywall-wrapper" *ngIf="!isPaywallAcivated && noOfDaysLeft <= 7 && noOfDaysLeft > 0">
+      <span class="paywall-counter" >
+        <span class="paywall-noofdays">{{ noOfDaysLeft }}</span>
+        <span class="paywall-title" > {{ countdownText }}</span>
+      </span>
+    </div>
+    <div class="profile-icon-wrapper">
+      <div matTooltip="{{'lets_get_started' | translate }}" (click)="showVideo()" class="open-video">
+        <mat-icon>play_circle_outline</mat-icon>
+      </div>
+      <div class="profile_icon help-section" (click)="openEmail()">
+        <mat-icon>help_outline</mat-icon>
+      </div>
+      <div style="height:64px;display: flex;align-items: center;justify-content: center;" [matMenuTriggerFor]="menu">
+        <img class="profile_icon" [src]="companyLogoUrl" onError="this.src='/assets/img/default.png'" alt="">
+      </div>
+    </div>
+    <mat-menu #menu="matMenu" class="profile-menu" [overlapTrigger]="false">
+      <section class="user_details" (click)="$event.stopPropagation()">
+        <img *ngIf="userPersonalData?.profile_image_url" class="user_image" [src]="userPersonalData?.profile_image_url" alt=""
+          onError="this.src='/assets/img/default.png'">
+        <div *ngIf="!userPersonalData?.profile_image_url" class="user_image">
+          <p>{{getNameFirstChar(userPersonalData?.first_name)}}{{getNameFirstChar(userPersonalData?.last_name)}}</p>
+        </div>
+        <div class="user_credentials">
+          <p class="name">{{userPersonalData?.first_name}} {{userPersonalData?.last_name}}</p>
+          <p class="email">{{userPersonalData?.email}}</p>
+          <button mat-flat-button color="primary" class="settings" *ngIf="!isAdmin() && !isPaywallAcivated"
+            (click)="navigateToUserDetailsPage()">{{'edit_profile' | translate}}</button>
+        </div>
+      </section>
+      <mat-divider class="footer-divider"></mat-divider>
+      <section class="profile-footer">
+        <button (click)="openLinkForPrivacy()" mat-menu-item class="profile-options-item" >
+          <mat-icon>security</mat-icon>
+          <span>{{'privacy_policy' | translate}}</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button (click)="openLinkTerms()" mat-menu-item class="profile-options-item">
+          <mat-icon>info</mat-icon>
+          <span>{{'terms_of_use' | translate}}</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button (click)="logout()" mat-menu-item class="profile-options-item">
+          <mat-icon>exit_to_app</mat-icon>
+          <span>{{'logout' | translate}}</span>
+        </button>
+
+      </section>
+    </mat-menu>
+  </div>
+</mat-toolbar>

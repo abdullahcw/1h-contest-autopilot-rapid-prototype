@@ -1,0 +1,18 @@
+<section [ngClass]="{'disable-admin': disableAdminPage}">
+  <app-header (toggleSidenav)="toggleSidenavHeader()" (trialExpired)="disablePage($event)"></app-header>
+  <div class="sidenav_wrapper" [ngClass]="{'isBackground': isSmall && isToggled}"
+    (click)="(isSmall && isToggled) ? closeSidenav() : $event.stopPropagation();">
+    <app-sidenav (sidenavtoggle)="toggleDrawerContent($event)" (isSmall)="isSmallDevice($event)" [isToggled]="isToggled"
+      [isToggleFixed]="isToggleFixed" (click)="$event.stopPropagation();"></app-sidenav>
+  </div>
+  <div class="content" [ngStyle]="{'margin-left': toggleDrawer ? '275px' : '70px'}"
+    [ngClass]="{'removeMargin': isSmall}">
+    <app-breadcrumbs></app-breadcrumbs>
+    <div *ngIf="isShowingRouteLoadIndicator">
+      <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+    </div>
+    <div>
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,25 @@
+@import '../../../assets/main.scss';
+
+    .content{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+
+        @include media-breakpoint-down(sm) {
+            flex-direction: column;
+        }
+
+        .company-details {
+            width: 900px;
+            margin: 20px;
+            @include media-breakpoint-down(sm) {
+                min-width: 300px;
+                width: auto;
+                margin: 10px 0px;                
+            }
+        }
+        .branding-container {
+            margin: 20px 20px 20px 0;
+            flex: 1;
+        }
+    }

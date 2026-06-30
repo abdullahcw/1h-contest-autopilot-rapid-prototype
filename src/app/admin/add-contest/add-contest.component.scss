@@ -1,0 +1,349 @@
+@import "../../../styles.scss";
+@import "../../../assets/colors";
+
+.overlay-wrapper {
+  height: $contest_container_height;
+  width: 0;
+  display: flex;
+  position: absolute;
+  z-index: 990;
+  right: 0;
+  top: 0;
+  overflow: hidden;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  transition: all 0.3s;
+
+  .hidden-overlay {
+    width: 100%;
+  }
+
+  .overlay-section {
+    width: 400px;
+  }
+}
+
+.hideContent {
+  display: none;
+}
+
+.isBackground {
+  width: 100% !important;
+}
+
+.search-input {
+  border: 1px solid transparent !important;
+}
+
+.disable-contest-change {
+  tr {
+    pointer-events: none;
+  }
+
+  .button-wrapper {
+    display: none;
+  }
+
+  .attempts-container {
+    .limit-select {
+      ::ng-deep .mat-select-arrow {
+        color: transparent;
+      }
+    }
+
+    .attempts-field {
+      border: none !important;
+    }
+  }
+}
+
+.game-row {
+  &:hover {
+    cursor: auto !important;
+  }
+}
+
+.wrapper {
+  padding: 5px 10px 0;
+  height: $contest_container_height;
+  max-height: $contest_container_height;
+  position: relative;
+
+  @include media-breakpoint-down(sm) {
+    padding: 5px 5px 0;
+  }
+
+  .container-card {
+    margin: 5px 40px 0 40px;
+    height: $contest_container_height;
+    max-height: $contest_container_height;
+    padding: 0;
+    position: relative;
+    @include i-pad-design;
+
+    @include media-breakpoint-down(sm) {
+      margin: 0 5px;
+      height: calc(100vh - 218px);
+      max-height: calc(100vh - 218px);
+    }
+
+    .mat-card-content {
+      margin: 0;
+      width: 100%;
+      overflow: auto;
+      min-height: $contest_container_height;
+      height: $contest_container_height;
+      max-height: $contest_container_height;
+      border-top: 1px solid $mat_border_color;
+      border-bottom: 1px solid $mat_border_color;
+      font-family: $Roboto_Regular_font;
+      font-size: $text_size_med;
+
+      .no_messages {
+        padding: 0;
+        width: 100%;
+        height: 90%;
+        text-align: center;
+        padding-top: 20px;
+
+        font: {
+          family: $Roboto_Regular_font;
+          size: $default_font_size;
+        }
+
+        @extend .center-align;
+      }
+    }
+
+    .add-game {
+      width: 50px;
+      height: 50px;
+      background-color: $add_icon_background;
+      color: $add_icon;
+      padding: 5px 20px;
+      border-radius: 30px;
+      font-size: $default_font_size;
+      position: absolute;
+      left: -23px;
+      top: 24px;
+      z-index: 101 !important;
+      @extend .center-align;
+      -webkit-transition: all 1s;
+      -moz-transition: all 1s;
+      -o-transition: all 1s;
+      -ms-transition: all 1s;
+      transition: all 1s;
+
+      &:disabled {
+        background: #aaaaaa;
+      }
+    }
+  }
+
+  .mat-card-actions:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  .attempts-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    .attempts-field {
+      text-align: end;
+      max-width: 50px;
+      padding-right: 4px;
+      border: 1px solid $midGrey;
+      box-shadow: inset 0px 0px 0px 0px $midGrey;
+    }
+
+    .limit-select {
+      min-width: 50px;
+      margin-left: 5px;
+      max-width: 61px;
+    }
+  }
+
+  .responsive-table {
+    .mat-row:nth-child(even) {
+      background-color: #efefef;
+
+      .attempts-field {
+        background-color: #efefef;
+      }
+    }
+
+    .mat-row:nth-child(odd) {
+      background-color: white;
+
+      .attempts-field {
+        background-color: white;
+      }
+    }
+
+    .game-logo-holder {
+      min-width: 85px;
+
+      @include media-breakpoint-down(sm) {
+        min-width: 65px;
+      }
+    }
+  }
+
+  tr {
+    display: table-row;
+    height: 50px;
+
+    &.disclaimer-class {
+      display: none;
+    }
+
+    .attempts-column {
+      padding-left: 10px !important;
+      width: 200px;
+
+      ::ng-deep .mat-sort-header-button {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding-right: 25px;
+
+        @include media-breakpoint-down(sm) {
+          padding-left: 25px;
+        }
+      }
+    }
+
+    td.select-all-row {
+      top: 45px !important; // to avoid transparent line above
+      text-align: center;
+      height: 45px;
+      padding: 8px 5px 8px 30px;
+    }
+
+    .select-all-row {
+      div {
+        padding-right: 30px;
+      }
+    }
+
+    button {
+      height: 24px !important;
+      font-size: 13px !important;
+    }
+  }
+
+  td.mat-cell:last-of-type,
+  td.mat-footer-cell:last-of-type,
+  th.mat-header-cell:last-of-type {
+    padding-right: 10px;
+  }
+
+  td {
+    position: relative;
+
+    label {
+      margin-bottom: 0 !important;
+
+      .mat-checkbox-layout {
+        margin-bottom: 0 !important;
+      }
+    }
+
+    @include media-breakpoint-down(sm) {
+      &:first-child {
+        padding: 5px;
+      }
+    }
+  }
+
+  td.game-name-holder {
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .mat-slider-horizontal {
+    width: 100%;
+  }
+}
+
+.delete-icon {
+  display: flex;
+  justify-content: flex-end;
+  color: #555;
+  padding-right: 10px;
+
+  mat-icon {
+    height: 20px;
+    width: 20px;
+    font-size: 20px;
+  }
+}
+
+.game-logo {
+  width: 50px;
+  border-radius: 50%;
+}
+
+.date-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.slider-overlay {
+  position: absolute;
+  top: 24px;
+  height: 20px;
+  width: 100%;
+}
+
+.date-range-slider {
+  margin: 15px 0 22px;
+  z-index: 0;
+
+  ::ng-deep .ngx-slider-span.ngx-slider-pointer:after {
+    display: none !important;
+  }
+
+  ::ng-deep .ngx-slider-span.ngx-slider-pointer {
+    cursor: ew-resize;
+    width: 10px;
+    height: 20px;
+    top: 0;
+    background-color: $brand_color;
+    border-radius: 0;
+    outline: none;
+    z-index: 9;
+  }
+
+  ::ng-deep .ngx-slider-span.ngx-slider-bar-wrapper {
+    pointer-events: none;
+  }
+
+  ::ng-deep .ngx-slider-bar {
+    height: 20px;
+    background: $brand_color;
+    border-radius: 0;
+  }
+
+  ::ng-deep .ngx-slider-span.ngx-slider-bar-wrapper.ngx-slider-full-bar .ngx-slider-span.ngx-slider-bar {
+    background: #e3e3e3 !important;
+  }
+
+  ::ng-deep .ngx-slider-bubble {
+    bottom: 3px;
+    z-index: 10;
+    pointer-events: none;
+    color: #44444485;
+    font-family: $Roboto_Regular_font;
+
+    font: {
+      family: $Roboto_Regular_font;
+      size: 10px;
+    }
+  }
+}

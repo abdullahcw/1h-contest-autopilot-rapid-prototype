@@ -1,0 +1,130 @@
+<div class="main_container">
+  <div class="wrapper">
+    <mat-card class="container-card">
+      <mat-card-header>
+        <mat-toolbar class="toolbar">
+          <mat-toolbar-row>
+            <div class="game-name-holder">
+              <input type="text" class="audiance-name" [(ngModel)]="audience.audience_name" (keyup.enter)="$event.target.blur()"
+                placeholder="{{'enter_audience_name' | translate}}" 
+                (change)="hasChanged = true" 
+                (blur)="hasChanged ? gameNameValidation('audience_name', audience?.audience_name) : false" 
+                (keypress)="noSpace($event)"
+                maxlength="32" minlength="1"  >
+            </div>
+             <button class="add-player addEntity" matTooltip="{{'add_new_player' | translate}}"
+              matTooltipPosition="below" (click)="addNewPlayerToAudience(audience.audience_id)" mat-fab>
+              <mat-icon>add</mat-icon>
+            </button>
+            <div class="icon-wrapper">
+              <button class="menu-options" mat-icon-button [matMenuTriggerFor]="menu"
+                matTooltip="{{'options' | translate}}">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+            </div>
+            <mat-menu #menu="matMenu" class="menu_status" y-position="below" overlapTrigger="false">
+              <button mat-menu-item class="options-menu-item" (click)="confirmDeletion()"  [ngClass]="{'disabled-style': !selection.hasValue()}">
+                <mat-icon>delete_on</mat-icon>
+                <span>{{'remove_player' | translate}}</span>
+              </button>
+            </mat-menu>
+          </mat-toolbar-row>
+          <mat-toolbar-row class="search-toolbar-row">
+            <input #search_field type="search" [formControl]="filterPlayers" class="search-item" 
+              placeholder="{{'search_without_three_dots' | translate}}" (click)="onSearch($event)">
+          </mat-toolbar-row>
+        </mat-toolbar>
+      </mat-card-header>
+      <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+      <mat-card-content>
+        <div class="no_messages" *ngIf="!playerDataSource?.data?.length">
+          <p>{{is_loading ? ('please_wait' | translate) : ('no_record_found' | translate)}}</p>
+        </div>
+        <div id="scrollToTop"></div>
+        <table aria-describedby="" mat-table [dataSource]="playerDataSource" class="responsive-table" matSort
+          (matSortChange)="sortData($event)" matSortActive="first_name" matSortDirection="asc" matSortDisableClear
+          *ngIf="playerDataSource?.data?.length" [ngClass]="{'disabled-style': is_loading}">
+          <ng-container matColumnDef="select">
+
+            <th id="" mat-header-cell *matHeaderCellDef class="checkboxes checkBoxColumn select-all-checkbox">
+              <mat-checkbox (change)="$event ? masterToggle() : null" *ngIf="!isSearchText"
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let player" (click)="$event.stopPropagation();"
+              class="checkboxes checkboxes-colors">
+              <mat-checkbox color="primary" (change)="selection.toggle(player);totalPlayerSelected = false;"
+                [checked]="selection.isSelected(player)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="disclaimer">
+            <td mat-header-cell *matHeaderCellDef [attr.colspan]="displayedColumns?.length" class="selection-text">
+              <div *ngIf="!is_loading && (totalUsers > noOfItemsPerPage)">
+                <div *ngIf="isAllSelected() && !totalPlayerSelected">
+                  <span>{{selectionBasedText(('players_selected_on_page' | translate), totalUsers, selection.selected.length)}}</span>
+                  <button (click)="allUserSelectionUpdated(true)" mat-button class="highlight-text" color="primary">
+                    {{selectionBasedText(('select_all_players' | translate), totalUsers)}}</button>
+                </div>
+                <div *ngIf="isAllSelected() && totalPlayerSelected">
+                  <span>{{selectionBasedText(('all_players_selected' | translate), totalUsers)}}</span>
+                  <button (click)="allUserSelectionUpdated(false)" mat-button class="highlight-text" color="primary">
+                    {{'clear_all' | translate}}</button>
+                </div>
+              </div>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="player_logo">
+            <th id="" mat-header-cell *matHeaderCellDef class="checkboxes game-logo-holder"></th>
+            <td mat-cell *matCellDef="let player">
+                <app-custom-images-table-static class="img-wrapper" [imageWithBorder]="false" [className]="'img40by40'" [ImageSrc]="player.profile_image_url" > </app-custom-images-table-static>
+              </td>
+          </ng-container>
+          <ng-container matColumnDef="first_name">
+            <th id="" mat-header-cell *matHeaderCellDef mat-sort-header> {{'name' | translate}} </th>
+            <td mat-cell *matCellDef="let player">{{player.first_name}} {{player.last_name}}</td>
+          </ng-container>
+          <ng-container [matColumnDef]="field.key" *ngFor="let field of customFields ">
+            <th id="" mat-header-cell *matHeaderCellDef> {{field.value}} </th>
+            <td mat-cell *matCellDef="let player">
+              <span *ngIf="player.secondary_location_count == 0 && field.key === 'location_name'">{{player?.customFields[field.key]}} </span>
+              <span class="click-cursor" *ngIf="field.key === 'location_name'" (click)="toggleMenu($event, player.player_id,'location_id'); $event.stopPropagation();">
+               <p *ngIf="player.secondary_location_count > 0">   {{player?.customFields[field.key]}} 
+                <span > + {{player.secondary_location_count}} {{'more' |translate}}</span>
+              </p>
+              </span>
+              <span *ngIf="player.secondary_department_count == 0 && field.key === 'department_name'">{{player?.customFields[field.key]}} </span>
+              <span class="click-cursor" *ngIf="field.key === 'department_name'" (click)="toggleMenu($event, player.player_id, 'department_id'); $event.stopPropagation();">
+                <p  *ngIf="player.secondary_department_count > 0"> {{player?.customFields[field.key]}} 
+                <span> 
+                  + {{player.secondary_department_count}} {{'more' |translate}}</span>
+                </p>
+              </span>
+
+              <span *ngIf="field.key !== 'location_name' && field.key !== 'department_name'">
+                {{player?.customFields[field.key]}} 
+              </span>
+               </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header"></tr>
+          <tr mat-row *matRowDef="let player; columns: displayedColumns;" class="notHandCursor"
+            [ngClass]="{'selected-row-styling': (selection && selection.selected.indexOf(player) > -1), 
+            'pulse-row': player?.is_player_inactive}">
+          </tr>
+          <tr mat-header-row *matHeaderRowDef="['disclaimer']; sticky: true"
+            [ngClass]="{'disclaimer-class': !(isAllSelected() && (totalUsers > noOfItemsPerPage))}"></tr>
+        </table>
+        <span class="spacer"></span>
+      </mat-card-content>
+      <mat-card-actions>
+        <mat-paginator #paginator [length]="totalUsers" [pageSize]="noOfItemsPerPage"
+          [pageSizeOptions]="pageSizeOptions" (page)="getUsersOverPagination($event)">
+        </mat-paginator>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
+<app-menu [openCustomMenu]="openCustomMenu" [selectedId]="selectedId" [fieldType]="selectedType"> </app-menu>

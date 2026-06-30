@@ -1,0 +1,44 @@
+<div class="main_container">
+  <div class="wrapper">
+    <mat-card class="container-card">
+      <mat-card-content>
+        <mat-tab-group class="tabs-container custom-tab-label">
+          <mat-tab label="{{'manager_tips' | translate}}">
+            <div class="tips-container">
+              <div class="body-container">
+                <div class="answer-section">
+                  <label class="tips-heading">{{'enter_your_tips' | translate}}</label>
+                  <ckeditor [editor]="Editor" #editor [(ngModel)]="tips.manager_tips" (change)="!isFirstLoad ? managerTipsChange = true : isFirstLoad = false;"
+                    [config]="{ toolbar: [  'bold', 'italic', 'underline', '|', 'numberedList', 'bulletedList', '|',  'link' ] }" [disabled]="isSaving">
+                  </ckeditor>
+                </div>
+              </div>
+              <div class="footer">
+                <div class="spacer"></div>
+                <button type="submit" mat-raised-button color="primary" [disabled]="!managerTipsChange || isSaving"
+                  (click)="saveManagerTips(tips.manager_tips)">{{ isSaving ? ('saving' | translate) : ('save' | translate)}}</button>
+              </div>
+            </div>
+          </mat-tab>
+          <mat-tab label="{{'player_tips' | translate}}">
+            <div class="tips-container">
+              <div class="body-container">
+                <div class="answer-section">
+                  <label class="tips-heading">{{'enter_your_tips' | translate}}</label>
+                  <ckeditor [editor]="Editor" #editor [(ngModel)]="tips.player_tips" (change)="isFirstLoad ? playerTipsChange = true : isFirstLoad = true;"
+                    [config]="{ toolbar: [  'bold', 'italic', 'underline', '|', 'numberedList', 'bulletedList', '|',  'link' ] }" [disabled]="isSaving">
+                  </ckeditor>
+                </div>
+              </div>
+              <div class="footer">
+                <div class="spacer"></div>
+                <button type="submit" mat-raised-button color="primary" [disabled]="!playerTipsChange || isSaving"
+                  (click)="savePlayerTips(tips.player_tips)">{{ isSaving ? ('saving' | translate) : ('save' | translate)}}</button>
+              </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

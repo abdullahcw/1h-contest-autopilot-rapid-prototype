@@ -1,0 +1,428 @@
+<div class="wrapper">
+  <app-add-game-header [(game)]=game [validFormRef]="scenario" [validStatusRef]="validStatus" [viewbutton]="false" [pinGameLimitReached]="pinGameLimitReached"
+    (goToNextStep)="goToNextStep()" (status)="status($event)" [isLoading]="is_loading"
+    (switchLanguage)="switchLanguage($event)" ></app-add-game-header>
+
+  <button *ngIf="game?.game_type != 1" class="add-profile addEntity" matTooltip="Add New Profile"
+    matTooltipPosition="below" (click)="addNewProfile()" [ngClass]="{'alignAddButton':!showleftPane}"
+    [disabled]='disableNewProfile' mat-fab>
+    <mat-icon>add</mat-icon>
+  </button>
+  <mat-card class="container-card">
+    <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+    <mat-card-header class="game-profile-header">
+      <div class="profileTitle">{{(game?.game_type == 2 && isSmallDevice && showleftPane) ? 'Select ' : ''}}Game
+        {{game?.game_type == 2 ? 'Profile' : 'Preview'}}</div>
+      <div class="updating-message" *ngIf="updating">Saving Changes...</div>
+    </mat-card-header>
+
+    <div class="inner-container-card" [ngClass]="{'addScroll':game?.game_type == 1 || !showleftPane}">
+      <div class="profile-container-card"
+        [ngClass]="game?.game_type == 1 ? 'singleProfileWidth' : 'multipleProfileWidth'">
+
+
+        <mat-card-content>
+          <div class="left-pane" [ngClass]="{'showLeftPanel': showleftPane}" *ngIf="game?.game_type != 1">
+            <mat-toolbar class="search-toolbar" (click)="$event.stopPropagation()">
+              <input type="text" [(ngModel)]="searchKey" />
+              <div class="search-indicator" *ngIf="!searchKey">
+                <mat-icon>search</mat-icon>Search
+              </div>
+
+            </mat-toolbar>
+            
+
+            <div class="profileHeader">
+              <div class="profileLinked">
+                <p>Link</p>
+              </div>
+              <div>
+                <p>Profiles</p>
+
+              </div>
+            </div>
+
+            <div class="profiles-list">
+              <form #profileList="ngForm">
+                <div *ngFor="let profile of profiles | search:selectSearchFilterKey: searchKey"
+                  class="profile-list-item" (click)="profileSelected(profile,true ,true)"
+                  [ngStyle]="{'background': profile.profile_id === selectedProfile.profile_id ? '#f6f3f3' : ''}"
+                  (mouseenter)="showDeleteIcon(profile.profile_id)" (mouseleave)="hoveredProfile = ''">
+                  <div class="profile-list-item-container">
+                    <div class="profile_checkbox">
+                      <mat-checkbox (change)="selectedProfileArray(profile,$event)"
+                        [disabled]="profile.is_checkBoxCliked" [checked]="profile.is_linked"></mat-checkbox>
+                    </div>
+                    <div style="display: flex;align-items: center;width: 78%;">
+                      <span class="item-name">{{profile.profile_name}}</span>
+                      <div style="display: flex;" *ngIf="hoveredProfile === profile.profile_id || isSmallDevice">
+                        <mat-icon (click)="deleteProfile(profile)">
+                          delete_outline
+                        </mat-icon>
+                      </div>
+                    </div>
+
+
+                  </div>
+
+                </div>
+
+              </form>
+            </div>
+
+          </div>
+          <div class="profile-details" [ngClass]="{'disabled-style': is_loading ,'showRightPanel':showRightPane}">
+            <div *ngIf="game?.game_type != 1" class="arrowButtons handCursor" [matTooltipDisabled]="showRightPane"
+              [matTooltip]="showleftPane ? 'Collapse side panel' : 'Expand side panel' " matTooltipPosition="after"
+              (click)="toggleBtwProfiles()">
+              <mat-icon *ngIf="!showleftPane">
+                arrow_right
+              </mat-icon>
+              <mat-icon *ngIf="showleftPane">
+                arrow_left
+              </mat-icon>
+            </div>
+
+            <div class="profile-details-container" #profilesDetails
+              [ngClass]="{'addScroll':game?.game_type == 2 && showleftPane}" [hidden]="!showProfileForm">
+              <form #scenario="ngForm">
+                <div class="info-content info-section ">
+                  <div class="info-content-v2-left">
+                    <div class="infoDivHeader">
+                      <span>HEADER</span>
+                    </div>
+                    <div class="gamePreviewInforWrapper">
+                      <input type="text" class="profile-name profile-title" name="profileName" (keypress)="noSpace($event, selectedProfile.profile_name)"
+                      [(ngModel)]="selectedProfile && selectedProfile.profile_name" (keyup.enter)="$event.target.blur()"
+                      minlength="1" maxlength="45" placeholder="Enter Title" (change)="hasChanged = true"
+                      (blur)="updateChanges(hasChanged,'profile_name',selectedProfile?.profile_name ,selectedProfile)"
+                      required [ngClass]="{'disable-game-profile-change': selectedProfile?.is_shop_game}">
+    
+                      <div class="infoDivHeader scenario-title ">
+                        <span>{{ game?.game_type == 2 ? 'TEXT' : 'GAME DETAILS' }}</span>
+                      </div>
+                      <ckeditor [editor]="Editor" #editorScenario class="scanario1" name="scanario" id="selectedProfileId"
+                        [(ngModel)]="selectedProfile.scenario" (change)="hasChanged = true" *ngIf="enableEditor"
+                        (blur)="updateChanges(hasChanged,'scenario',selectedProfile?.scenario ,selectedProfile)"
+                        [ngClass]="checkEmpty(selectedProfile.scenario ) ? 'validation-editor-valid' : 'validation-editor-error'"
+                        [config]="{ toolbar: [  'bold', 'italic', '|', 'numberedList', 'bulletedList', '|',  'link' ] }">
+                      </ckeditor>
+                    </div>
+                   
+
+                  </div>
+                  <div class="info-content-v2-right">
+                    
+                    <div class="pdf-section">
+                      <div class="infoDiv">
+                        <span>{{'pdf_uc' | translate}}</span>
+                      </div>
+                      <div class="pdfInnerSection">
+                        <button class="pdfActionButtons" *ngIf="!selectedProfile?.document_url">
+                          <div class="upload-pdf-wrapper"
+                            [ngClass]="{'disable-game-profile-change': selectedProfile?.is_shop_game}">
+                            <div class="uploader-wrapper handCursor" (click)="pdfInput.click()"
+                              title="{{'pdf_max_size' | translate}}">
+                              <img class="upload-icon" src="../../../assets/img/pdfUpload.png" alt="">
+                              <button class="upload-button" [disabled]="isPdfUpdating">
+                                {{ 'upload_pdf_title' | translate}}
+                              </button>
+                            </div>
+                            <!-- <div class="pdf-text-wrapper pdf-title">
+                              <span class="pdfText">{{ 'pdf_title' | translate}}</span>
+                            </div> -->
+                          </div>
+                          <input type="file" [hidden]="true" #pdfInput onclick="this.value=null" accept="application/pdf"
+                            (change)="uploadPdfEvent($event, selectedProfile)" />
+                        </button>
+                        <button class="pdfActionButtons" *ngIf="selectedProfile?.document_url">
+                          <div class="add-pdf-wrapper">
+                            <!-- <div class="pdf-thumbnail"
+                              *ngIf="(isPdfLoading || isPdfUpdating) && !selectedProfile?.pdf_thumbnail_url">
+                              <mat-spinner class="pdf-spinner" diameter="20"></mat-spinner>
+                            </div>                           -->
+                            <div class="delete-icon-wrapper handCursor" (click)="removePdf()" *ngIf="selectedProfile?.document_url && !selectedProfile?.is_shop_game">
+                              <mat-icon>delete</mat-icon>
+                            </div>
+                            <div class="pdf-thumbnail handCursor" *ngIf="selectedProfile?.pdf_thumbnail_url && !isDefaultThumbnail(selectedProfile?.pdf_thumbnail_url)"
+                              (click)="openPdfViewer(selectedProfile)">
+                              <img appSignedUrl class="pdf-thumbnail-image" [imgSelector]="'changeImageSrc'" [imgSrcValue]="selectedProfile?.pdf_thumbnail_url" onError="this.src='/assets/img/icon/pdf.png'" src="/assets/img/icon/pdf.png" alt="">
+                            </div>
+                            <pdf-viewer class="pdf-thumbnail handCursor" [src]="selectedProfile?.document_url" [page]="1"
+                              [original-size]="false" [show-all]="false" 
+                              (click)="openPdfViewer(selectedProfile)" (on-progress)="onProgress($event)"
+                              *ngIf="!selectedProfile?.pdf_thumbnail_url || isDefaultThumbnail(selectedProfile?.pdf_thumbnail_url)"
+                              [ngClass]="{'hide-pdf-thumbnail': (isPdfLoading || isPdfUpdating)}" #pdfViewer
+                              (page-rendered)="pageRendered($event,selectedProfile)">
+                            </pdf-viewer>
+    
+                            <div class="pdf-text-wrapper"
+                              [ngClass]="{'disable-game-profile-change': selectedProfile?.is_shop_game}">
+                              <input class="pdf-input-text" type="text" [(ngModel)]="selectedProfile.document_name"
+                                name="pdf-name" (blur)="updatePdfName($event, selectedProfile, hasChanged, false)" minlength="1"
+                                maxlength="70" (change)="hasChanged = true" autocomplete="off">
+                            </div>
+                          </div>
+                        </button>
+                        <!-- <div class="removePdf">
+                          <span class="handCursor" *ngIf="selectedProfile?.document_url && !selectedProfile?.is_shop_game"
+                            (click)="removePdf()">
+                            {{'remove' | translate}} {{'pdf_uc' | translate}}</span>
+                          <span *ngIf="isPdfUpdating">Uploading....</span>
+                        </div> -->
+                      </div>
+                    </div>
+
+                    
+                  <div class="videoSection" [ngStyle]="{'width': !is_video ? '100%' : ''}">
+                    <div class="infoDiv" *ngIf="!selectedProfile?.video_url && !selectedProfile.is_video_uploading ">
+                      <!-- <span>VIDEO</span> -->
+                      <img class="video-icon" src="../../../assets/img/videoIcon.png" alt="">
+                    </div>
+                    
+                    <div class="playVideo" [hidden]="!is_video">
+                      
+                      <div class="delete-icon-wrapper-video handCursor" 
+                    (click)="selectedProfile.profile_id  ? updateVideo('video_url', selectedProfile.video_url ,selectedProfile)  : removeVideo()"
+                     *ngIf="!selectedProfile?.is_shop_game">
+                      <mat-icon>delete</mat-icon>
+                    </div>
+
+                      <video width="{{videoWidth}}" class="videoDimensions"  controls #profileVideo id="video">
+                        <source src="{{selectedProfile.video_url}}" type="video/mp4">
+                        <track src="{{selectedProfile.video_url}}" kind="subtitles" srclang="en" label="English" />
+                        Your browser does not support the video tag.
+                      </video>
+
+                      <div class="video-name-wrapper" [ngClass]="{'disable-game-profile-change': selectedProfile?.is_shop_game}">
+                            <input class="video-input-text" type="text" [(ngModel)]="selectedProfile.video_name"
+                              name="video-name" (blur)="updateVideoName($event, selectedProfile, hasChanged)" minlength="1"
+                              maxlength="70" (change)="hasChanged = true" autocomplete="off">
+                      </div>
+
+                      
+                      <!-- <div class="removeVideo">
+                        <span class="handCursor"
+                          *ngIf="!selectedProfile.is_video_uploading && !selectedProfile?.is_shop_game"
+                          (click)="selectedProfile.profile_id  ? updateVideo('video_url', selectedProfile.video_url ,selectedProfile)  : removeVideo()">
+                          Remove Video</span>
+                        <span *ngIf="selectedProfile.is_video_uploading">Uploading....</span>
+                      </div> -->
+  
+                    </div>
+                    <div class="videoInnerSection" *ngIf="!is_video"
+                      [ngClass]="{'disable-game-profile-change': selectedProfile?.is_shop_game}">
+                      <button class="videoActionButtons">
+                        <div class="addVideoWrapper handCursor" (click)="videoInput.click()">
+                          <!-- <em class="material-icons" style="font-size: 20px;color: #767676;">
+                            video_call
+                          </em> -->
+                          <span class="videoText">Upload Video</span>
+                        </div>
+  
+                      </button>
+                    </div>
+  
+                    <input type="file" [hidden]="true" #videoInput onclick="this.value=null" accept="mp4/*" name="video-input"
+                      (change)="fileChangeEvent($event ,selectedProfile)" />
+                  </div>
+  
+                  
+                </div>
+                </div>
+                <ng-container *ngIf="selectedProfile?.information.length">
+                  <div *ngFor="let subProfile of selectedProfile?.information;let i = index;" [ngClass]="{'inforamationData': i > 0 ,
+                    'disable-game-profile-change': selectedProfile?.is_shop_game}">
+                    <div class="placeObjectToEnd">
+                      <em class="material-icons handCursor" (click)="removeScenario(subProfile)"
+                        style="font-size: 24px;">
+                        close
+                      </em>
+                    </div>
+                    <div class="info-content">
+                     
+                      <div class="info-content-v2-left">
+                       
+                        <div class="info-section adjustPadding">
+                          <div class="infoDiv">
+                            <span>INFORMATION {{i + 1}}</span>
+                          </div>
+    
+                          <div>
+                            <input type="text"
+                              [ngClass]="checktextEditorLength(subProfile?.description) > 0 || checktextEditorLength(subProfile?.video_url) > 0
+                              || checktextEditorLength(subProfile?.document_url) > 0 || checktextEditorLength(subProfile?.document_name) > 0 
+                              || checktextEditorLength(subProfile?.pdf_thumbnail_url) > 0 ? '' : 'apply-Border'"
+                              class="profile-name" minlength="1" maxlength="500" [(ngModel)]="subProfile.title"
+                              [name]="'title' + subProfile.name" (keyup.enter)="$event.target.blur()"
+                              placeholder="Enter Title" (change)="hasChanged = true" (keypress)="noSpace($event, subProfile.title)"
+                              (blur)="updateChanges(hasChanged,'information',subProfile ,selectedProfile)"
+                              [required]="checktextEditorLength(subProfile?.description) > 0 || checktextEditorLength(subProfile?.video_url) > 0
+                              || checktextEditorLength(subProfile?.document_url) > 0 || checktextEditorLength(subProfile?.document_name) > 0 
+                              || checktextEditorLength(subProfile?.pdf_thumbnail_url) > 0">
+      
+                          
+      
+                            <ckeditor [editor]="Editor" #editor{{i}} class="scenario-editor" placeholder="Enter Description"
+                              [name]="'description' + subProfile.name" [(ngModel)]="subProfile.description"
+                              (change)="hasChanged = true" *ngIf="enableEditor"
+                              (blur)="updateChanges(hasChanged,'information',subProfile ,selectedProfile)"
+                              (keyup)="checkValidationKey(subProfile)" (keypress)="noSpace($event, subProfile.description)"
+                              [ngClass]="[checkValidation(subProfile) ? 'validation-editor-valid' : 'validation-editor-error', checkISRequired(subProfile.title) ? 'not-required': '']"
+                              [config]="{ toolbar: [  'bold', 'italic', '|', 'numberedList', 'bulletedList', '|',  'link' ] }">
+                            </ckeditor>
+                          </div>
+                          <!-- <div class="addRow" [ngClass]="{'disable-game-profile-change': selectedProfile?.is_shop_game}" *ngIf="i === selectedProfile?.information.length - 1">
+                            <div (click)="addScenario()" class="handCursor addMore">
+                              <em class="material-icons plusSign">
+                                add
+                              </em><span>Add More</span>
+                            </div>
+                          </div> -->
+                        </div>
+                      </div>
+                     
+                      
+                      <div class="info-content-v2-right">
+
+                        <div class="pdf-section" *ngIf="game?.game_type != 2">
+                          <div class="infoDiv">
+                            <span>{{'pdf_uc' | translate}}</span>
+                          </div>
+                          <div class="pdfInnerSection">
+                            <button class="pdfActionButtons" *ngIf="!subProfile?.document_url" [name]="'pdf' + subProfile.name">
+                              <div class="upload-pdf-wrapper"
+                                [ngClass]="{'disable-game-profile-change': selectedProfile?.is_shop_game}">
+                                <div class="uploader-wrapper handCursor" (click)="pdfInputForInfo.click()"
+                                  title="{{'pdf_max_size' | translate}}">
+                                  <img class="upload-icon" src="../../../assets/img/pdfUpload.png" alt="">
+                                  <button class="upload-button" [disabled]="isPdfUpdatingForInfo">
+                                    {{ 'upload_pdf_title' | translate}}
+                                  </button>
+                                </div>
+                                <!-- <div class="pdf-text-wrapper pdf-title">
+                                  <span class="pdfText">{{ 'pdf_title' | translate}}</span>
+                                </div> -->
+                              </div>
+                              <input type="file" [hidden]="true" #pdfInputForInfo onclick="this.value=null" accept="application/pdf"
+                                (change)="uploadPdfEventForInformation($event, selectedProfile, subProfile, i)" />
+                            </button>
+                            <button class="pdfActionButtons" *ngIf="subProfile?.document_url" [name]="'pdf' + subProfile.name">
+                              <div class="add-pdf-wrapper">
+                                <!-- <div class="pdf-thumbnail"
+                                  *ngIf="(isPdfLoading || isPdfUpdating) && !subProfile?.pdf_thumbnail_url">
+                                  <mat-spinner class="pdf-spinner" diameter="20"></mat-spinner>
+                                </div> -->
+                                <div  *ngIf="subProfile?.document_url && !selectedProfile?.is_shop_game" class="delete-icon-wrapper handCursor" (click)="showConfirmationPopupForPdfInformation(subProfile)">
+                                  <mat-icon>delete</mat-icon>
+                                </div>
+                                <div class="pdf-thumbnail handCursor" *ngIf="subProfile?.pdf_thumbnail_url && !isDefaultThumbnail(subProfile?.pdf_thumbnail_url)"
+                                  (click)="openPdfViewer(subProfile)">
+                                  <img appSignedUrl class="pdf-thumbnail-image" [imgSelector]="'changeImageSrc'" [imgSrcValue]="subProfile?.pdf_thumbnail_url" onError="this.src='/assets/img/icon/pdf.png'" src="/assets/img/icon/pdf.png" alt="">
+                                </div>
+                                
+                                <pdf-viewer class="pdf-thumbnail handCursor" [src]="subProfile?.document_url" [page]="1"
+                                  [original-size]="false" [show-all]="false" 
+                                  (click)="openPdfViewer(subProfile)" (on-progress)="onProgress($event)"
+                                  *ngIf="!subProfile?.pdf_thumbnail_url || isDefaultThumbnail(subProfile?.pdf_thumbnail_url)"
+                                  [ngClass]="{'hide-pdf-thumbnail': (isPdfLoading || isPdfUpdating)}" #pdfViewer
+                                  (page-rendered)="pageRenderedSubProfile($event,subProfile, i)">
+                                </pdf-viewer>
+        
+                                <div class="pdf-text-wrapper"
+                                  [ngClass]="{'disable-game-profile-change': selectedProfile?.is_shop_game}">
+                                  <input class="pdf-input-text" type="text" [(ngModel)]="subProfile.document_name"
+                                    [name]="'pdf-name' + subProfile.name" (blur)="updatePdfNameForInformation($event, subProfile, hasChanged)" minlength="1"
+                                    maxlength="70" (change)="hasChanged = true" autocomplete="off">
+                                </div>
+                              </div>
+                            </button>
+                            <!-- <div class="removePdf">
+                              <span class="handCursor" *ngIf="subProfile?.document_url && !selectedProfile?.is_shop_game"
+                                (click)="showConfirmationPopupForPdfInformation(subProfile)">
+                                {{'remove' | translate}} {{'pdf_uc' | translate}}</span>
+                              <span *ngIf="isPdfUpdatingForInfo">Uploading....</span>
+                            </div> -->
+                          </div>
+                        </div>
+
+                        <div class="videoSection" [ngStyle]="{'width': !subProfile.is_video_ForInfo ? '100%' : ''}" *ngIf="game?.game_type != 2">
+                          <!-- <div class="infoDiv">
+                            <span>VIDEO</span>
+                          </div> -->
+                          <div class="infoDiv" *ngIf="!subProfile?.is_video_ForInfo">
+                            <!-- <span>VIDEO</span> -->
+                            <img class="video-icon" src="../../../assets/img/videoIcon.png" alt="">
+                          </div>
+                          <div class="playVideo" [hidden]="!subProfile.is_video_ForInfo">
+        
+                            <div class="delete-icon-wrapper-video handCursor" 
+                            (click)="selectedProfile.profile_id  ? updateVideoForInformation('information', subProfile, selectedProfile)  : removeVideoForInformation()"
+                            *ngIf="!selectedProfile?.is_shop_game">
+                              <mat-icon>delete</mat-icon>
+                            </div>
+
+                            <video width="{{videoWidth}}"  class="videoDimensions"  controls #profileVideoForInfo [id]="'video' + subProfile.name">
+                              <source src="{{subProfile.video_url}}" type="video/mp4">
+                              <track src="{{subProfile.video_url}}" kind="subtitles" srclang="en" label="English" />
+                              Your browser does not support the video tag.
+                            </video>
+
+                            <div class="video-name-wrapper" [ngClass]="{'disable-game-profile-change': selectedProfile?.is_shop_game}">
+                              <input class="video-input-text" type="text" [(ngModel)]="subProfile.video_name"
+                              [name]="'video-name' + subProfile.name" (blur)="updateVideoNameForInformation($event, subProfile, hasChanged)" minlength="1"
+                                maxlength="70" (change)="hasChanged = true" autocomplete="off">                                  
+                            </div>
+                            
+                            <!-- <div class="removeVideo">
+                              <span class="handCursor"
+                                *ngIf="!selectedProfile.is_video_uploading && !selectedProfile?.is_shop_game"
+                                (click)="selectedProfile.profile_id  ? updateVideoForInformation('information', subProfile, selectedProfile)  : removeVideoForInformation()">
+                                Remove Video</span>
+                              <span *ngIf="selectedProfile.is_video_uploading">Uploading....</span>
+                            </div> -->
+        
+                          </div>
+                          <div class="videoInnerSection" *ngIf="!subProfile.is_video_ForInfo"
+                            [ngClass]="{'disable-game-profile-change': selectedProfile?.is_shop_game}">
+                            <button class="videoActionButtons" [name]="'video' + subProfile.name">
+                              <div class="addVideoWrapper handCursor" (click)="videoInputForInfo.click()">
+                                <!-- <em class="material-icons" style="font-size: 20px;color: #767676;">
+                                  video_call
+                                </em> -->
+                                <span class="videoText">Upload Video</span>
+                              </div>
+        
+                            </button>
+                          </div>
+        
+                          <input type="file" [hidden]="true" #videoInputForInfo onclick="this.value=null" accept="mp4/*" [name]="'video' + subProfile.name"
+                            (change)="fileChangeEventForInformation($event , subProfile)" />
+                        </div>
+        
+                        
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+                <div class="addMarginForNoInfo" [ngClass]="{'disable-game-profile-change': selectedProfile?.is_shop_game}">
+                  <div (click)="addScenario()" class="handCursor addMore">
+                    <em class="material-icons plusSign">
+                      add
+                    </em><span>Add More</span>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="no_messages" [hidden]="showProfileForm">
+              <p class="bottom-margin">Please select and link a profile</p>
+              <p class="bottom-margin">or</p>
+              <p class="bottom-margin">Click '<strong>+</strong>' to add new</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </div>
+
+    </div>
+  </mat-card>
+</div>

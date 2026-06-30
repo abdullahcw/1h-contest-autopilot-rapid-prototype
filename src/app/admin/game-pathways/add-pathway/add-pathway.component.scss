@@ -1,0 +1,79 @@
+@import "../../../../styles.scss";
+
+.main-container {
+  width: 500px;
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+
+  @include media-breakpoint-down(xs) {
+    width: 300px;
+  }
+  .small-toolbar {
+    height: 50px;
+    font-size: 16px;
+  }
+
+  .add-category {
+    border-radius: 30px;
+    margin-left: auto;
+
+    mat-icon {
+      color: white;
+    }
+  }
+
+  .form-inputs {
+    // margin: 12px 0;
+    margin-top: 15px;
+  }
+
+  .error-msg {
+    // min-width: 150px;
+    // max-width: 500px;
+    width: 100%;
+    padding-left: 12px;
+  }
+
+  .add-pathway-content {
+    height: 150px;
+
+    form {
+      height: 100%;
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        padding: 12px 20px;
+        height: 100%;
+        justify-content: space-between;
+
+        .button-row {
+          width: auto;
+          display: flex;
+
+          .btn-right {
+            margin-left: auto;
+          }
+
+          .cancel-button {
+            border: 0px;
+            // margin-right: 10px;
+            // background: white;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+
+  .save-button {
+    &:disabled {
+      cursor: auto !important;
+    }
+  }
+
+  .container>* {
+    width: 100%;
+  }
+}

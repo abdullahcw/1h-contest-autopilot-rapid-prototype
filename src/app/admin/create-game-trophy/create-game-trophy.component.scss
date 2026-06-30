@@ -1,0 +1,182 @@
+@import '../../../styles.scss';
+.gameTrophy-main-container {
+    min-width: 400px;
+    max-width: 400px;
+    position: relative;
+    overflow: hidden;
+    @include media-breakpoint-down(sm) {
+        min-width: 330px;
+    }
+    @include media-breakpoint-down(xs) {
+        min-width: 280px;
+    }
+    .ng-valid[required],
+    .ng-valid.required {
+        border-left: 5px solid #17b057 !important;
+        /* green */
+    }
+    .ng-invalid:not(form) {
+        border-left: 5px solid #a94442 !important;
+        /* red */
+    }
+    .small-toolbar {
+        height: 50px;
+        font-size: 16px;
+    }
+    .content {
+        display: flex;
+        flex-direction: column;
+        padding: 0 0;
+        .container {
+            padding: 15px 15px 0;
+            overflow: auto;
+            .user-name {
+                display: flex;
+                flex-direction: row;
+                margin-top: 15px;
+                .name-field {
+                    width: 48%;
+                }
+                .spacer {
+                    margin: 5px;
+                }
+            }
+            .trophyName {
+                display: block;
+                font-size: 20px;
+                font-family: Roboto_Regular;
+            }
+            .editTrophyWrapper{
+                height: 420px;
+                    @include media-breakpoint-down(xs) {
+                        height: 340px;                        
+                    }
+            }
+            .trophyPreviewWrapper {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                .trophyPreview {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-direction: column;
+                    border: 1px solid #ccc;
+                    border-radius: 5px; 
+                    width: 314px;
+                    height: 420px;
+                    @include media-breakpoint-down(xs) {
+                        height: 340px;                        
+                    }
+                    .achivedText {
+                        padding: 10px 0;
+                        font-size: 24px;
+                        font-family: Roboto_Bold
+                    }
+                    .trophyLogo {
+                        position: relative;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        .bgImg {
+                            width: 210px;
+                            z-index: 1;
+                            @include media-breakpoint-down(xs) {
+                                width: 160px;                        
+                            }
+                        }
+                        .innerImg {
+                            width: 126px;
+                            border-radius: 50%;
+                            position: absolute;
+                        }
+                        .innerImgFixed {
+                            width: 210px;
+                            border-radius: 50%;
+                            @include media-breakpoint-down(xs) {
+                                width: 160px;                        
+                            }
+                        }
+                    }
+                    .trophy_Name {
+                        padding: 10px 0;
+                        font-size: 22px;
+                        font-family: Roboto_Bold;
+                        text-align: center;
+                        line-height: 1.1em;
+                    }
+                    .trophyDetails {
+                        padding-bottom: 10px;
+                        font-size: 18px;
+                        font-family: Roboto_Regular;
+                        margin: 0;
+                        padding: 0;
+                        ul {
+                            list-style-type: none;
+                            padding: 0;
+                            margin: 0;
+                            font-size: 14px;
+                        }
+                    }
+                    .sub-title{
+                        text-align: center;
+                    }
+                }
+            }
+            .department-container {
+                margin-bottom: 0px;
+            }
+            .trophyDesc {
+                resize: none !important;
+                height: 85px !important;
+            }
+        }
+        .gameTrophyDetails {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+        .footer {
+            display: flex;
+            justify-content: flex-end;
+            padding: 6px 0px;
+            background-color: $secondary_bg_color;
+            position: sticky;
+            z-index: 5;
+            .button-row {
+                width: 100%;
+                display: flex;
+                .btn-right {
+                    margin-left: auto;
+                }
+                .cancel-button {
+                    border: 0px;
+                    background: white;
+                    cursor: pointer;
+                }
+            }
+        }
+        dt {
+            display: block;
+            float: left;
+            width: 100px;
+            text-align: right;
+            font-size: 14px;
+            font-family: Roboto_Medium;
+            font-weight: 200;
+        }
+        dt:after {
+            content: ':';
+        }
+        dd {
+            display: block;
+            margin: 0;
+            padding: 0;
+            font-size: 14px;
+            font-family: Roboto_Medium;
+        }
+    }
+    .container>* {
+        width: 100%;
+    }
+}

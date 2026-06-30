@@ -1,0 +1,80 @@
+<div class="main_container">
+  <div class="wrapper">
+    <mat-card class="container-card">
+      <mat-card-header>
+        <mat-toolbar class="toolbar">
+          <mat-toolbar-row>
+            <span class="title"><span class="">{{'show_all_attempted_que' | translate}}</span></span>
+            <span class="spacer"></span>
+            <button mat-icon-button (click)="downloadReport()" matTooltip="{{'download' | translate}}"
+              matTooltipPosition="left">
+              <mat-icon>cloud_download</mat-icon>
+            </button>
+          </mat-toolbar-row>
+        </mat-toolbar>
+        <mat-toolbar class="toolbar" *ngIf="dataSource">
+          <div class="stats">{{'total_points' | translate}}: {{globalService.formatNumber(totalPoints)}}</div>
+          <div class="separator"></div>
+          <div class="stats">{{'total_time' | translate}}: {{totalTime}}</div>
+          <div class="separator" *ngIf="result"></div>
+          <div class="stats" *ngIf="result">{{'result' | translate}}: {{result}}</div>
+          <div class="separator" *ngIf="winPoints"></div>
+          <div class="stats" *ngIf="winPoints">{{'win_pts' | translate}}: {{globalService.formatNumber(winPoints)}}
+          </div>
+          <div class="separator" *ngIf="team"></div>
+          <div class="stats" *ngIf="team">{{'team' | translate}}: {{team}}</div>
+          <div class="separator"></div>
+          <div class="stats">{{'played_on' | translate}}: {{playedOn}}</div>
+        </mat-toolbar>
+      </mat-card-header>
+      <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+      <mat-card-content>
+        <div class="no_messages" *ngIf="!dataSource?.data.length">
+          <p>{{is_loading ? ('please_wait' | translate) : ('no_record_found' | translate)}}</p>
+        </div>
+        <table aria-describedby="" mat-table [dataSource]="dataSource" class="responsive-table" matSort
+          (matSortChange)="sortData($event)" matSortDirection="asc" matSortDisableClear *ngIf="dataSource?.data.length">
+          <ng-container matColumnDef="is_correct_answer">
+            <th id="" mat-header-cell *matHeaderCellDef mat-sort-header> </th>
+            <td mat-cell *matCellDef="let question">
+              <mat-icon class="result-indicator" [ngClass]="{'correct-result-indicator' : question.is_correct_answer}">
+                {{question.is_correct_answer ? 'done' : 'clear'}}</mat-icon>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="card_number">
+            <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'card' | translate}}# </th>
+            <td mat-cell *matCellDef="let question">
+              <label>{{'card' | translate}}# </label>
+              <p class="small-number-content">{{question.card_number}}</p>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="question">
+            <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'question' | translate}} </th>
+            <td mat-cell *matCellDef="let question" class="question-row-item">
+              <label>{{'question' | translate}}</label>
+              <p class="question_title">{{question.question}}</p>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="points">
+            <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'points' | translate}} </th>
+            <td mat-cell *matCellDef="let question">
+              <label>{{'points' | translate}}</label>
+              <p class="small-number-content">{{question.pointsFormatted}}</p>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="time">
+            <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'time' | translate}} </th>
+            <td mat-cell *matCellDef="let question">
+              <label>{{'time' | translate}}</label>
+              <p>{{question.timeFormatted}}</p>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header"></tr>
+          <tr mat-row *matRowDef="let question; columns: displayedColumns;">
+          </tr>
+        </table>
+        <span class="spacer"></span>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

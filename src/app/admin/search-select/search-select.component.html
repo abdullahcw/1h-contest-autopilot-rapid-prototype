@@ -1,0 +1,27 @@
+<div class="search-wrapper">
+  <input matInput #search class="selected-item-input handCursor" [disabled]="disabled" name="search"
+    [(ngModel)]="selectedItem.title" [matAutocomplete]="auto"
+    (click)="activateAutocomplete(auto.isOpen);searchInput?.focus()" [placeholder]="placeholderText" readonly
+    [required]="isRequired">
+  <mat-icon class="cancel handCursor" (click)="activateAutocomplete(auto.isOpen);searchInput?.focus()"
+    [ngClass]="{'arrow-disabled': disabledArrow}">arrow_drop_down</mat-icon>
+</div>
+<mat-autocomplete #auto class="dropdown" class="{{ CSSClasses }}">
+  <input *ngIf="shouldAllowSearch" type="text" [formControl]="filterControl" [(ngModel)]="searchKey" #searchInput
+    class="search-input" placeholder="{{'search' | translate}}" autofocus>
+  <div class="options-wrapper">
+    <mat-option class="option" [ngClass]="{'seleted-option': selectedItem?.id === item.id}" [value]="option"
+      *ngFor="let item of items" (click)="itemClicked(item); searchInput?.blur(); search?.blur()">
+      <div class="option-container">
+        <span class="title">
+          {{item.title}}
+        </span>
+        <span *ngIf="item.subtitle" class="subtitle">
+          {{item.subtitle}}
+        </span>
+      </div>
+    </mat-option>
+    <mat-option class="disabled-list" (click)="$event.stopPropagation()" *ngIf="items?.length == 0" disabled>
+      <span class="item">{{'no_record_found' | translate}}</span></mat-option>
+  </div>
+</mat-autocomplete>

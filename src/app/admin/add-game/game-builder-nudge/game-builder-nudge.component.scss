@@ -1,0 +1,55 @@
+@import '../../../../styles.scss';
+.pre-wrapper{
+    padding: 20px;
+}
+.wrapper{
+    width: 300px;
+    background: #3F55CA;
+    color: #fff;
+    position: fixed;
+    right: 50px;
+    bottom: 25px;
+    border-radius: 5px;
+
+    .small-toolbar{
+        height: 35px;
+        border-radius: 5px;
+    }
+  
+    .closeIcon{
+       
+        display: flex;
+          flex: 1;
+          justify-content: flex-end;
+          align-items: center;
+          cursor: pointer;
+          mat-icon{
+            font-size: 20px;
+            height: 20px;
+            width: 20px;
+          }
+    }
+    .title{
+        font-size: 14px;
+        font-family: $Roboto_Regular_font;
+    }
+    .text{
+        font-size: 14px;
+        font-family: $Roboto_Regular_font;
+        padding: 5px 14px;
+        height: 90px;
+       
+    }
+    .nav{
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 2px 12px;
+        cursor: pointer;
+    }
+}
+.hello {
+    background-color: #44444454;
+  }
+
+  

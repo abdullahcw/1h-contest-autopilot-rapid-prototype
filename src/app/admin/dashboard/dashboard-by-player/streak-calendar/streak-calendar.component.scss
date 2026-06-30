@@ -1,0 +1,126 @@
+@import "../../../../../styles.scss";
+
+.calendar {
+    background-color: #fff;
+    border-radius: 3px;
+    z-index: 20;
+    width: 100%;
+    height: 100%;
+
+    .calendar_month_nav {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #3856D1;
+        padding-top: 7px;
+
+        .month_text {
+            font-size: 20px;
+            font-family: $FaktPro_Black_font;
+            margin: 0 10px;
+        }
+
+        mat-icon {
+            font-size: 26px;
+            cursor: pointer;
+        }
+
+        .disable-icon {
+            color: #878787
+        }
+    }
+
+    .calendar_day_names {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        margin-top: 10px;
+        padding: 0 5px;
+
+        .calendar_day_name {
+            font-size: 16px;
+            font-family: $Archivo_Black_font;
+            color: #26272B;
+        }
+    }
+
+    .calendar_weeks {
+        display: flex;
+        flex-direction: column;
+        background-color: #fff;
+        // height: 372px;
+        border-radius: 3px;
+        padding: 0 5px;
+
+        @include media-breakpoint-down(md) {
+            height: 269px;
+        }
+
+        @include media-breakpoint-up(lg) {
+            height: 269px;
+        }
+
+        @media (min-width: 1920px) and (max-width: 2560px)  {
+            height: 369px;
+        }
+
+        .calendar_week {
+            display: flex;
+            flex-direction: row;
+            height: 20%;
+            align-items: center;
+
+            .calendar_date {
+                text-align: center;
+                padding: 3px;
+                width: 14.29%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                .calendar_number {
+                    font-size: 16px;
+                    font-family: $Archivo_Regular_font;
+
+                }
+
+                .selected {
+                    color: #fff;
+                    background-color: #3856D1;
+                    border-radius: 50%;
+                    width: 32px;
+                    height: 32px;
+                    padding-top: 5px;
+    
+                    &:hover {
+                        cursor: pointer;
+                    }
+                }
+            }
+
+            // .disabled {
+            //     pointer-events: none;
+            //     color: #E8E8E8;
+            // }
+        }
+    }
+
+    .custom_calendar_weeks {
+
+        @include media-breakpoint-down(md) {
+            height: 272px;
+        }
+
+        @include media-breakpoint-up(lg) {
+            height: 242px;
+        }
+
+        @media (min-width: 1920px) and (max-width: 2560px)  {
+            height: 320px;
+        }
+
+        @include media-breakpoint-down(xs) {
+            height: 288px;
+        }
+    }
+}

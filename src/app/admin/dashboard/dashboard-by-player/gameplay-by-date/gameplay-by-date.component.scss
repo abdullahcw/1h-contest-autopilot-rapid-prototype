@@ -1,0 +1,241 @@
+@import "../../../../../styles.scss";
+
+.content-wrapper-right {
+
+    background: #fff;
+    height: 582px;
+    // min-width: 850px;
+    // max-width: 850px;
+
+    @include media-breakpoint-down(md) {
+        min-width: 614px;
+        max-width: 614px;
+    }
+
+    @include media-breakpoint-up(lg) {
+        min-width: 818px;
+        max-width: 818px;
+    }
+
+    @media (min-width: 1920px) and (max-width: 2560px)  {
+        min-width: 850px;
+        max-width: 850px;
+    }
+
+    @include media-breakpoint-down(xs) {
+        min-width: 500px;
+        width: 500px;
+        max-width: 500px;
+    }
+
+    .mlg-performance {
+        min-height: 532px;
+        max-height: 532px;
+        overflow-y: auto;
+        // min-width: 850px;
+        // max-width: 850px;
+
+        @include media-breakpoint-down(md) {
+            min-width: 614px;
+            max-width: 614px;
+        }
+    
+        @include media-breakpoint-up(lg) {
+            min-width: 818px;
+            max-width: 818px;
+        }
+    
+        @media (min-width: 1920px) and (max-width: 2560px)  {
+            min-width: 850px;
+            max-width: 850px;
+        }
+
+        @include media-breakpoint-down(xs) {
+            min-width: 100%;
+            width: 500px;
+            max-width: 100%;
+        }
+
+        .infinite-container {
+
+            max-height: 530px;
+            position: relative;
+            overflow: auto;
+            // @include media-breakpoint-down(md) {
+            //     height: calc(100vh - 492px);
+            // }
+
+            // @include media-breakpoint-up(lg) {
+            //     height: calc(100vh - 236px);
+            // }
+
+            // @media only screen and (min-width: 1024px) and (max-height: 1366px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 1.5) {
+            //     height: calc(100vh - 836px);
+            // }
+
+            // @media only screen and (min-width: 1025px) and (max-height: 1366px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1.5) {
+            //     height: calc(100vh - 492px);
+            // }
+
+            // @media (min-width: 1920px) and (max-width: 2560px)  {
+            //     height: calc(100vh - 405px);
+            // }
+
+            // @include media-breakpoint-down(xs) {
+            //     height: calc(100vh - 312px);
+            // }
+        }
+    }
+
+    .small-toolbar {
+        height: 50px;
+        background: #262B33;
+
+        .selected-date {
+            font-size: 22px;
+            color: #fff;
+            font-family: $FaktPro_Black_font;
+
+            @include media-breakpoint-down(xs) {
+                font-size: 16px;
+            }
+        }
+
+        .closeIcon {
+            display: flex;
+            flex: 1;
+            justify-content: flex-end;
+            align-items: center;
+            cursor: pointer;
+            color: #fff;
+        }
+    }
+
+
+    table {
+
+        .mat-header-row {
+            height: 50px;
+        }
+
+        th {
+            font-size: 16px;
+            background-color: #fff !important;
+            font-family: $Archivo_Regular_font;
+
+            @include media-breakpoint-down(lg) {
+                font-size: 14px !important;
+            }
+
+            @include media-breakpoint-down(md) {
+                font-size: 11px !important;
+            }
+
+            @include media-breakpoint-down(xs) {
+                font-size: 12px !important;
+            }
+        }
+
+        // .player-column {
+        //     width: 270px;
+        // }
+
+        .game-level-holder,
+        .game-level-column {
+            width: 50px;
+
+            @include media-breakpoint-down(xs) {
+                width: 20px;
+            }
+        }
+
+        .game-name-holder {
+            max-width: 170px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            @include media-breakpoint-down(xs) {
+                max-width: 118px;
+            }
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+            cursor: default;
+        }
+
+
+        .game-logo-holder {
+            width: 60px;
+
+            .game-logo-content {
+                position: relative;
+                
+                .game-logo {
+                    width: 35px;
+                    height: 35px;
+                    border-radius: 50%;
+                    // border: 1px solid #eae9e9;
+
+                    @include media-breakpoint-down(md) {
+                        width: 25px;
+                        height: 25px;
+                    }
+                
+                    @include media-breakpoint-down(xs) {
+                        width: 25px;
+                        height: 25px;
+                    }
+                }
+            }
+        }
+
+        .game-logo-column {
+            width: 60px;
+        }
+
+        .high-score-holder,
+        .time-played-holder,
+        .start-time-holder,
+        .points-holder {
+            width: 120px;
+        }
+
+        .high_score_column,
+        .points-column {
+            width: 100px;
+        }
+
+        td {
+            font-size: 14px;
+            font-family: $Roboto_Medium_font;
+
+            @include media-breakpoint-down(lg) {
+                font-size: 13px !important;
+            }
+
+            @include media-breakpoint-down(md) {
+                font-size: 11px !important;
+            }
+
+            @include media-breakpoint-down(xs) {
+                font-size: 11px !important;
+            }
+        }
+
+        td.mat-cell:last-of-type, 
+        td.mat-footer-cell:last-of-type,
+        th.mat-header-cell:last-of-type {
+
+            @include media-breakpoint-down(md) {
+                padding-right: 11px;
+            }
+        }
+    }
+
+    tr.game-row {
+        border-bottom: 2px solid transparent !important;
+        // cursor: pointer !important;
+    }
+
+}

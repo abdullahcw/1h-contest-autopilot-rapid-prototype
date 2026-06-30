@@ -1,0 +1,129 @@
+<div class="gameTrophy-main-container">
+  <mat-toolbar class="small-toolbar" color="primary">
+    <div *ngIf="!previewShowHide">
+      {{editGameTrophy.is_trophy ? 'Edit Trophy' : 'Add Trophy'}}
+    </div>
+    <div *ngIf="previewShowHide">
+      Preview
+    </div>
+  </mat-toolbar>
+  <section class="content" [ngClass]="{'disabled-style': is_loading}">
+    <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+
+
+    <form #trophy="ngForm" (ngSubmit)="gameTrophy && gameTrophy?.is_trophy ? updateTrophy() : saveTrophy()">
+      <div class="container">
+        <div class="editTrophyWrapper" *ngIf="!previewShowHide">
+          <div class="form-group department-container name-field">
+            <label for="Points">Trophy Name</label>
+            <label for="Points" class="trophyName">{{gameTrophy.game_name | uppercase}}</label>
+          </div>
+          <div class="form-group department-container name-field">
+            <label for="Points">Points</label>
+            <input type="tel" class="form-inputs" (keypress)="restrictAlphabets($event)" maxlength="7"
+              placeholder="Enter Points" name="Points" [(ngModel)]="gameTrophy.game_points"
+              [required]="!gameTrophy.high_score && !gameTrophy.attempts">
+          </div>
+
+          <div class="form-group department-container name-field">
+            <label for="department">Attempts</label>
+            <input type="tel" class="form-inputs" maxlength="3" (keypress)="restrictAlphabets($event)"
+              placeholder="Enter Attempts" name="Attempts" [(ngModel)]="gameTrophy.attempts"
+              [required]="!gameTrophy.high_score && !gameTrophy.game_points">
+          </div>
+          <div class="spacer"></div>
+          <div class="form-group">
+            <label for="type">High Score</label>
+            <select class="state-drop-down form-inputs form-control" name="High Score"
+              [(ngModel)]="gameTrophy.high_score" [required]="!gameTrophy.game_points && !gameTrophy.attempts">
+              <option selected value="">Select High Score</option>
+              <option *ngFor="let score of higScoreValue;" [value]="score">{{score}} %</option>
+            </select>
+          </div>
+
+          <div class="form-group department-container name-field">
+            <label for="department">Description</label>
+            <textarea class="form-inputs trophyDesc" placeholder="Enter Trophy Description" name="Description"
+              minlength="1" maxlength="145" [(ngModel)]="gameTrophy.trophy_description" required></textarea>
+          </div>
+
+        </div>
+        <div class="trophyPreviewWrapper" *ngIf="previewShowHide">
+          <div class="trophyPreview">
+            <div class="achivedText" [ngStyle]="{'margin-bottom':editGameTrophy.trophy_type === 1 ? '15px' : ''}">
+              TROPHY ACHIEVED!
+            </div>
+            <div class="trophyLogo" *ngIf="editGameTrophy.trophy_type === 2">
+              <img src="/assets/img/outer_trophy_logo.png" class="bgImg">
+              <img class="innerImg" 
+              appSignedUrl [imgSelector]="'changeImageSrc'" [imgSrcValue]="editGameTrophy.game_logo_url" 
+              onError="this.src='/assets/img/default.png'" src="" alt=""  >
+            </div>
+            <div class="trophyLogo" *ngIf="editGameTrophy.trophy_type === 1">
+              <img [src]="editGameTrophy.logo_url" class="innerImgFixed" onError="this.src='/assets/img/default.png'">
+            </div>
+            <div class="trophy_Name" *ngIf="editGameTrophy.trophy_type === 2">
+              {{editGameTrophy.game_name}}
+            </div>
+            <div class="trophy_Name" style="margin-top:10px" *ngIf="editGameTrophy.trophy_type === 1">
+              {{editGameTrophy.trophies_name}}
+            </div>
+            <mat-card-subtitle class="trophyDetails" *ngIf="editGameTrophy.trophy_type == 2">
+              <div class="gameTrophyDetails">
+                <div style="width: 170px;">
+                  <dl style="margin:0">
+                    <dt>Total
+                      Points</dt>
+                    <dd>
+                      {{gameTrophy.game_points ? '&nbsp;'+globalService.formatNumber(gameTrophy.game_points) : '&nbsp;'+'N/A'}}
+                    </dd>
+                    <dt>Attempts</dt>
+                    <dd>{{gameTrophy.attempts ? '&nbsp;'+gameTrophy.attempts: '&nbsp;'+'N/A'}}
+                    </dd>
+                    <dt>High Score</dt>
+                    <dd>{{gameTrophy.high_score ? '&nbsp;'+gameTrophy.high_score + '%' : '&nbsp;'+'N/A'}}
+                    </dd>
+
+                  </dl>
+                </div>
+              </div>
+            </mat-card-subtitle>
+            <mat-card-subtitle *ngIf="editGameTrophy.trophy_type == 1" class="sub-title margin-padding-0 robotoBold">
+              {{editGameTrophy.achieved_description}}</mat-card-subtitle>
+
+
+          </div>
+        </div>
+      </div>
+
+        <mat-card-actions class="footer" [ngStyle]="{'border-top': previewShowHide ? 'none' : ''}">
+          <div class="button-row">
+            <div>
+              <button type="button" class="robotoRegular" *ngIf="!previewShowHide" (click)="showPreview()" mat-button>
+                PREVIEW
+              </button>
+            </div>
+            <div class="btn-right">
+              <button mat-button type="button" *ngIf="!previewShowHide" class="cancel-button" tabindex="-1"
+                (click)="cancel()">CANCEL</button>
+            </div>
+            <div>
+              <button mat-button type="submit" *ngIf="!previewShowHide"
+                [disabled]="!trophy?.valid || !trophy?.dirty || shouldDisable()">
+                <div *ngIf="editGameTrophy.is_trophy">UPDATE</div>
+                <div *ngIf="!editGameTrophy.is_trophy">SAVE</div>
+              </button>
+              <button mat-button type="submit" *ngIf="previewShowHide" tabindex="-1"
+                (click)="closePopUp()">
+                OK
+              </button>
+            </div>
+          </div>
+        </mat-card-actions>
+    </form>
+
+
+
+  </section>
+
+</div>

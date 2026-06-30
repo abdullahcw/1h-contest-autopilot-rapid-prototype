@@ -1,0 +1,227 @@
+@import "../../../styles.scss";
+.main-container-add-marketplace {
+    min-width: 530px;
+    position: relative;
+    overflow: hidden;
+    
+    @include media-breakpoint-down(sm) {
+        min-width: 325px;
+    }
+    .small-toolbar {
+        height: 50px;
+        font-size: 18px;
+        font-family: Roboto_Medium;
+    }
+    .wrapper {
+        .content {
+            display: flex;
+            box-sizing: border-box;
+            padding: 20px 20px 10px 20px;
+            flex-direction: column;
+
+            .form-group {
+                margin-top: 0px;
+            }
+
+            .name-field {
+                padding-top: 24px;
+
+                @include media-breakpoint-down(sm) {
+                    padding-top: 10px;
+                }
+            }
+            .marketplace-container {
+                margin-bottom: 0px;
+                position: relative;
+            }
+
+            .company_logo {
+                width: 128px;
+                height: 72px;
+                border: 1px solid $midGrey;
+            }
+
+            .image-overlay {
+                opacity: 1;
+                width: 128px;
+                height: 72px;
+                position: absolute;
+                top: 38px;
+                background: #ccc;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                flex-direction: column;
+
+                mat-icon {
+                    color: #3856d1;
+                    font-size: 24px;
+                    width: 24px;
+                    height: 20px;
+                }
+
+                @include media-breakpoint-down(sm) {
+                    top: 35px;
+                }
+            }
+
+            .show-image-overlay {
+                display: none;
+            }
+
+            .edit-image {
+                opacity: 1;
+                right: 360px;
+                position: absolute;
+                top: 40px;
+                display: flex;
+                cursor: pointer;
+
+                mat-icon {
+                    color: #3856d1;
+                    font-size: 19px;
+                    width: 24px;
+                    height: 20px;
+                }
+            }
+
+            .label {
+                font-size: 14px;
+                padding-bottom: 14px;
+                font-family: Roboto_Medium;
+                margin-bottom: 0px;
+
+                @include media-breakpoint-down(sm) {
+                    padding-bottom: 10px;
+                }
+            }
+
+            .author-name {
+                height: 50px;
+                padding-left: 12px;
+
+                ::placeholder {
+                    color: #ccc;
+                }
+            }
+
+            .form-inputs {
+                margin-bottom: 0px;
+            }
+
+            .add-description {
+                height: 100px;
+                padding-left: 15px;
+                ::placeholder {
+                    color: #ccc;
+                }
+            }
+
+            .game-category-wrapper {
+                display: flex;
+                cursor: pointer;
+                font-size: 14px;
+                font-family: Roboto_Regular;
+                height: 50px;
+                .category-options {
+                    width: 320px;
+                }
+                @include media-breakpoint-down(xs) {
+                    margin-right: 20px;
+                    flex: 0;
+                    width: 0px;
+
+                    ::ng-deep .mat-form-field-wrapper {
+                        width: 0;
+                    }
+
+                    ::ng-deep .mat-form-field-flex {
+                        width: 228px !important;
+                    }
+                }
+
+                .game-category {
+                    border: 1px solid rgba(0, 0, 0, 0.4);
+                }
+
+                ::ng-deep .mat-form-field-infix {
+                    padding: 5px !important;
+                    border-top: 0px;
+                }
+
+                ::ng-deep .mat-select-value {
+                    padding-bottom: 7px;
+                }
+
+                ::ng-deep .mat-form-field-label {
+                    color: #ccc;
+                }
+
+                ::ng-deep .mat-select-arrow-wrapper {
+                    padding-bottom: 7px;
+                }
+
+                ::ng-deep .mat-select-arrow {
+                    border-left: 8px solid transparent;
+                    border-right: 8px solid transparent;
+                    border-top: 10px solid;
+                }
+            }
+
+            .spacer {
+                margin: 5px;
+
+                @include media-breakpoint-down(xs) {
+                    display: none;
+                }
+            }
+
+            ::ng-deep .mat-form-field-flex {
+                width: 320px !important;
+                padding: 5px 10px;
+                border: 1px solid #ccc;
+            }
+
+            .required {
+                color: red;
+                padding-left: 5px;
+            }
+        }
+    }
+
+    .button-row {
+        width: auto;
+        display: flex;
+        justify-content: flex-end;
+        padding-top: 10px;
+        .btn-right {
+            margin-left: auto;
+        }
+        .cancel-button {
+            border: 0px;
+            background: white;
+            cursor: pointer;
+        }
+
+        button {
+            font-size: 16px;
+            font-family: Roboto_Medium;
+            &:disabled {
+                cursor: auto !important;
+              }
+        }
+    }
+}
+
+::ng-deep .game-category-wrapper .mat-select-value {
+    display: table-cell !important;
+}
+
+::ng-deep .category-options.mat-option.mat-active {
+    background: none;
+
+    &:hover {
+        background: rgba(0,0,0,.04);
+    }
+}

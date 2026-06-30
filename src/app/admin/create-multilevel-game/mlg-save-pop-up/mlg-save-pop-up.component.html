@@ -1,0 +1,19 @@
+<mat-toolbar color="primary" class="small-toolbar">
+  {{ "update_live_mlg_levels" | translate }}</mat-toolbar
+>
+<section class="content">
+  <div class="description">
+    {{ "update_live_mlg_levels_description" | translate }}
+  </div>
+
+  <div class="button-row">
+    <div class="btn-right">
+      <button mat-button tabindex="-1" (click)="cancel()">
+        {{ "cancel" | translate }}
+      </button>
+    </div>
+    <div class="cancel-button">
+      <button mat-button tabindex="-1" (click)="update()">{{ "update" | translate }}</button>
+    </div>
+  </div>
+</section>

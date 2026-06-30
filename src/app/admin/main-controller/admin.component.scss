@@ -1,0 +1,45 @@
+@import '../../../styles.scss';
+
+.sidenav_wrapper {
+  height: calc(100vh - 64px);
+  width: auto;
+  position: fixed;
+  z-index: 999;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+.disable-admin {
+  background: #0000009c !important;
+
+  .sidenav_wrapper,
+  .content {
+    opacity:0.5 !important;
+    pointer-events: none !important;
+  }
+}
+
+.isBackground {
+  width: 100% !important;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.removeMargin {
+  margin-left: 0 !important;
+}
+
+.content {
+  height: calc(100vh - 64px);
+  background-color: #EFEFEF;
+  // margin-left: 70px; 
+  transition: 0.3s all;
+}
+
+section {
+  @include media-breakpoint-down(xs) {
+    overflow: hidden;
+  }
+}

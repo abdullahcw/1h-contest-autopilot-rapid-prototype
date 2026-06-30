@@ -1,0 +1,99 @@
+<div class="main-container" *ngIf="!resetView">
+    <div class="mlg-details-container">
+        <div class="mlg-card">
+            <mat-spinner class="spinner" mode="indeterminate" *ngIf="isLoading" diameter="20"></mat-spinner>
+            <div *ngIf="!isLoading" class="mlg-card-content">
+                <div class="left-side">
+                    <div class="logo-wrapper">
+                      <img appSignedUrl [imgSelector]="'changeImageSrc'" [imgSrcValue]="contest?.contest_logo" onError="this.src='/assets/img/default.png'" src="/assets/img/default.png" alt=""/>
+                    </div>
+                </div>
+                <div class="right-side">
+                        <mat-card-title class="robotoBold title" #elements matTooltip="{{contest?.contest_name }}" [matTooltipShowDelay]="500"  [matTooltipDisabled]="elements.scrollWidth > elements.clientWidth">
+                     {{ contest?.contest_name }}
+                    </mat-card-title>
+                    <mat-card-subtitle class="robotoRegular mlg-created">
+                        {{ 'start_date' | translate }}: {{ contest?.contest_start_date | date:'MM/dd/yyyy' }}
+                    </mat-card-subtitle>
+                    <mat-card-subtitle class="mlg-created">
+                        <span>{{ 'status' | translate }}: </span>
+                        <span class="gameMode" [ngClass]="{
+                        'draft-color': contest?.contest_status == 'DRAFT',
+                        'live-color': contest?.contest_status == 'LIVE',
+                        'ready-color': contest?.contest_status == 'READY',
+                        'closed-color': contest?.contest_status == 'CLOSED' || contest?.contest_status == 'ENDED',
+                        'offsetMargin': access_type === 'MM'}">
+                            {{ contest?.contest_status }}
+                        </span>
+                    </mat-card-subtitle>
+                </div>
+            </div>
+        </div>
+        <div class="mlg-score">
+            <div class="mlg-record">
+                <div class="mlg-won">
+                    <mat-spinner class="spinner" mode="indeterminate" *ngIf="isLoading" diameter="20"></mat-spinner>
+                    <div *ngIf="!isLoading" class="mlg-content">
+                        <img src="../../../../assets/img/participation.png" alt="" class="mlg-won-icon">
+                        <span class="mlg-count">{{ contest?.participation < 0 ? '--' : (contest?.participation | number) }}</span>
+                        <span class="mlg-subtitle">{{ 'participation' | translate }}</span>
+                    </div>
+                </div>
+                <div class="mlg-record-divider"></div>
+                <div class="mlg-progress">
+                    <mat-spinner class="spinner" mode="indeterminate" *ngIf="isLoading" diameter="20"></mat-spinner>
+                    <div *ngIf="!isLoading" class="mlg-content">
+                        <img src="../../../../assets/img/complete_games.png" alt="" class="mlg-progress-icon">
+                        <span class="mlg-count">{{ contest?.complete_games < 0 ? '--' : (contest?.complete_games | number) }}</span>
+                        <span class="mlg-subtitle">{{ 'perfect_contest' | translate }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="vertical-divider"></div>
+            <div class="mlg-game-time">
+                <div class="mlg-time-spent">
+                    <mat-spinner class="spinner" mode="indeterminate" *ngIf="isLoading" diameter="20"></mat-spinner>
+                    <div *ngIf="!isLoading" class="mlg-content">
+                        <img src="../../../../assets/img/mlg_timespent.png" alt="" class="mlg-time-icon">
+                        <span class="mlg-count">{{ contest?.time_spent < 0 ? '--:--:--' : convertToHHMMSS(contest?.time_spent) }}</span>
+                        <span class="mlg-subtitle">{{ 'time_spent' | translate }}</span>
+                    </div>
+                </div>
+                <div class="mlg-game-time-divider"></div>
+                <div class="mlg-games-played">
+                    <mat-spinner class="spinner" mode="indeterminate" *ngIf="isLoading" diameter="20"></mat-spinner>
+                    <div *ngIf="!isLoading" class="mlg-content">
+                        <img src="../../../../assets/img/mlg_gamesplayed.png" alt="" class="mlg-played-icon">
+                        <span class="mlg-count">{{ contest?.games_played < 0 ? '--' : (contest?.games_played | number) }}</span>
+                        <span class="mlg-subtitle">{{ 'games_played' | translate }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="leaderboard-container">
+        <div class="leaderboard">
+            <div class="header">
+               <span>{{ 'leaderboard_uppercase' | translate }}</span>
+            </div>
+            <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
+            <app-contest-dashboard-leaderboard (switchTab)="switchTab($event)" [selectedDashboardType]="selectedDashboardType" 
+                [contest]="contest" [tabIndex]="tabIndex" [appliedFilters]="appliedFilters">
+            </app-contest-dashboard-leaderboard>
+        </div>
+        <div class="performance">
+            <div class="header">{{ 'performance_by_game' | translate }}</div>
+            <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
+            <app-contest-dashboard-performance-game [selectedDashboardType]="selectedDashboardType" [contestState]="contest?.contest_status"
+                [appliedFilters]="appliedFilters" [tabIndex]="tabIndex">
+            </app-contest-dashboard-performance-game>
+        </div>
+    </div>
+</div>
+<div class="reset_view" *ngIf="resetView && !fetchingAllLocations">
+    <p>{{'pls_add_filter' | translate}}</p>
+</div>
+<div class="no_messages" *ngIf="fetchingAllLocations">
+    <mat-spinner [diameter]="40"></mat-spinner>
+    <p>{{'please_wait' | translate}}</p>
+</div>

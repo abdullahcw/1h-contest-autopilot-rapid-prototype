@@ -1,0 +1,36 @@
+<div class="main-container-pathways">
+    <mat-toolbar class="small-toolbar" color="primary">
+      <div>
+        {{ 'selectPathways' | translate}}
+      </div>
+    </mat-toolbar>    
+    <section class="content">
+        <div class="pathwayListWrapper">
+            <div class="pathwayList">
+                <div *ngFor="let item of data" class="pathwayWrapper">
+                    <mat-checkbox (click)="$event.stopPropagation()" (change)="onItemClick(item);" [checked]="item.isSelected">
+                        <span class="item-Title" >{{ item.title }}</span>
+                    </mat-checkbox>
+                </div>
+            </div>
+        </div>
+
+    <mat-card-actions class="footer">     
+      <div class="button-row">
+        <div class="btn-right">
+          <button mat-button type="button" class="cancel-button" tabindex="-1"
+            (click)="closePopUp()">{{ 'cancel_uppercase'| translate }}</button>
+        </div>
+        <div>
+          <button mat-button type="button" (click)="save()">
+            {{ 'save_uppercase'| translate }}
+          </button>
+        </div>
+      </div>
+    </mat-card-actions>
+    </section>
+  </div>
+
+
+  
+

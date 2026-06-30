@@ -1,0 +1,24 @@
+<div class="contest-trophy-main-container">
+  <section class="content" [ngClass]="{'disabled-style': is_loading}">
+    <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+
+    <div class="trophyPreview">
+      <div class="close-icon handCursor" (click)="cancel()">
+        <mat-icon>
+          close
+        </mat-icon>
+      </div>
+      <div class="achivedText">
+        {{'trophy_uppercase' | translate}}
+      </div>
+      <div class="trophyLogo">
+        <img src="/assets/img/contest-winner-trophy.png" class="bgImg" alt="">
+      </div>
+      <div class="trophy_Name" style="margin-top:10px">
+        {{trophyDetails.name}}
+      </div>
+    </div>
+
+  </section>
+
+</div>

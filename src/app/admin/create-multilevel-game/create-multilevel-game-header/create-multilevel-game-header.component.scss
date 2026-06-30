@@ -1,0 +1,667 @@
+@import "../../../../styles.scss";
+@import "../../../../assets/colors";
+
+.main-container {
+  height: 85px;
+  padding: 0 40px;
+
+  @include media-breakpoint-down(xs) {
+    padding: 0 10px;
+  }
+  .mlg-header {
+    height: 80px !important;
+    display: flex;
+    padding: 0;
+    align-items: unset;
+    flex-wrap: wrap;
+
+    @include media-breakpoint-down(xs) {
+      height: auto !important;
+      padding: 0 5px;
+
+    }
+
+    .mlg-header-conatiner {
+      display: flex;
+      width: 100%;
+
+      @include media-breakpoint-down(xs) {
+        flex-direction: row;
+      }
+      .last-two-col{
+        display: flex;
+        flex-direction: column;
+        
+        @include media-breakpoint-down(xs) {
+          width: 30%
+        }
+            
+
+        .button-row {
+          width: auto;
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-end;
+          //align-items: flex-end;
+          padding-top: 10px;
+          display: flex;
+          flex: 4;
+          //align-self: flex-end;
+        
+
+          @include media-breakpoint-down(xs) {
+            padding: 0;
+            padding-top: 10px;
+          }
+          .disabled-save {
+            color: #fff;
+            background: #ccc;
+            pointer-events: none;
+
+            @include media-breakpoint-down(xs) {
+              margin-left: 5px;
+            }
+          }
+
+
+          .btn-right {
+            margin-left: auto;
+
+            @include media-breakpoint-down(xs) {
+              padding-right: 2px;
+            }
+          }
+
+          .cancel-button {
+            align-content: center;
+            text-align: center;
+            text-transform: capitalize;
+            align-items: center;
+            border: 1px solid blue;
+            border-radius: 3px;
+            width: 80px;
+            height: 27px;
+            font-size: 14px;
+            font-family: Roboto_Medium;
+            
+            background: white;
+            margin: auto;
+            cursor: pointer;
+
+            @include media-breakpoint-down(xs) {
+              max-height: 28px;
+              width: 54px;
+              font-size: 12px;
+              min-width: 20px;
+              padding: 0;
+            }
+          }
+          
+        }
+        .save-button {
+          margin-bottom: 20px;
+          background: $brand_color;
+          color: #fff;
+          border-radius: 3px;
+          margin: auto;
+          margin-left: 5px;
+          width: 80px;
+          height: 27px;
+          font-size: 14px;
+          font-family: Roboto_Medium;
+
+          @include media-breakpoint-down(xs) {
+            margin: 0;
+            max-height: 28px;
+            width: 54px;
+            font-size: 12px;
+            min-width: 20px;
+            padding: 0;
+          }
+        }
+      }
+
+
+      .mlg-title-container {
+        display: flex;
+        width: 100%;
+        
+
+        .mlg-icon-wrapper {
+          display: flex;
+          align-items: center;
+          padding-top: 10px;
+
+          @include media-breakpoint-down(xs) {
+            padding-top: 0px !important;
+            
+          }
+        }
+
+        @include media-breakpoint-down(xs) {
+          flex: 1;
+          margin-bottom: 2px;
+          width: 70%;
+          
+        }
+
+        .mlg-icon-container {
+          position: relative;
+
+          .mlg-icon {
+            height: 72px;
+            width: 128px;
+            border: 1px solid $midGrey;
+            object-fit: cover;
+
+            @include media-breakpoint-down(xs) {
+              height: 45px;
+              width: 45px;
+            }
+          }
+
+          .mlg-icon-overlay {
+            align-items: center;
+            justify-content: center;
+            display: flex;
+            color: white;
+            position: absolute;
+            background: rgba(0, 0, 0, 0.5);
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            opacity: 0;
+          }
+
+          &:hover .mlg-icon-overlay {
+            opacity: 1;
+            cursor: pointer;
+          }
+        }
+
+        .mlg-name-holder-wrapper {
+          width: 100%;
+          flex: 6;
+
+          @include media-breakpoint-down(xs) {
+            width: 160px;
+          }
+
+          
+          .mlg-name-holder {
+            width: 100%;
+            margin-right: 18px;
+            margin-top: 10px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            flex: 1;
+
+            @include media-breakpoint-down(xs) {
+              margin-right: 0;
+              width: 160px;
+            }
+            .mlg-name {
+              width: 100%;
+              height: 32px;
+              font-size: 20px;
+              font-family: Roboto_Medium;
+              margin: 0 6px;
+              padding: 5px;
+              padding-left: 10px;
+              border: 0;
+              outline: none;
+              background: none;
+              border-radius: 2px;
+              color: #262b33;
+
+              @include media-breakpoint-down(md) {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+
+              @include media-breakpoint-down(xs) {
+                font-size: 15px;
+                flex: 1;
+                width: 160px;
+              }
+
+              &:hover {
+                cursor: text;
+                border: 1px solid #aaa;
+                background: #e6e6e6;
+                border: none;
+              }
+
+              &:focus-within {
+                border: 1px solid #aaa;
+                padding: 5px 5px;
+                background: white;
+                height: 32px;
+              }
+            }
+
+            .edit-input-icon {
+              color: #767676;
+              font-size: 16px;
+              position: absolute;
+              top: 3px;
+              right: 8px;
+              justify-content: center;
+              align-items: center;
+              z-index: 9;
+
+              @include media-breakpoint-down(sm) {
+                display: none !important;
+              }
+            }
+
+            mat-icon {
+              display: none;
+            }
+
+            &:hover {
+              mat-icon {
+                display: flex;
+              }
+            }
+
+            &:focus-within {
+              mat-icon {
+                display: none;
+              }
+            }
+          }
+          
+          .mlg-date-holder {
+            width: 100%;
+            margin-right: 18px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            margin-top: 2px;
+
+            .date-picker-field {
+              border: none;
+              max-width: 85px;
+              outline: none;
+              font-size: 14px;
+              background: transparent;
+              -webkit-touch-callout: none;
+              -webkit-user-select: none;
+              -khtml-user-select: none;
+              -moz-user-select: none;
+              -ms-user-select: none;
+              user-select: none;
+              text-align: center;
+            }
+
+            .date-label {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+
+              span {
+                font-size: 15px;
+                font-family: Roboto_Regular;
+              }
+            }
+
+            .seperator {
+              padding: 0;
+            }
+          }
+        }
+      }
+    }
+
+    .mlg-options-container {
+      display: flex;
+      flex-direction: row-reverse;
+      align-self: flex-end;
+      width: 100%;
+      flex: 1;
+      padding-bottom: 2px;
+      margin-top: 3px;
+
+
+      @include media-breakpoint-down(xs) {
+        margin-top: 8px;
+      }
+
+      .button-height {
+        max-height: 35px;
+        font-size: 12px;
+        padding: 0 10px;
+        margin: 0 2px;
+        border-radius: 4px;
+        color: #5f6268;
+        border-color: rgba(0, 0, 0, 0.2);
+
+        @include media-breakpoint-down(xs) {
+          flex: 1;
+        }
+      }
+
+      
+
+      .buttons-div {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0 !important;
+        min-height: 16px;
+        max-height: 30px;
+
+        .togglebtn{
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+
+          .lockUnlockBtn{
+            height: 30px;
+            width: 30px;
+            border-radius: 50%;
+            font-size: 12px;
+            color: #767676;
+            background-color: #bbbbbb;
+            cursor: pointer;
+            margin-right: 8px;
+          }
+          .property-icon-filled {
+            background-color: $brand_color;
+          }
+      
+          .toggle-group {
+            
+            margin-right: 10px;
+            cursor: pointer;
+            opacity: 1;
+            ::ng-deep .mat-slide-toggle-bar {
+              background-color: #fd6669;
+            }
+      
+            ::ng-deep .mat-slide-toggle-thumb {
+              background-color: white !important;
+              cursor: pointer !important;
+            }
+          }
+          .enable-toggle {
+            cursor: pointer !important;
+      
+            ::ng-deep .mat-slide-toggle-bar {
+              background-color: #31a80d !important;
+            }
+      
+            ::ng-deep .mat-slide-toggle-thumb {
+              background-color: white !important;
+              cursor: pointer !important;
+            }
+          }
+        }
+        .property-icon-holder {      
+          height: 30px;
+          width: 30px;
+          border-radius: 50%;
+          font-size: 12px;
+          color: #767676;
+          background-color: #bbbbbb;
+          cursor: pointer;
+          margin-right: 8px;
+           .reward-icon {
+              height: 18px;
+              width: 20px;
+              margin-left: -1px;
+            }
+          }
+
+          mat-icon {
+            padding: 6px;
+            height: 18px;
+            width: 18px;
+            font-size: 18px;
+            color: white;
+          }
+          .property-icon-trophy {   
+            display: flex;
+            justify-content: center;   
+            height: 30px;
+            width: 30px;
+            border-radius: 50%;
+            font-size: 12px;
+            color: #767676;
+            background-color: #bbbbbb;
+            cursor: pointer;
+            margin-right: 8px;
+          }
+          .custom-icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .assets-icon {
+              display: flex;
+              height: 18px;
+              width: 24px;
+            }
+
+            .trophy-icon {
+              height: 15px;
+              width: 22px;
+            }
+        }
+
+        .property-icon-filled {
+          background-color: $brand_color;
+        }
+        .no-hand-cursor{
+          cursor: auto !important;
+        }
+
+        .selectedProperty {
+          color: $brand_color;
+        }
+      }
+
+      .custom-btn {
+        max-height: 35px;
+        font-size: 12px;
+        padding: 0 10px;
+        margin: 0 2px;
+        border-radius: 4px;
+        background-color: #bbbbbb;
+        border-color: rgba(0, 0, 0, 0.2);
+      }
+
+      .highlight-button {
+        background: $brand_color;
+      }
+
+      .publish-wrapper {
+        display: flex;
+        justify-content: flex-end;
+
+        .publish-btn {
+          max-height: 30px;
+          width: 90px;
+          font-size: 14px;
+          padding: 0;
+          color: #fff;
+          border-radius: 4px;
+          border: none;
+
+          .schedule-btn-container {
+            width: 100%;
+
+            .schedule-btn-text {
+              @include media-breakpoint-down(xs) {
+                display: none;
+              }
+            }
+
+            .arrow-right-icon {
+              display: none;
+              width: 23px;
+              height: auto;
+
+              @include media-breakpoint-down(xs) {
+                display: flex;
+              }
+            }
+          }
+        }
+      }
+
+      @include media-breakpoint-down(xs) {
+        flex: 0;
+        display: flex;
+      }
+    }
+  }
+
+  
+
+  .disable-mlg-change {
+    pointer-events: none;
+  }
+    
+  .disable-date-holder-validation {
+    .date-picker-field.ng-invalid {
+      border-left: none !important;
+      color: black;
+    }
+  }
+
+  .enable-date-holder-validation {
+    .date-picker-field.ng-invalid {
+      border-left: 3px solid $invalid-input !important;
+      color: $invalid-input;
+    }
+  }
+
+  .addEntity {
+
+    @include media-breakpoint-only(sm) {
+      bottom: 35px !important;
+      right: 0px !important;
+      left: unset !important;
+      top: unset !important;
+      z-index: 1 !important;
+    }
+  }
+
+  .divider {
+    margin: 0 2px;
+    width: 2px;
+    height: 20px;
+    background: #cccccc;
+  }
+
+  .tabWrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: calc(100vw - 172px);
+    margin: 0 auto;
+    align-items: center;
+
+    .multilevel-button {
+      display: block;
+      font-size: 16px;
+      padding: 5px;
+
+      .tab-icon {
+        font-size: 20px;
+      }
+
+      .multilevel-underline {
+        border-top-color: $brand_color;
+        border-top-width: 3px;
+        margin-top: -2px; // fix required
+      }
+    }
+
+    .custom-tab-label.mlg-tab {
+      ::ng-deep .mat-tab-label {
+        padding: 0px 5px !important;
+        height: 28px !important;
+        min-width: 100px !important;
+        margin-left: -6px !important;
+      }
+    }
+  }
+
+  ::ng-deep .mat-ink-bar {
+    width: 100px !important;
+  }
+
+  .tab-label {
+    font-size: 16px;
+    margin-bottom: 0 !important;
+    padding-left: 4px;
+  }
+
+  .rmp {
+    font-family: Roboto_Regular;
+    font-size: 12px;
+    color: $disable_color;
+    margin-bottom: 0;
+    cursor: pointer;
+  }
+}
+
+.disable-mlg-change{
+  pointer-events: none;
+}
+
+
+
+.mlg-header {
+  height: 80px !important;
+  display: flex;
+  padding: 0;
+  align-items: unset;
+
+  @include media-breakpoint-down(xs) {
+    height: auto !important;
+    padding: 0 5px;
+  }
+}
+
+.name-holder-wrapper{
+  width: 100%;
+
+  .name-holder {
+    width: 100%;
+    margin-right: 18px;
+    margin-top: 10px;
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    @include media-breakpoint-down(xs) {
+      margin-right: 0;
+    }
+  }
+}
+
+
+
+ .property-icons{
+    display: flex;
+    flex-direction: row-reverse;
+    align-self: flex-end;
+    width: 100%;
+    flex: 1;
+    padding-bottom: 2px;
+
+}
+
+.last-col{
+  display: flex;
+  align-self: flex-end;
+}

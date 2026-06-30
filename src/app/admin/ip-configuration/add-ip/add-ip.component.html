@@ -1,0 +1,42 @@
+<div class="main-container">
+    <mat-toolbar class="small-toolbar" color="primary">
+      {{ipDetails.edit_mode ? ('edit_ips' | translate) : ('add_ips' | translate)}}
+    </mat-toolbar>
+    <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+    <section class="add-series-content" [ngClass]="{'disabled-style': is_loading}">
+      <form #addSeries="ngForm">
+        <div class="container">
+          <div class="input-text">
+            <input type="text" class="holder form-inputs" placeholder="{{'enter_ip_address' | translate}}"
+              name="ip_address"  [(ngModel)]="ips.ip_address" appValidateInput required
+              type="text" minlength="7" maxlength="15" size="15" pattern="^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$" >
+
+          </div>
+          <div class="input-text">
+              <textarea type="text" class="holder form-inputs add-description" style="resize: none;"
+              placeholder="{{'enter_ip_desc' | translate}}" name="ip_desc" [(ngModel)]="ips.ip_desc" appValidateInput
+               minlength="1" maxlength="2000"
+              [required]="false"></textarea>
+          </div>
+
+          <div class="button-row">
+            <div class="btn-right">
+              <button type="button" mat-button class="cancel-button" tabindex="-1"
+                (click)="cancel()">{{'cancel_uppercase' | translate}}</button>
+            </div>
+            <div>          
+              <button type="button" mat-button class="next-button" tabindex="-1" (click)="nextScreen(ips)"
+                [disabled]="!addSeries.valid || !addSeries.dirty || ipExist"
+                *ngIf="!ipDetails.edit_mode" >{{'save_uppercase' | translate}}</button>
+            </div>
+            <div>          
+              <button type="button" mat-button class="next-button" tabindex="-1" (click)="updateSeries(ips)"
+                [disabled]="!addSeries.valid || !addSeries.dirty || ipExist"
+                *ngIf="ipDetails.edit_mode">{{'save_uppercase' | translate}}</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </section>
+  </div>
+  

@@ -1,0 +1,222 @@
+<div class="main-container">
+  <div class="wrapper">
+    <mat-card class="container-card">
+      <mat-card-content class="masterCardTable"
+        [ngStyle]="{'height': !playerDataSource?.data?.length || dashboardFilter.dashboard_by === dashboard.BY_PLAYER ? 'calc(100vh - 216px)': ''}">
+        <mat-progress-bar class="progress-bar" mode="indeterminate"
+          *ngIf="is_loading && playerDataSource?.data?.length"></mat-progress-bar>
+        <div class="no_messages" *ngIf="!playerDataSource?.data?.length">
+          <mat-spinner [diameter]="40" *ngIf="is_loading"></mat-spinner>
+          <p>{{is_loading ? ('please_wait' | translate) : messageToDisplay}}</p>
+        </div>
+        <table aria-describedby="" mat-table [dataSource]="playerDataSource" matSort class="responsive-table"
+          matSortActive="first_name" matSortDirection="asc" matSortDisableClear (matSortChange)="sortData($event)"
+          matSortStart="desc" *ngIf="playerDataSource?.data?.length" [ngClass]="{'disabled-style': is_loading}">
+
+          <ng-container matColumnDef="profile_image_url">
+            <th id="" mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let player" width="20px">
+              <app-custom-images-table-static class="img-wrapper" [className]="'img40by40'"  [ImageSrc]="player.profile_image_url" > </app-custom-images-table-static>
+
+          </ng-container>
+
+          <ng-container matColumnDef="first_name">
+            <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'player' | translate}}</th>
+            <td mat-cell *matCellDef="let player">
+              <p class="text-content-style">
+                {{player.first_name}} {{player.last_name}}
+              </p>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sp_games">
+            <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'games_sp' | translate}}</th>
+            <td mat-cell *matCellDef="let player">
+              <p class="number-content-style medium-content">
+                {{formatNumber(player.sp_games) || '0'}}
+              </p>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sp_time">
+            <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'time_sp' | translate}}</th>
+            <td mat-cell *matCellDef="let player">
+              <p class="text-content-style small-content">
+                {{secondsToHms(player.sp_time) || '0'}}
+
+              </p>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sp_points">
+            <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'points_sp' | translate}}</th>
+            <td mat-cell *matCellDef="let player">
+              <p class="number-content-style medium-content">
+                {{formatNumber(player.sp_points) || '0'}}
+
+              </p>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sp_last_played_on">
+            <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'last_played_sp' | translate}}</th>
+            <td mat-cell *matCellDef="let player">
+              <p class="text-content-style long-content" *ngIf="player.spPlayedOnFormatted">
+                {{player.spPlayedOnFormatted}} {{player.spTzAbbrevation}}
+              </p>
+              <p *ngIf="!player.spPlayedOnFormatted" class="hyphen-styling">
+                -
+              </p>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="sp_last_score">
+            <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'last_score_sp' | translate}}</th>
+            <td mat-cell *matCellDef="let player">
+              <p class="number-content-style medium-content-percentage" *ngIf="player.last_score !== null">
+                {{player.last_score + '%' }}
+              </p>
+              <p *ngIf="player.last_score === null" class="hyphen-styling-number">
+                -
+              </p>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="win_rate">
+            <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'win_rate' | translate}}</th>
+            <td mat-cell *matCellDef="let player">
+              <p class="number-content-style small-content">
+                {{player.win_rate || '-'}}
+              </p>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="mp_games">
+            <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'games_mp' | translate}}</th>
+            <td mat-cell *matCellDef="let player">
+              <p class="number-content-style medium-content">
+                {{formatNumber(player.mp_games) || '0'}}
+
+              </p>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="mp_time">
+            <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'time_mp' | translate}}</th>
+            <td mat-cell *matCellDef="let player">
+              <p class="text-content-style small-content">
+                {{secondsToHms(player.mp_time) || '0'}}
+
+              </p>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="mp_points">
+            <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'points_mp' | translate}}</th>
+            <td mat-cell *matCellDef="let player">
+              <p class="number-content-style medium-content">
+                {{formatNumber(player.mp_points) || '0'}}
+
+              </p>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="mp_wins">
+            <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'wins_mp' | translate}}</th>
+            <td mat-cell *matCellDef="let player">
+              <p class="number-content-style medium-content">
+                {{formatNumber(player.mp_wins) || '0'}}
+
+              </p>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="mp_last_played_on">
+            <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'last_layed_mp' | translate}}</th>
+            <td mat-cell *matCellDef="let player">
+              <p class="text-content-style long-content" *ngIf="player.mpPlayedOnFormatted">
+                {{player.mpPlayedOnFormatted}} {{player.mpTzAbbrevation}}
+              </p>
+              <p *ngIf="!player.mpPlayedOnFormatted" class="hyphen-styling">
+                -
+              </p>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="player_rating">
+            <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'rating' | translate}}</th>
+            <td mat-cell *matCellDef="let player">
+              <p class="number-content-style small-content">
+                {{player.player_rating || '0'}}
+
+              </p>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="current_level">
+            <th id="" mat-header-cell *matHeaderCellDef>{{'current_level' | translate}}</th>
+            <td mat-cell *matCellDef="let player">
+              <p class="number-content-style small-content">
+                {{player.current_level_number}}/{{player.max_level}}
+
+              </p>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="completion">
+            <th id="" mat-header-cell *matHeaderCellDef>{{'completion' | translate}}</th>
+            <td mat-cell *matCellDef="let player">
+              <p class="number-content-style small-content">
+                {{player.completion}}
+              </p>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="department_name">
+            <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'department' | translate}}</th>
+            <td mat-cell *matCellDef="let player">
+              <p class="text-content-style" *ngIf="player.secondary_department_count == 0">
+                {{player.department_name || '-'}}
+              </p>
+              <p *ngIf="player.secondary_department_count > 0" (click)="toggleMenu($event, player.player_id, 'department_id'); $event.stopPropagation();">
+                {{player.department_name}}
+                <span > + {{player.secondary_department_count}} {{'more' |translate}}</span>
+              </p>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="location_name">
+            <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'location' | translate}}</th>
+            <td mat-cell *matCellDef="let player">
+              <p class="text-content-style" *ngIf="player.secondary_location_count == 0">
+                {{player.location_name || '-'}}
+              </p>
+              <p *ngIf="player.secondary_location_count > 0" (click)="toggleMenu($event, player.player_id,'location_id'); $event.stopPropagation();">{{player.location_name}}
+                <span > + {{player.secondary_location_count}} {{'more' |translate}}</span>
+              </p>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="group_name">
+            <th id="" mat-header-cell *matHeaderCellDef mat-sort-header>{{'group' | translate}}</th>
+            <td mat-cell *matCellDef="let player">
+              <p class="text-content-style">
+                {{player.group_name || '-'}}
+
+              </p>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header headerHeight"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="navigateToPlayerReport(row)"></tr>
+        </table>
+
+      </mat-card-content>
+      <mat-card-actions [style.display]="!playerDataSource?.data?.length || dashboardFilter.dashboard_by === dashboard.BY_PLAYER ? 'none': ''">
+        <mat-paginator #paginator [length]="totalPlayers" [pageSize]="noOfItemsPerPage"
+          [pageSizeOptions]="pageSizeOptions" (page)="getPlayersOverPagination($event)">
+        </mat-paginator>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
+
+<app-menu [openCustomMenu]="openCustomMenu" [selectedId]="selectedId" [fieldType]="selectedType"> </app-menu>

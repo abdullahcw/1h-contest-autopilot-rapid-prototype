@@ -1,0 +1,467 @@
+@import "../../../styles.scss";
+
+.main-container {
+  height: calc(100vh - 96px);
+  overflow: hidden;
+  position: relative;
+  padding-top: 26px;
+
+  @include media-breakpoint-down(sm) {
+    padding: 5px 5px 0;
+  }
+
+  .container-card {
+    margin: 5px 40px 0 40px;
+    padding: 0;
+    @include i-pad-design;
+
+    @include media-breakpoint-down(sm) {
+      margin: 0 5px;
+      height: calc(100vh - 110px);
+      max-height: calc(100vh - 110px);
+    }
+    .header {
+      height: 151px;
+      display: flex;
+      padding: 0 35px;
+      border-bottom: 1px solid #eae9e9;
+      @include media-breakpoint-down(xs) {
+        height: auto !important;
+        padding: 0 5px;
+      }
+
+      .game-title-container {
+        display: flex;
+        width: 100%;
+        pointer-events: none;
+        @include media-breakpoint-down(xs) {
+          flex: 1;
+          margin-bottom: 2px;
+        }
+
+        .game-icon-container {
+          position: relative;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .game-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 1px solid $midGrey;
+
+            @include media-breakpoint-down(xs) {
+              height: 45px;
+              width: 45px;
+            }
+          }
+        }
+
+        .game-name-holder {
+          width: 100%;
+          margin-right: 18px;
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          text-align: left;
+          padding-left: 15px;
+          font-family: Roboto_Regular;
+          justify-content: center;
+
+          @include media-breakpoint-down(xs) {
+            margin-right: 0;
+          }
+
+          .game-name {
+            font-size: 32px;
+            font-family: Roboto_Regular;
+            letter-spacing: 0.64px;
+
+            @include media-breakpoint-down(xs) {
+              font-size: 14px;
+            }
+          }
+
+          .shop-data {
+            letter-spacing: 0.28px;
+            padding-right: 3px;
+            font-size: 14px;
+            @include media-breakpoint-down(xs) {
+              font-size: 10px;
+            }
+          }
+
+          .title {
+            padding-right: 3px;
+          }
+        }
+      }
+
+      .game-option-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        flex-direction: column;
+
+        @include media-breakpoint-down(xs) {
+          padding-top: 5px;
+        }
+
+        .custom-button-wrapper {
+          background: $brand_color;
+          color: #fff;
+          border-radius: 0px;
+          width: 110px;
+          height: 44px;
+          font-size: 14px;
+          font-family: "Roboto_Medium";
+
+          @include media-breakpoint-down(xs) {
+            margin: 0;
+            max-height: 28px;
+            width: 54px;
+            font-size: 12px;
+            min-width: 20px;
+          }
+
+          .customeBtnDiv {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+
+          .custom-button {
+            display: flex;
+            justify-content: center;
+            display: block;
+
+            @include media-breakpoint-down(xs) {
+              display: none;
+            }
+          }
+
+          &:disabled {
+            background: #d2d2d2;
+          }
+        }
+
+        .save-button {
+          background: $brand_color;
+          color: #fff;
+          border-radius: 0px;
+          width: 110px;
+          height: 44px;
+          font-size: 14px;
+          font-family: "Roboto_Medium";
+
+          @include media-breakpoint-down(xs) {
+            margin: 0;
+            max-height: 28px;
+            width: 54px;
+            font-size: 12px;
+            min-width: 20px;
+            padding: 0;
+          }
+        }
+
+        .disabled {
+          color: #fff;
+          background: #ccc;
+          pointer-events: none;
+        }
+        .add-library-button {
+          width: 159px;
+          margin-bottom: 9px;
+          background: $brand_color;
+          color: #fff;
+          border-radius: 0px;
+          height: 44px;
+          font-size: 14px;
+          font-family: "Roboto_Medium";
+
+          @include media-breakpoint-down(xs) {
+            margin: 0;
+            max-height: 28px;
+            width: 110px;
+            font-size: 10px;
+            min-width: 20px;
+            padding: 0;
+          }
+        }
+
+        .added-to-library {
+          color: #c5c5c5;
+          background-color: #e8e8e8;
+          cursor: auto;
+          pointer-events: none;
+        }
+
+        .rating {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          height: 60px;
+          align-items: flex-end;
+          .showInput {
+            font-family: Drukwide_Bold;
+            font-size: 32px;
+            text-align: right;
+            margin-top: 5px;
+            height: 40px;
+            width: 111px;
+
+            @include media-breakpoint-down(xs) {
+              font-size: 15px;
+              padding-top: 2px;
+            }
+
+            .game-rating {
+              width: 111px;
+              height: 40px;
+              text-align: center;
+              border: 2px solid #4c9aff;
+              outline: none;
+              padding-top: 5px;
+
+              @include media-breakpoint-down(xs) {
+                width: 60px;
+                height: 30px;
+              }
+            }
+          }
+
+          .stars-outer {
+            display: inline-block;
+            position: relative;
+            text-align: end;
+            height: 20px;
+            width: 86px;
+            margin-top: -10px;
+          }
+
+          .removeMargin{
+            margin-top: -2px !important;
+          }
+
+          .stars-inner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 0;
+          }
+
+          .stars-outer::before {
+            content: "\f005 \00a0 \f005 \00a0 \f005 \00a0 \f005 \00a0 \f005";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            color: #efefef;
+            font-size: 13px;
+          }
+
+          .stars-inner::before {
+            content: "\f005 \00a0 \f005 \00a0 \f005 \00a0 \f005 \00a0 \f005";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            color: #f8ce0b;
+            font-size: 13px;
+          }
+        }
+
+        .alignRating {
+          padding-top: 30px;
+        }
+
+        .button-row {
+          width: auto;
+          display: flex;
+          justify-content: flex-end;
+          padding-top: 10px;
+
+          @include media-breakpoint-down(xs) {
+            padding: 0;
+          }
+
+          .btn-right {
+            margin-left: auto;
+
+            @include media-breakpoint-down(xs) {
+              padding-right: 2px;
+            }
+          }
+
+          .cancel-button {
+            border-radius: 0px;
+            width: 110px;
+            height: 44px;
+            font-size: 14px;
+            font-family: "Roboto_Medium";
+            background: white;
+            cursor: pointer;
+
+            @include media-breakpoint-down(xs) {
+              max-height: 28px;
+              width: 54px;
+              font-size: 12px;
+              min-width: 20px;
+              padding: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .wrapper {
+    height: calc(100vh - 260px);
+    overflow: scroll;
+
+    @include media-breakpoint-down(sm) {
+      height: calc(100vh - 195px);
+    }
+    .mat-card-content {
+      font-family: Roboto_Regular;
+      font-size: $text_size_med;
+      background: white;
+      padding: 30px 35px 30px 35px;
+      margin: 0px;
+      .label {
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .about-game {
+        ::ng-deep .ck.ck-editor__main > .ck-editor__editable {
+          height: 342px;
+          font-family: Roboto_Regular;
+          font-size: 14px;
+          border-width: 2px;
+        }
+        .description {
+          font-family: Roboto_Regular;
+          font-size: 14px;
+        }
+
+        @include media-breakpoint-down(xs) {
+          ::ng-deep .ck.ck-editor__main > .ck-editor__editable {
+            height: 171px;
+          }
+        }
+      }
+
+      .game-content {
+        .show-ss {
+          display: flex;
+          flex-wrap: wrap;
+
+          .show-content {
+            margin-right: 15px;
+            margin-top: 15px;
+            width: 185px;
+            height: 405px;
+            box-shadow: 0px 3px 6px #0000004D;
+            display: flex;
+            flex-direction: row;            
+          }
+        }
+
+        .content-wrapper {
+          display: flex;
+          flex-wrap: wrap;
+        }
+        .align-ss {
+          display: flex;
+          position: relative;
+
+          .inside-content-img {
+            margin-right: 15px;
+            margin-top: 15px;
+            width: 185px;
+            height: 405px;
+            box-shadow: 2px 3px 6px 2px #ccc;
+            display: flex;
+            flex-direction: row;
+            cursor: pointer;
+            &:hover {
+              opacity: 0.2;
+              display: flex;
+              cursor: pointer;
+            }
+          }
+          .edit-delete {
+            display: none;
+            position: absolute;
+            width: 185px;
+            height: 405px;
+            margin-right: 13px;
+            mat-icon {
+              display: flex;
+              align-items: center;
+              font-size: 24px;
+              justify-content: center;
+              color: black;
+              cursor: pointer;
+              position: absolute;
+              top: 10px;
+              right: 12px;
+              z-index: 9;
+              background: #fff;
+              border-radius: 5px;
+            }
+          }
+          &:hover {
+            .edit-delete {
+              display: block;
+              background: black;
+              opacity: 0.5;
+              position: absolute;
+              top: 15px;
+              box-shadow: 0px 3px 6px #000000;
+            }
+          }
+        }
+
+        .inside-content {
+          margin-right: 15px;
+          margin-top: 15px;
+          width: 185px;
+          height: 405px;
+          background-color: white;
+          cursor: pointer;
+          border-style: dotted;
+          border-color: #dfe1e6;
+          display: flex;
+          flex-direction: row;
+          position: relative;
+
+          &:hover {
+            border-style: dotted;
+            border-color: #4c9aff;
+            .edit-icon {
+              color: #4c9aff;
+            }
+          }
+
+        }
+        .edit-icon {
+          display: flex;
+          justify-content: center;
+          position: absolute;
+          color: #dfe1e6;
+          top: 185px;
+          left: 79px;
+          &:hover {
+            color: #4c9aff;
+          }
+        }
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+    }
+  }
+}

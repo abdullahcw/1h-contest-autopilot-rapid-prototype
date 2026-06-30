@@ -1,0 +1,320 @@
+@import '../../../styles.scss';
+
+.wrapper {
+  padding: 20px 10px 0;
+  height: $header_height;
+  max-height: $header_height;
+  position: relative;
+
+  @include media-breakpoint-down(sm) {
+    padding: 10px 0px 0;
+  }
+
+  .container-card {
+    margin: 0 40px;
+    // padding: 0px;
+    height: $header_height;
+    max-height: $header_height;
+    padding: 0;
+    @include i-pad-design;
+
+    @include media-breakpoint-down(sm) {
+      margin: 0 10px;
+    }
+    .row-row{
+      cursor: auto;
+    }
+    .mat-card-header {
+      .mat-card-header-text {
+        display: none !important;
+      }
+
+      .mat-toolbar {
+        padding: 0;
+        padding-left: 0px;
+        padding-right: 0px;
+        border: none;
+        min-height: 50px;
+        .mat-toolbar-row {
+          display: flex;
+          justify-content: space-between;
+          flex-direction: row;
+          height: $row_height;
+          border-bottom: 1px solid $mat_border_color;
+          @include media-breakpoint-down(xs) {
+            padding: 0 10px !important;
+          }
+
+          // padding-top: 30px;
+          // padding-bottom: 30px;
+
+          .toolbar-icon-color {
+            cursor: pointer;
+            color: $disable_color;
+          }
+
+          .filter-chip {
+            margin-left: 16px;
+          }
+
+          &:last-child {
+            border-top: 1px solid transparent;
+            border-bottom: 1px solid transparent;
+          }
+
+          mat-icon {
+            color: #666666;
+            cursor: pointer;
+          }
+
+          .title {
+            margin-left: 14px;
+
+            font: {
+              family: Roboto_Regular;
+              size: $text_size_med;
+            }
+
+            .name {
+              font: {
+                family: Roboto_Medium;
+                size: $default_font_size;
+              }
+
+              color: $textMidGrey;
+            }
+
+            span {
+              color: $textColor;
+            }
+          }
+        }
+      }
+
+    }
+
+    .mat-card-content {
+      // max-height: calc 
+      width: 100%;
+      font-size: 14px;
+      min-height: $shop_report_height;
+      height: $shop_report_height;
+      max-height: $shop_report_height;
+      overflow: auto;
+      margin: 0;
+      border-top: 1px solid $mat_border_color;
+      border-bottom: 1px solid $mat_border_color;
+
+      font-family: Roboto_Regular;
+      font-size: $text_size_med;
+
+      .no_messages {
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        padding-top: 20px;
+
+        font: {
+          family: Roboto_Regular;
+          size: $default_font_size;
+        }
+
+        @extend .center-align;
+      }
+
+      .responsive-table {
+        .question-title {
+          max-width: 600px;
+          white-space: normal;
+        }
+
+        .small-number-content {
+          max-width: 30px;
+          border: none;
+          text-align: right;
+        }
+
+        .medium-number-content {
+          max-width: 70px;
+          border: none;
+          text-align: right;
+        }
+
+        .long-number-content {
+          max-width: 90px;
+          border: none;
+          text-align: right;
+        }
+      }
+    }
+
+    .mat-card-actions {
+      margin: 0;
+      padding: 0;
+
+      .mat-paginator {
+        width: 95%;
+        margin: 0 auto;
+
+        .mat-paginator-page-size {
+          flex: 1;
+        }
+      }
+    }
+
+    .toolbar {
+      background-color: $secondary_bg_color;
+      border-bottom: 1px solid $mat_border_color;
+      padding: 5px 20px;
+      font-size: $text_size_med;
+      width: 100%;
+
+      .search-toolbar-row {
+        display: flex;
+        // justify-content: end;
+        // flex: 1;
+        @include media-breakpoint-down(xs) {
+          padding-right: 2px;
+        }
+
+        .range {
+          max-width: 100px;
+          height: 60px;
+          text-align: right;
+          font-size: 13px;
+
+          .calender-icon {
+            display: none;
+
+            @include media-breakpoint-down(xs) {
+              display: block !important;
+              position: absolute;
+              top: -8px;
+              left: -2px;
+            }
+          }
+
+          @include media-breakpoint-down(xs) {
+            max-width: 34px;
+            padding: 0 8px;
+            height: 50px;
+            margin-top: 2px;
+            // box-shadow: -2px 2px 2px 0px rgba(0, 0, 0, 0.28), -2px 3px 2px 2px rgba(0, 0, 0, 0), 0px 0px 0px 0px rgba(0, 0, 0, 0.12);
+            box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.28), -2px 3px 2px 2px rgba(0, 0, 0, 0), 0px 0px 0px 0px rgba(0, 0, 0, 0.12);
+
+            ::ng-deep .mat-select-value {
+              display: none;
+            }
+
+            ::ng-deep .mat-select-arrow-wrapper {
+              display: none !important;
+            }
+          }
+
+          //   ::ng-deep .range-option.mat-option {
+          //     font-size: 13px;
+          //   }
+
+        }
+      }
+    }
+  }
+
+  .spacer {
+    flex: 1;
+  }
+
+  .toolbar-button {
+    font-size: 12px;
+    color: $add-filter-icon-color;
+  }
+
+  .mat-sort-header-container {
+    align-items: center;
+  }
+
+  //   table{
+  //       table-layout: fixed;
+  //   }
+
+  //   th{
+  //       width: 100px !important;
+  //   }
+  tr {
+    display: table-row;
+
+    &.disclaimer-class {
+      display: none;
+    }
+
+    td.select-all-row {
+      top: 45px !important; // to avoid transparent line above
+      text-align: center;
+      height: 45px;
+      padding: 8px 5px 8px 30px;
+    }
+
+    .select-all-row {
+      div {
+        padding-right: 30px;
+      }
+    }
+
+    button {
+      height: 24px !important;
+      font-size: 13px !important;
+    }
+  }
+
+  td {
+    position: relative;
+
+    label {
+      margin-bottom: 0 !important;
+
+      .mat-checkbox-layout {
+        margin-bottom: 0 !important;
+      }
+    }
+
+    .addText {
+      color: #3856D1;
+      font-family: 'Roboto_Bold';
+      cursor: pointer;
+    }
+
+    .addedText {
+      color: #ccc;
+    }
+
+    .game-name {
+      text-overflow: ellipsis;
+      text-wrap: nowrap;
+      overflow: hidden;
+    }
+
+    &:first-child {
+      max-width: 150px;
+    }
+  }
+
+  .checkboxes {
+    width: 50px !important;
+  }
+
+  .question-row {
+    cursor: default !important;
+  }
+
+}
+
+::ng-deep .range-option.mat-option {
+  font-size: 13px;
+}
+
+.disableText{
+  color: #c4c4c4 !important;
+  pointer-events: none;
+  cursor: pointer;
+}

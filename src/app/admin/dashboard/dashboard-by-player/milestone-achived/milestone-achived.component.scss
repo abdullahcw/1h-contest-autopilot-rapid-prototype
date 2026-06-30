@@ -1,0 +1,134 @@
+@import "../../../../../styles.scss";
+
+.milestones_container {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+
+  @include media-breakpoint-down(md) {
+    height: 68%;
+  }
+
+  @include media-breakpoint-up(lg) {
+    height: 68%;
+  }
+
+  @media (min-width: 1920px) and (max-width: 2560px) {
+    height: 77%;
+  }
+
+  @include media-breakpoint-down(xs) {
+    height: 63%;
+  }
+
+  .milestones_wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    position: relative;
+
+    .milestone {
+      z-index: 999;
+
+      @include media-breakpoint-down(md) {
+        width: 80px;
+        height: 80px;
+      }
+
+      @include media-breakpoint-up(lg) {
+        width: 75px;
+        height: 75px;
+      }
+
+      @media (min-width: 1920px) and (max-width: 2560px) {
+        width: 120px;
+        height: 120px;
+      }
+
+      @include media-breakpoint-down(xs) {
+        width: 65px;
+        height: 65px;
+      }
+    }
+
+    .custom_milestone {
+      @include media-breakpoint-down(md) {
+        width: 90px;
+        height: 90px;
+      }
+
+      @include media-breakpoint-up(lg) {
+        width: 85px;
+        height: 85px;
+      }
+
+      @media (min-width: 1920px) and (max-width: 2560px) {
+        width: 140px;
+        height: 140px;
+      }
+
+      @include media-breakpoint-down(xs) {
+        width: 55px;
+        height: 55px;
+      }
+    }
+
+    .milestone_gray {
+      background: #00000029;
+      opacity: 0.3;
+      position: absolute;
+      border-radius: 50%;
+
+      @include media-breakpoint-down(md) {
+        width: 80px;
+        height: 80px;
+      }
+
+      @include media-breakpoint-up(lg) {
+        width: 75px;
+        height: 75px;
+      }
+
+      @media (min-width: 1920px) and (max-width: 2560px) {
+        width: 120px;
+        height: 120px;
+      }
+
+      @include media-breakpoint-down(xs) {
+        width: 65px;
+        height: 65px;
+      }
+    }
+
+    .custom_milestone_gray {
+
+      @include media-breakpoint-down(md) {
+        width: 90px;
+        height: 90px;
+      }
+
+      @include media-breakpoint-up(lg) {
+        width: 85px;
+        height: 85px;
+      }
+
+      @media (min-width: 1920px) and (max-width: 2560px) {
+        width: 140px;
+        height: 140px;
+      }
+
+      @include media-breakpoint-down(xs) {
+        width: 55px;
+        height: 55px;
+      }
+   
+    }
+
+    .disable_milestone {
+      opacity: 0.1;
+    }
+  }
+}

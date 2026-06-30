@@ -1,0 +1,30 @@
+<div class="circleChartWrapper">
+    <div class="canvasDiv" *ngIf="showChart()">
+        <canvas id="circleChart" #circleChart></canvas>
+        <div class="progress-container" style="z-index: 1;">
+            <span class="winScore">{{circleChartData?.length && circleChartData[0]}}%</span>
+            <span class="inProgressScore">{{circleChartData?.length && circleChartData[1]}}%</span>
+        </div>
+    </div>
+    <div class="no_messages" *ngIf="!showChart()">
+        <p>{{('no_gameplay' | translate)}}</p>
+    </div>
+    <div class="namingWrapper" *ngIf="showChart()">
+        <div class="wonText">
+            <div class="colorDiv">
+                
+            </div>
+            <span class="textFontStyling">
+                {{'won' | translate}}
+            </span>
+        </div>
+        <div class="inProgressText">
+            <div class="colorDiv">
+                
+            </div>
+            <span class="textFontStyling"> 
+                {{'in_progress' | translate}} 
+            </span>
+        </div>
+    </div>
+</div>

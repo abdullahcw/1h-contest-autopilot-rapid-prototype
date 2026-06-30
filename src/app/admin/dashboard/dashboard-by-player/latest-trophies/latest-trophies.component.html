@@ -1,0 +1,35 @@
+<section class="trophies_container" *ngIf="trophies.length"
+  [ngClass]="{'custom_trophies_container': showPlayerGameplay}">
+  <div class="trophies_wrapper" [ngClass]="{'custom_trophies_wrapper': showPlayerGameplay}">
+    <div *ngFor="let data of trophies" class="trophy_container">
+      <div *ngIf="data.trophy_type == 'game_trophy'" class="game_trophy_container">
+        <img class="trophy_outer" src="/assets/img/outer_trophy_logo.png" alt=""
+          [ngClass]="{'custom_trophy_outer': showPlayerGameplay}" />
+        <img appSignedUrl src="/assets/img/default.png" [imgSelector]="'changeImageSrc'" [imgSrcValue]="data?.logo_url"
+          onError="this.src='/assets/img/default.png'" alt="" class="game_trophy"
+          [ngClass]="{'custom_game_trophy': showPlayerGameplay}" />
+      </div>
+
+      <div *ngIf="data.trophy_type != 'game_trophy'" class="other_trophy_container"
+        [ngClass]="{'custom-width': data.trophy_type != 'game_trophy' }">
+        <img *ngIf="data.trophy_type == 'mlg' || data.trophy_type == 'fixed_trophy'" class="trophy" [src]="data?.logo_url"
+          onError="this.src='/assets/img/default.png'" alt="" [ngClass]="{'custom_trophy': showPlayerGameplay}" />
+        <img *ngIf="data.trophy_type == 'contest'" appSignedUrl src="/assets/img/default.png"
+          [imgSelector]="'changeImageSrc'" [imgSrcValue]="data?.logo_url" onError="this.src='/assets/img/default.png'"
+          alt="" class="trophy" [ngClass]="{'custom_trophy': showPlayerGameplay}" />
+      </div>
+      <div class="trophyName" [ngClass]="{'custom_trophy_name': showPlayerGameplay}">
+        <span>{{ data.trophies_name }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="button-row" *ngIf="!showPlayerGameplay">
+    <div class="btn-right">
+      <button type="button" mat-button class="cancel-button" tabindex="-1" (click)="viewAll()">{{'view_all' |
+        translate}}</button>
+    </div>
+  </div>
+</section>
+<div class="no_messages" *ngIf="!trophies.length">
+  <p>{{ ('player_not_achieved_trophy' | translate) }}</p>
+</div>

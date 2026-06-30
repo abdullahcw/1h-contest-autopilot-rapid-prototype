@@ -1,0 +1,44 @@
+@import '../../../styles.scss';
+
+.content {
+  padding: 25px;
+  min-width: 550px;
+  max-width: 550px;
+  height: 200px;
+  font-family: Roboto_Regular;
+  font-size: 14px;
+  display: flex;
+
+  @include media-breakpoint-down(xs) {
+    min-width: 285px;
+  }
+
+  .title {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .margin-top {
+    margin-top: 10px;
+
+    .text-bold {
+      font-family: Roboto_Black;
+    }
+  }
+
+  a:active,
+  a:focus {
+    outline: none;
+  }
+}
+
+// ::ng-deep .cdk-overlay-container {
+//   height: calc(100% - 60px);
+//   width: 100%;
+//   margin-top: 64px;
+// }
+
+// ::ng-deep .mat-dialog-container {
+//   margin-bottom: 60px;
+// }

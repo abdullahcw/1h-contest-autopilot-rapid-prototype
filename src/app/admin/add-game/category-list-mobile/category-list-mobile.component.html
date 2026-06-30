@@ -1,0 +1,20 @@
+<div class="main-container-categoryList">
+    <mat-toolbar class="small-toolbar" color="primary">
+      <div>
+        {{ 'selectCategory' | translate}}
+      </div>
+    </mat-toolbar>    
+    <section class="content">
+        <div class="categoryListWrapper">
+            <div class="categoryList">
+                <div *ngFor="let item of data" class="categoryWrapper" (click)="save(item)" [ngClass]="{'selectedTab': item.id == game_category_id}">
+                    <span class="item-Title" >{{ item.title }}</span>
+                </div>
+            </div>
+        </div>
+    </section>
+  </div>
+
+
+  
+

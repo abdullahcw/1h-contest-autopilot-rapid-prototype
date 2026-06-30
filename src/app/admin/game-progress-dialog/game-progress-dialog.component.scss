@@ -1,0 +1,216 @@
+@import "../../../styles.scss";
+.wrapper{
+  width: 700px;
+  height: 500px;
+  position: relative;
+  overflow: hidden;
+    .top-header{
+      position: sticky;
+      top: 0;
+      height: 195px;
+    }
+
+    .small-toolbar {
+        min-height: 50px;
+        height: 50px;
+        .title{
+            font-size: 15px;
+            font-family: $Roboto_Bold_font;
+            
+        }
+        .closeIcon{
+          display: flex;
+          flex: 1;
+          justify-content: flex-end;
+          align-items: center;
+          cursor: pointer;
+      }
+    }
+    .spinner-wrpper{
+      display: flex;
+      padding: 10px;
+      justify-content: center;
+      height: 60px;
+      align-items: center;
+      background: #fff;
+
+      @include media-breakpoint-down(xs) {
+      
+      width: 100%;
+      margin-top: 2px;
+      overflow: auto;
+      overflow-x: overlay;
+      position: relative;
+      flex-direction: row;
+      justify-content: flex-start;
+      
+     }
+    
+    .basic-container{
+        position: relative;
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        .img-spinner{
+            width: 50px;
+            height: 50px;
+            // background: red;
+        }
+        .line {
+          width: 31px;
+          height: 0;
+          border: 1px solid #C4C4C4;
+          margin: 0px;
+          margin-top: 17px;
+          align-items: center;
+          display: flex;
+          }
+          :not(spinner-container).spinner-container {
+            position: relative;
+          
+            .spinner-background {
+              position: absolute;
+              width: 35px;
+              height:35px;
+              line-height: 80px;
+              text-align: center;
+              overflow: hidden;
+              border-color: #ABABAB;
+              border-radius: 50%;
+              border-style: solid;
+              border-width: 4px;
+              background: #E8E8E8;
+            }
+          }
+          ::ng-deep .mat-progress-spinner svg{
+            width: 35px;
+            height: 35px;
+          }
+    }
+
+   .line:last-child {
+      border-color: #ff0000;
+    }
+  }
+    .progress-wrapper{
+        display: flex;
+        width: auto;
+        align-items: center;
+        position: relative;
+        justify-content: center;
+        height: 45px;
+        background: #E8E8E8;
+        font-family: $Roboto_Bold_font;
+
+        @include media-breakpoint-down(xs){
+          padding: 0 16px;
+          font-size: 15px;
+        }
+        
+        .progress {
+          height: 14px !important;
+          width: 64%;
+          margin: 0 10px;
+        }
+        .mat-progress-bar-fill::after {
+          background-color: #c5cae9;
+        }
+        ::ng-deep .mat-progress-bar-buffer {
+          background-color: #c5cae9;
+        }
+      }
+      
+      img {
+        max-width: 100%;
+        position: absolute;
+        max-height: 100%;
+        top: 3px;
+        width: 25px;
+        height: 22px;
+        left: 1px;
+        padding: 5px;
+        background: #E8E8E8;
+      }
+      .header{
+        display: flex;
+        padding: 0px 20px;
+        height: 40px;
+        background: #cccccc;
+        align-items: center;
+        .left-header{
+          font-family: $Roboto_Bold_font;
+          width: 30%;
+          font-size: 16px;
+          @include media-breakpoint-down(xs){
+            font-size: 15px;
+          }
+        }
+        .right-header{
+          font-family: $Roboto_Bold_font;
+          width: 70%;
+          font-size: 16px;
+          @include media-breakpoint-down(xs){
+            font-size: 15px;
+          }
+        }
+      }
+      .content{
+        display: flex;
+        width: 100%;
+        padding: 5px 20px;
+        border-bottom: 1px solid rgb(227, 227, 227);
+        min-height: 100px; 
+        .left-content{
+          width: 30%;
+          display: flex;
+          align-items: center;
+          font-family: $Roboto_Regular_font;
+          font-size: 16px;
+          @include media-breakpoint-down(xs){
+            font-size: 15px;
+          }
+  
+        }
+        
+        .right-content-wraper{
+          width: 70%;
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          .right-content{
+            span{
+              width: 28px;
+              height: 28px;
+              border-radius: 50%;
+              display: flex;
+              justify-content: center;
+              font-family: $Roboto_Regular_font;
+              align-items: center;
+              margin: 1px 3px;
+              padding: 10px;
+              font-size: 13px;
+              cursor: default;
+            }
+            .content-color-complted{
+              background: #A3DFBC;
+              border-color: #18AF57;
+            }
+            .content-color-incomplted{
+              background: #FAE0BD;
+              border-color: #F3B15B;
+            }
+          }
+        }
+      }
+      .content-wrapper{
+        height: 305px;
+        overflow: scroll;
+      }
+
+
+      @include media-breakpoint-down(xs) {
+       width: 100%;
+      //  padding: 10px;
+      }
+
+}

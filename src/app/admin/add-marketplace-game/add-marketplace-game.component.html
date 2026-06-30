@@ -1,0 +1,103 @@
+<div class="main-container">
+  <mat-card class="container-card" [ngClass]="{'disabled-style': is_loading}">
+    <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+    <mat-card-header class="header">
+      <div class="game-title-container">
+        <div class="game-icon-container">
+          <img class="game-icon"[src]="shopGame?.game_image_url" onError="this.src='/assets/img/default.png'" alt="">
+        </div>
+        
+        <div class="game-name-holder">
+          <span class="game-name">{{shopGame.game_name}}</span>
+          <div class="shop-data">
+            <span class="title">{{'author'| translate}}:</span>
+            <span>{{shopGame.author_name}}</span>
+          </div>
+          <div class="shop-data" style="padding-bottom: 4px;">
+            <span class="title">{{'game_category'| translate}}:</span>
+            <span>{{shopGame.game_category_name}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="game-option-container">
+        <div *ngIf="storageService?.getAccessType() === role.ADMIN">
+          <button mat-raised-button class="custom-button-wrapper robotoRegular" *ngIf="!isEditing" (click)="editMode()">
+            {{'edit_uppercase' | translate}}
+          </button>
+          <div class="button-row" *ngIf="isEditing">
+            <div class="btn-right">
+              <button type="button" mat-button class="cancel-button" tabindex="-1"
+                (click)="cancel()">{{'cancel_uppercase' | translate}}</button>
+            </div>
+            <div>
+              <button type="button" mat-raised-button class="save-button robotoRegular" 
+                (click)="saveShopGameContent()" [ngClass]="{'disabled': shouldDisable()}">
+                {{'save_uppercase' | translate}}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="storageService?.getAccessType() === role.MANAGER">
+          <button mat-raised-button class="add-library-button robotoRegular" (click)="addGameToMyLibrary(shopGame)"
+            [ngClass]="{'added-to-library': shopGame?.is_added }" > 
+            <div class="customeBtnDiv">
+              <span class="custom-button">{{shopGame?.is_added ? ('added_to_library_uppercase' | translate) : ('add_to_library_uppercase' | translate) }}</span>
+            </div>
+          </button>
+        </div>
+        <div class="rating" [ngClass]="{'alignRating': storageService?.getAccessType() === role.MID_MANAGER || storageService?.getAccessType() === role.TEAM_LEAD}">
+          <div class="showInput">
+            <span *ngIf="!isEditing">{{shopGame.game_rating}}</span>
+            <input type="text" class="game-rating" [(ngModel)]="shopGame.game_rating" (keypress)="floatOnly($event)"
+            maxlength="3" *ngIf="isEditing && storageService?.getAccessType() === role.ADMIN" (paste)="disablePaste($event)">
+          </div>
+          <div class="stars-outer" [ngClass]="{'removeMargin': isEditing}">
+            <div class="stars-inner" id="stars-inner"></div>
+          </div>
+        </div>
+      </div>
+    </mat-card-header>
+    <div class="wrapper">
+      <mat-card-content id="container">
+        <div class="about-game">
+          <div *ngIf="!isEditing">
+            <div class="description" [innerHTML]="transform(displayInnerHTML)"></div>
+          </div>
+          <ckeditor [editor]="Editor" #editor [(ngModel)]="shopGame.game_description"
+            [config]="{ toolbar: [  'bold', 'italic', '|', 'numberedList', 'bulletedList', '|', 'link'] }"
+            *ngIf="isEditing && storageService?.getAccessType() === role.ADMIN" (keypress)="descriptionChange($event)" >
+          </ckeditor>
+        </div>
+        <div class="game-content">
+          <div *ngIf="!isEditing">
+            <div class="label" *ngIf="game_preview_urls.length">{{'screenshots' | translate}}</div>
+            <div class="show-ss">
+              <img class="show-content"  *ngFor="let image of game_preview_urls" src="" 
+              appSignedUrl [imgSelector]="'changeImageSrc'" [imgSrcValue]="image.preview_url" onError="this.src='/assets/img/default.png'" alt="">
+            </div>
+          </div>
+          <div *ngIf="isEditing">
+            <div class="label" style="padding-top: 12px;">{{'screenshots' | translate}}</div>
+            <div class="content-wrapper">
+              <div class="align-ss" *ngFor="let image of game_preview_urls; let i = index">
+                <img class="inside-content-img" src="" 
+                appSignedUrl [imgSelector]="'changeImageSrc'" [imgSrcValue]="image.preview_url" onError="this.src='/assets/img/default.png'" alt="">
+
+                <div class="edit-delete" *ngIf="image.preview_url">
+                  <mat-icon (click)="confirmDelete(image, i)">delete</mat-icon>
+                </div>
+              </div>
+              <div class="inside-content" *ngIf="game_preview_urls.length < showScreenShotLength" (click)="imgInput && imgInput?.click()">
+                <input type="file" onclick="this.value=null" #imgInput id="upload_image" [hidden]="true" accept="image/*"
+                  (change)="fileChangeEvent($event)" />
+                <div class="edit-icon">
+                  <mat-icon>add</mat-icon>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </div>
+  </mat-card>
+</div>

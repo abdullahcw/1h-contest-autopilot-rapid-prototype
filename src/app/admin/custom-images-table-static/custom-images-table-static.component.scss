@@ -1,0 +1,30 @@
+@import "../../../styles.scss";
+
+img {
+    margin-right: 10px;
+    border-radius: 50%;
+}
+.img-border{
+    border: 1px solid #eae9e9;
+}
+.img40by40{
+    height: 40px;
+    width: 40px;
+}
+.img45by45{
+    height: 45px !important;
+    width: 45px !important;
+}
+
+.img48by48{
+    height: 48px !important;
+    width: 48px !important;
+}
+.img35by35{
+    height: 35px !important;
+    width: 35px !important;
+}
+.img70by70{
+    height: 70px !important;
+    width: 70px !important;
+}

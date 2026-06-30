@@ -1,0 +1,51 @@
+@import '../../../../styles.scss';
+
+.small-toolbar {
+  height: 50px;
+  font-size: 16px;
+  font-family: Roboto_Medium;
+  .img-icon{
+    width: 30px;
+    margin-right: 8px;
+  }
+}
+
+.content {
+  padding: 20px 16px 6px;
+  min-width: 500px;
+  max-width: 500px;
+  font-family: Roboto_Regular;
+
+  @include media-breakpoint-down(xs) {
+    min-width: 285px !important;
+  }
+
+  .title {
+    margin-bottom: 20px;
+  }
+
+  .toggle-section {
+    margin-bottom: 20px;
+  }
+
+  .button-row {
+    width: auto;
+    display: flex;
+    margin-top: 30px;
+
+    .btn-right {
+      margin-left: auto;
+    }
+
+    .cancel-button {
+      border: 0px;
+      background: white;
+      cursor: pointer;
+    }
+  }
+}
+
+.linked {
+  min-width: 565px;
+  max-width: 565px;
+}

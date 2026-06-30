@@ -1,0 +1,281 @@
+@import '../../../styles.scss';
+
+.wrapper {
+    padding: 20px 10px 0;
+    height: $header_height;
+    max-height: $header_height;
+    position: relative;
+    @include media-breakpoint-down(sm) {
+        padding: 10px 0px 0;        
+    }
+    .user-logo {
+        width: 50px !important;
+
+        img {
+            margin-right: 0 !important;
+
+        }
+    }
+
+    .container-card {
+        margin: 0 40px;
+        // padding: 0px;
+        height: $header_height;
+        max-height: $header_height;
+        padding: 0;
+        @include i-pad-design-with-btn;
+        @include media-breakpoint-down(sm) {
+            margin: 0 10px;
+        }
+
+        .search-container {
+            margin-left: 15px;
+        }
+
+        .mat-card-header {
+            .mat-card-header-text {
+                display: none !important;
+            }
+
+            .mat-toolbar {
+                padding: 0;
+                padding-left: 0px;
+                padding-right: 0px;
+                border: none;
+
+                .mat-toolbar-row {
+                    height: $row_height;
+                    border-bottom: 1px solid $mat_border_color;
+                    // padding-top: 30px;
+                    // padding-bottom: 30px;
+
+                    .toolbar-icon-color {
+                        cursor: pointer;
+                        color: $disable_color;
+                    }
+
+                    .filter-chip {
+                        margin-left: 16px;
+                    }
+
+                    &:last-child {
+                        border-top: 1px solid transparent;
+                        border-bottom: 1px solid transparent;
+                    }
+
+                    .title {
+                        margin-left: 14px;
+
+                        font: {
+                            family: Roboto_Regular;
+                            size: $text_size_med;
+                        }
+
+                        .name {
+                            font: {
+                                family: Roboto_Medium;
+                                size: $default_font_size;
+                            }
+
+                            color: $textMidGrey;
+                        }
+
+                        span {
+                            color: $textColor;
+                        }
+                    }
+
+                    .icon-wrapper {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        right: 10px;
+
+                        .open-video {
+                            background: none;
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            color: #555;
+                            cursor:pointer;
+                        
+                            mat-icon {
+                              font-size: 35px;
+                              display: flex;
+                              align-items: center;
+                              justify-content: center;
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+        .mat-card-content {
+            // max-height: calc 
+            width: 100%;
+            font-size: 14px;
+            min-height: $company_content_height;
+            height: $company_content_height;
+            max-height: $company_content_height;
+            overflow: auto;
+            margin: 0;
+            border-top: 1px solid $mat_border_color;
+            border-bottom: 1px solid $mat_border_color;
+
+            font-family: Roboto_Regular;
+            font-size: $text_size_med;
+
+            @include media-breakpoint-down(sm) {
+                height: calc(100vh - 268px);
+                max-height: calc(100vh - 268px);
+            }
+
+            .no_messages {
+                padding: 0;
+                width: 100%;
+                height: 100%;
+                text-align: center;
+                padding-top: 20px;
+
+                font: {
+                    family: Roboto_Regular;
+                    size: $default_font_size;
+                }
+
+                @extend .center-align;
+            }
+        }
+
+        .mat-card-actions {
+            margin: 0;
+            padding: 0;
+
+            .mat-paginator {
+                width: 95%;
+                margin: 0 auto;
+
+                .mat-paginator-page-size {
+                    flex: 1;
+                }
+            }
+        }
+
+        .add-manager {
+            width: 50px;
+            height: 50px;
+            background-color: $add_icon_background;
+            color: $add_icon;
+            padding: 5px 20px;
+            border-radius: 30px;
+
+            font-size: $default_font_size;
+            position: absolute;
+            left: -23px;
+            top: 24px;
+            @extend .center-align;
+            -webkit-transition: all 1s;
+            -moz-transition: all 1s;
+            -o-transition: all 1s;
+            -ms-transition: all 1s;
+            transition: all 1s;
+
+            &:disabled {
+                background: #aaaaaa;
+                pointer-events: none;
+            }
+        }
+    }
+}
+
+.toolbar {
+    background-color: $secondary_bg_color;
+    border-bottom: 1px solid $mat_border_color;
+    padding: 5px 20px;
+    font-size: $text_size_med;
+    width: 100%;
+}
+
+.spacer {
+    flex: 1;
+}
+
+.toolbar-button {
+    font-size: 12px;
+    color: $add-filter-icon-color;
+}
+
+.mat-sort-header-container {
+    align-items: center;
+}
+
+.imgColumn {
+    width: 20px !important;
+}
+
+.checkBoxColumn {
+    width: 60px !important;
+    padding: 15px 12px 8px 20px !important;
+}
+
+//   table{
+//     table-layout: fixed;
+// }
+
+// th{
+//     width: 100px !important;
+// }
+
+tr {
+    display: table-row;
+}
+
+td {
+    position: relative;
+}
+
+
+
+::ng-deep .mat-menu-panel.customeMenu-1 {
+    max-height: 300px !important;
+    max-width: 300px !important;
+    min-width: 200px;
+
+    .inputSearch {
+        width: 100%;
+        @extend .form-inputs;
+        border: none !important;
+        border-bottom: 1px solid #ccc !important;
+        margin-bottom: 0;
+        height: 48px;
+        min-width: 250px;
+    }
+}
+
+.menu_container {
+    height: auto;
+    max-height: 200px;
+    overflow-y: auto;
+
+    mat-list-item {
+        font-size: 14px;
+        font-family: $Roboto_Regular_font;
+    }
+    mat-list-item {
+        font-size: 14px;
+    }
+
+}
+
+.department_name {
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+}
+
+mat-list mat-list-item {
+    &:hover {
+        background-color: #f4f4f4;
+    }
+}

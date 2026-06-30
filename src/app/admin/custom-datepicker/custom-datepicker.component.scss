@@ -1,0 +1,133 @@
+@import "../../../styles.scss";
+
+::ng-deep .mat-chip.mat-standard-chip {
+  color: #444;
+  background-color: #ebebeb;
+  font-weight: normal;
+  font-family: Roboto_Regular;
+  font-size: 12px;
+  span {
+    padding-top: 2px;
+  }
+  &:hover {
+    background-color: #c4c4c4;
+  }
+}
+.main-container {
+  min-width: 280px;
+  width: 450px;
+  @include media-breakpoint-down(xs) {
+    width: 280px;
+  }
+
+  .small-toolbar {
+    height: 50px;
+    font-size: 16px;
+    display: flex;
+    flex-direction: row;
+    .add-group {
+      border-radius: 30px;
+      margin-left: auto;
+      mat-icon {
+        color: white;
+      }
+    }
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    .date-picker {
+      position: relative;
+      mat-datepicker-toggle {
+        position: absolute;
+        top: 24px;
+        right: 0;
+      }
+    }
+
+    .label {
+      font-size: 12px;
+    }
+
+    .email-container {
+      width: 100%;
+      overflow-y: scroll;
+      max-height: 100%;
+      font-size: 14px;
+      margin: 0px;
+      color: $search_color;
+      border: 1px solid $midGrey;
+      height: 126px;
+      .add-filter-indicator {
+        border: 1px solid #b6b6b6;
+        border-style: dashed;
+        padding: 2px 12px 2px 5px;
+        border-radius: 40px;
+        height: 30px;
+        mat-icon {
+          color: $add-filter-icon-color;
+        }
+        font: {
+          family: Roboto_Regular;
+          size: $text_size_small;
+        }
+        mat-icon {
+          font-size: 20px;
+          margin-top: -1px;
+          @extend .center-align;
+        }
+        display: flex;
+        align-items: center;
+        color: $midGrey;
+        span {
+          font-family: Roboto_Regular;
+          margin-top: 2px;
+          color: $add-filter-color;
+        }
+      }
+    }
+    .multiple-email-container {
+      height: 126px;
+      border: 1px solid #ccc;
+      .chip-container {
+        margin: 2px;
+      }
+    }
+  }
+  .disable-date {
+    .date-picker {
+      pointer-events: none;
+    }
+  }
+
+  .cancel-chip {
+    margin: 4px !important;
+  }
+
+  .container > * {
+    width: 100%;
+  }
+  .button-row {
+    width: auto;
+    display: flex;
+    margin: 0 20px 10px;
+    .btn-right {
+      margin-left: auto;
+    }
+    .cancel-button {
+      border: 0px;
+      background: white;
+      cursor: pointer;
+    }
+  }
+}
+::ng-deep .mat-calendar-table {
+  tr {
+    border-bottom: none;
+  }
+  th {
+    background-color: $secondary_bg_color;
+  }
+}

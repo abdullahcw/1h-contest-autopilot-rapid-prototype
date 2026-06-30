@@ -1,0 +1,38 @@
+<mat-toolbar color="primary" class="small-toolbar">
+    {{'reactivate_vip_title' | translate}} 
+  </mat-toolbar>
+  <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+  <section class="reactivate-vip-content" [ngClass]="{'disabled-style': is_loading}">
+      
+    <div class="title">    
+      <div class="reactivate_title">
+        <span>{{'reactivate_vip_title' | translate}} "{{vipcodedata.vip_code}}"</span>
+      </div>
+      <form #reactivateVipcode="ngForm">
+        <div class="form-group">
+            <label for="startDate">{{'expiration_date_label' | translate}}</label>
+            <div class="calendar-input-wrapper">
+                <input matInput class="holder form-inputs calendar-input" [matDatepicker]="futureDatePicker"
+                  [placeholder]="datePlaceHolder" name="enddate" [(ngModel)]="vipcodeobj.new_expiry_date"
+                  (click)="futureDatePicker.open()" (open)="isDatePickerOpen" [min]="today"
+                  (keydown)="isDatePickerOpen = true;" required readonly>
+                <mat-datepicker-toggle matPrefix [for]="futureDatePicker">
+                </mat-datepicker-toggle>
+                <mat-datepicker #futureDatePicker>
+                </mat-datepicker>
+              </div>
+          </div>      
+      </form>
+  
+    </div>
+    <div class="button-row">
+      <div class="btn-right">
+        <button mat-button class="cancel-button" tabindex="-1" (click)="cancel()">{{'cancel_uppercase' | translate}}</button>
+      </div>
+      <div>
+        <button mat-button tabindex="-1" (click)="actionConfirmed()" [disabled]="!reactivateVipcode?.valid || !reactivateVipcode?.dirty">
+        {{'done_uppercase' | translate}}
+        </button>
+      </div>
+    </div>
+  </section>

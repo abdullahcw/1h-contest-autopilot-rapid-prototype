@@ -1,0 +1,14 @@
+<section class="master-overlay-wrapper">
+
+  <mat-toolbar class="small-toolbar" color="primary">
+    <div>{{data | translate}}</div>
+    <mat-icon class="cancel-icon" (click)="save()">close</mat-icon>
+  </mat-toolbar>
+  <div class="overlay-wrapper">
+    <app-contest-rules *ngIf="data == 'rule'"></app-contest-rules>
+    <app-contest-reward *ngIf="data == 'reward'"></app-contest-reward>
+    <app-schedule-contest *ngIf="data == 'schedule'"></app-schedule-contest>
+    <app-contest-notification *ngIf="data == 'notification'"></app-contest-notification>
+  </div>
+
+</section>

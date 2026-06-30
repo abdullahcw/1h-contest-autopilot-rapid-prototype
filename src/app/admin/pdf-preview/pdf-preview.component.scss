@@ -1,0 +1,50 @@
+@import "../../../styles.scss";
+
+.main-container {
+  position: relative;
+  background-color: white;
+  min-width: 500px;
+  min-height: 500px;
+  overflow: hidden;
+  .small-toolbar {
+    height: 50px;
+    width: 100%;
+    font-size: 16px;
+    background: $brand_color;
+    color: white;
+    font-family: Roboto_Bold;
+    display: flex;
+    justify-content: space-between;
+
+    .closeIcon {
+      z-index: 1;
+      // background: white;
+      // border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .spinner {
+    z-index: 99;
+  }
+  .please-wait {
+    width: 100%;
+    min-height: 500px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+  }
+  .hide-pdf-viewer {
+    opacity: 0;
+    ::ng-deep.ng2-pdf-viewer-container {
+      opacity: 0;
+    }
+  }
+
+  ::ng-deep.ng2-pdf-viewer-container {
+    min-height: 500px;
+    height: 700px;
+  }
+}

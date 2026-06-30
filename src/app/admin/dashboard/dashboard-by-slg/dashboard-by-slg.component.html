@@ -1,0 +1,135 @@
+<div class="main-container" *ngIf="!resetView">
+    <div class="mlg-details-container">
+        <div class="mlg-card">
+            <mat-spinner class="spinner" mode="indeterminate" *ngIf="isLoading" diameter="20"></mat-spinner>
+            <div *ngIf="!isLoading" class="mlg-card-content">
+                <div class="left-side">
+                    <div class="logo-wrapper">
+                      <img appSignedUrl src="/assets/img/default.png" [imgSelector]="'changeImageSrc'" [imgSrcValue]="game?.game_image_url" onError="this.src='/assets/img/default.png'" alt=""/>
+                    </div>
+                </div>
+                <div class="right-side">
+                    <mat-card-title class="robotoBold title" #elements matTooltip="{{game?.game_name}}" [matTooltipShowDelay]="500" >
+                        {{game?.game_name}}
+                    </mat-card-title>
+                    <mat-card-subtitle class="robotoRegular mlg-created">
+                        {{ 'created' | translate }}: {{ game?.created_on | date:'MM/dd/yyyy' }}
+                    </mat-card-subtitle>
+                    <mat-card-subtitle class="mlg-created">
+                        <span>{{ 'status' | translate }}: </span>
+                        <span class="gameMode" [ngClass]="{
+                        'draft-color': game?.status == 'DRAFT',
+                        'live-color': game?.status == 'LIVE',
+                        'ready-color': game?.status == 'READY',
+                        'delete-color': game?.is_deleted }">
+                            {{ game?.is_deleted ? ('deleted' | translate ) : game?.status }}
+                        </span>
+                    </mat-card-subtitle>
+                </div>
+            </div>
+        </div>
+        <div class="mlg-score">
+            <div class="game-details">
+                <div class="mlg-record">
+                    <div class="mlg-won">
+                        <mat-spinner class="spinner" mode="indeterminate" *ngIf="isLoading" diameter="20"></mat-spinner>
+                        <div *ngIf="!isLoading" class="mlg-content">
+                            <img src="../../../../assets/img/winrate.png" alt="" class="mlg-won-icon">
+                            <span class="mlg-count">{{ game?.win_rate < 0 ? '--' : game?.win_rate }}</span>
+                            <span class="mlg-subtitle">{{ 'win_rate' | translate }}</span>
+                        </div>
+                    </div>
+                    <div class="mlg-record-divider"></div>
+                    <div class="mlg-progress">
+                        <mat-spinner class="spinner" mode="indeterminate" *ngIf="isLoading" diameter="20"></mat-spinner>
+                        <div *ngIf="!isLoading" class="mlg-content">
+                            <img src="../../../../assets/img/mlg_gamesplayed.png" alt="" class="mlg-progress-icon">
+                            <span class="mlg-count">{{ game?.games_played < 0 ? '--' : (game?.games_played | number) }}</span>
+                            <span class="mlg-subtitle">{{ 'games_played' | translate }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="vertical-divider"></div>
+                <div class="mlg-game-time">
+                    <div class="mlg-time-spent">
+                        <mat-spinner class="spinner" mode="indeterminate" *ngIf="isLoading" diameter="20"></mat-spinner>
+                        <div *ngIf="!isLoading" class="mlg-content">
+                            <img src="../../../../assets/img/participation.png" alt="" class="mlg-time-icon">
+                            <span class="mlg-count">{{ game?.participation < 0 ? '--' : game?.participation }}</span>
+                            <span class="mlg-subtitle">{{ 'participation' | translate }}</span>
+                        </div>
+                    </div>
+                    <div class="mlg-game-time-divider"></div>
+                    <div class="mlg-games-played">
+                        <mat-spinner class="spinner" mode="indeterminate" *ngIf="isLoading" diameter="20"></mat-spinner>
+                        <div *ngIf="!isLoading" class="mlg-content">
+                            <img src="../../../../assets/img/trophies.png" alt="" class="mlg-played-icon">
+                            <span class="mlg-count">{{ game?.trophies_achieved < 0 ? '--' : (game?.trophies_achieved | number) }}</span>
+                            <span class="mlg-subtitle">{{ 'trophies_achieved' | translate }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="button-row">
+                <div class="btn-right">
+                    <span class="cancel-button" tabindex="-1" (click)="viewAccuracyReport(game.game_id, 'accuracy')">{{'view_question_accuracy_report' | translate}}</span>
+                    <mat-icon (click)="viewAccuracyReport(game.game_id, 'accuracy')">open_in_new</mat-icon>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="leaderboard-container">
+        <div class="leaderboard">
+            <div class="header">
+               <span>{{ 'leaderboard_uppercase' | translate }}</span>
+            </div>
+            <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
+            <app-mlg-dashbaord-leaderboard (switchTab)="switchTab($event)" [selectedDashboardType]="selectedDashboardType" [selectedRange]="selectedRange"
+                [game]="game" [tabIndex]="tabIndex" [appliedFilters]="appliedFilters" [gametype]="true" [startDate]="startDate" [endDate]="endDate">
+            </app-mlg-dashbaord-leaderboard>
+        </div>
+        <div class="graphical-container">
+            <div class="feedback_container">
+                <div class="player_feedback">
+                    <span class="player_feedback_text">{{ 'player_feedback' | translate }}
+                        <ng-lottie width='30px' height='30px' [options]="options" *ngIf="game?.question_feedback?.open_count === 0 && !isLoading"
+                            (complete)="complete($event)" [ngClass]="{'hide-animation': hide}">
+                        </ng-lottie>
+                    </span>
+                    <div class="feedbacks">
+                        <div class="feedback_count">
+                            <span class="open_count" [ngClass]="{'no_feedback': game?.question_feedback?.open_count === 0 }">{{ game?.question_feedback?.open_count }}</span>
+                            <span class="feedback_status">{{ 'open' | translate }}</span>
+                        </div>
+                        <div class="count-divider"></div>
+                        <div class="feedback_count">
+                            <span class="closed_count" [ngClass]="{'no_feedback': game?.question_feedback?.resolved_count === 0 }">{{ game?.question_feedback?.resolved_count }}</span>
+                            <span class="feedback_status">{{ 'closed' | translate }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="button-row">
+                    <div class="btn-right">
+                        <span class="cancel-button" tabindex="-1" (click)="viewAccuracyReport(game.game_id, 'feedback')">{{'view_open_feedback' | translate}}</span>
+                        <mat-icon (click)="viewAccuracyReport(game.game_id, 'feedback')">open_in_new</mat-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="total-games-graph">
+                <div class="header">{{ 'total_games_played' | translate }}</div>
+    
+                <div class="canvasBarChart">
+                    <app-mlg-bar-chart *ngIf="!chartLoading" class="bar-chart" [chartData]="gameChartData" ></app-mlg-bar-chart>                
+                    <mat-spinner class="spinner" mode="indeterminate" *ngIf="chartLoading" diameter="20"></mat-spinner>
+                   </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="reset_view" *ngIf="resetView && !fetchingAllLocations">
+    <p>{{'pls_add_filter' | translate}}</p>
+</div>
+<div class="no_messages" *ngIf="fetchingAllLocations">
+    <mat-spinner [diameter]="40"></mat-spinner>
+    <p>{{'please_wait' | translate}}</p>
+</div>

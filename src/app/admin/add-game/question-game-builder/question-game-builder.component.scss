@@ -1,0 +1,442 @@
+.mat-card {
+  width: 95%;
+  margin: 10px auto;
+}
+
+#contextWrapper {
+  width: 250px;
+  height: auto;
+  z-index: 99;
+  background: #f2f2f2;
+  -moz-box-shadow: 3px 3px 4px #ccc;
+  -webkit-box-shadow: 3px 3px 4px #ccc;
+  box-shadow: 3px 3px 4px #ccc;
+
+  button {
+    outline: none;
+  }
+
+  button:disabled {
+    mat-icon {
+      color: #ccc;
+    }
+  }
+  .customContextMenu {
+    ul {
+      list-style: none;
+      padding: 10px 0;
+      margin: 0;
+    }
+  }
+}
+
+table {
+  font-family: Roboto_Regular;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.question-rows {
+  &:hover {
+    background: none !important;
+
+    &:not(.is-editing) {
+      -webkit-box-shadow: inset 0px 0px 0px 2px #ccc !important;
+      -moz-box-shadow: inset 0px 0px 0px 2px #ccc !important;
+      -o-box-shadow: inset 0px 0px 0px 2px #ccc !important;
+      -ms-box-shadow: inset 0px 0px 0px 2px #ccc !important;
+      box-shadow: inset 0px 0px 0px 2px #ccc !important;
+    }
+  }
+}
+
+td,
+th {
+  border: none;
+  text-align: left;
+  padding: 8px;
+}
+
+.align-top {
+  position: sticky;
+}
+
+th {
+  background: #e3e3e3;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  cursor: default;
+
+  .action {
+    cursor: pointer;
+  }
+}
+
+.action {
+  position: absolute;
+  right: 10px;
+  top: 0;
+  bottom: 0;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+
+  mat-icon {
+    font-size: 20px !important;
+  }
+
+  @media (max-width:768px) {
+    display: none;
+  }
+
+}
+
+tr.question-toggle {
+  height: 48px;
+}
+
+td.small-width {
+  width: 60px;
+  text-align: center;
+}
+
+td {
+  height: inherit;
+  padding: 0;
+  vertical-align: middle;
+
+  .question_container {
+    display: flex;
+    flex-direction: column;
+
+    .question-wrapper {
+      width: 100%;
+      display: flex;
+      align-items: center;
+
+      &.full-height {
+        height: 135px;
+        padding-top: 5px;
+      }
+
+      .question {
+        min-height: 80%;
+        flex: 1;
+        resize: none;
+        line-height: 1em;
+        border: 1px solid rgb(200, 200, 200);
+        outline: none;
+        &:focus {
+          border: 1px solid rgb(200, 200, 200);
+          background: #fff;
+        }
+      }
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 5px;
+
+      .options {
+        max-width: 100px;
+        display: flex;
+        align-items: center;
+
+        .text-options {
+          font-size: 16px;
+          margin: 0 10px;
+        }
+      }
+
+      mat-icon {
+        margin: 0 5px;
+      }
+    }
+  }
+
+  .answer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .choices {
+      display: flex;
+      flex: 1;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .answer {
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .answer-container {
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      padding-right: 6px;
+      /* Increase/decrease this value for cross-browser compatibility */
+      box-sizing: content-box;
+
+      .theme {
+        width: 100%;
+
+        .editing-options {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          height: 16px;
+
+          .edit {
+            margin: 0 5px;
+          }
+
+          .single-choice {
+            width: 14px;
+            height: 2px;
+            background: #000;
+          }
+        }
+      }
+
+      .answer-options {
+        display: flex;
+        flex-direction: column;
+        padding: 0 10px;
+        max-height: 175px;
+
+        .answer-option {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          margin: 2px;
+
+          .options {
+            width: 100%;
+
+            textarea {
+              min-height: 80%;
+              flex: 1;
+              resize: none;
+              line-height: 1em;
+              width: 100%;
+              border: 1px solid rgb(200, 200, 200);
+              outline: none;
+
+              &:focus {
+                background: #fff;
+              }
+            }
+
+            input {
+              font-family: Roboto_Regular;
+              margin-bottom: 5px;
+              color: rgb(117, 117, 117);
+              border: 1px solid rgb(200, 200, 200);
+              font-size: 13px;
+              min-width: 250px;
+              border-radius: 0;
+              &:focus {
+                background: #fff;
+              }
+            }
+          }
+        }
+
+        mat-checkbox {
+          margin-right: 5px;
+        }
+
+        .is-correct {
+          font-family: Roboto_Bold;
+        }
+      }
+
+      .answer-type-selection {
+        mat-chip {
+          margin: 10px;
+          background-color: #ffffff;
+          color: #000;
+          border: 1px dashed;
+        }
+      }
+    }
+
+    button {
+      display: flex;
+      align-items: center;
+      background: none;
+      box-shadow: none;
+      border: 1px dotted #000;
+      border-radius: 20px;
+      margin: 5px;
+      .single-icon {
+        width: 15px;
+        height: 2px;
+        margin-right: 3px;
+        background: #000;
+      }
+    }
+  }
+}
+
+
+.is_disabled {
+
+  input,
+  select,
+  mat-checkbox {
+    border: none !important;
+    pointer-events: none !important;
+    color: #444 !important;
+  }
+
+  textarea {
+    display: none;
+    color: #444 !important;
+  }
+
+  .is-truncated {
+    max-height: 78px;
+    display: flex !important;
+    align-items: center;
+    overflow: hidden !important;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    word-break: break-word;
+    white-space: normal;
+    font-size: 14px;
+    color: #444 !important;
+  }
+
+  .is-default-checkbox {
+    pointer-events: all !important;
+  }
+
+  .select {
+    border: 1px solid rgb(200, 200, 200) !important;
+  }
+}
+.headercard{
+  width: 50px;
+}
+.headerCheckbox {
+  text-align: center;
+  height: 37px;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+
+  .check-box-wrapper {
+    margin-top: 5px;
+  }
+}
+
+.sticky-progress {
+  position: absolute;
+  cursor: default;
+  right: 0;
+  left: 0;
+  z-index: 12;
+}
+
+.mat-menu-action {
+  position: fixed;
+  z-index: 999;
+}
+
+::ng-deep .mat-menu-item.mat-menu-item-submenu-trigger {
+  padding: 0px 24px 0 10px;
+  width: 160px;
+  float: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  outline: 0;
+  border: none;
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  line-height: 48px;
+  height: 48px;
+  text-align: left;
+  text-decoration: none;
+  max-width: 100%;
+  position: relative;
+  margin: 0;
+}
+
+// select-all checkbox style // multiple classes to reduce code in html
+.select-all-checkbox {
+  ::ng-deep .mat-checkbox .mat-checkbox-frame {
+    border-color: #808080;
+  }
+
+  &:hover {
+    ::ng-deep .mat-checkbox .mat-checkbox-frame {
+      border-color: #020202 !important;
+    }
+  }
+}
+
+//  .mat-menu-item:hover:not([disabled]),
+::ng-deep .mat-menu-item.cdk-program-focused:not([disabled]), 
+ .mat-menu-item.cdk-keyboard-focused:not([disabled])
+{
+  background-color: unset !important;
+}
+
+
+.options-menu-item{
+  &:hover {
+    background-color: #d4d4d4 !important;
+  }
+}
+.list-container {
+    width: calc(100vw - 170px);
+    height: calc(100vh - 290px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: #444;
+    @media only screen and (max-width: 700px) {
+      width: calc(100vw - 20px);
+
+    }
+}
+  .collapse-div-height{
+    height: calc(100vh - 295px);
+
+  }
+  .library-height{
+    height: calc(100vh - 340px);
+  }
+  .no_messages{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    color: #5f6268;
+    font-family: Roboto_Regular;
+    font-size: 14px;
+    text-align: center;
+    padding: 20px 0 0;
+    font: {
+      family: Roboto_Regular;
+    }
+    .bottom-margin {
+      margin-bottom: 0;
+    }
+  }

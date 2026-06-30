@@ -1,0 +1,23 @@
+<div class="container">
+  <mat-toolbar class="small-toolbar" color="primary">Select Game Icon</mat-toolbar>
+  <div class="content">
+    <mat-grid-list cols="{{breakpoint}}" rowHeight="1:1" [gutterSize]="'20px'">
+      <mat-grid-tile class="image-container"
+        [ngClass]="{'selected-container': image.icon_url == selectedImage.icon_url}" *ngFor="let image of staticImages"
+        (click)="selectedImage = image">
+        <img [src]="image.icon_url" />
+        <mat-icon *ngIf="image.icon_url == selectedImage.icon_url">done</mat-icon>
+      </mat-grid-tile>
+      <mat-grid-tile class="add-image-container addIcon" (click)="attachImage()">
+        <mat-icon>add</mat-icon>
+      </mat-grid-tile>
+    </mat-grid-list>
+    <div class="button-row">
+      <div class="btn-right">
+        <button mat-button (click)="apply()" tabindex="-1">
+          DONE
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

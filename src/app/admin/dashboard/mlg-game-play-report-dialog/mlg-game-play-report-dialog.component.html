@@ -1,0 +1,182 @@
+<mat-card class="wrapper" id="wrapper" tabindex="0" [ngClass]="{'disabled-style': is_loading}" *ngIf="!is_loading">
+    <div class="left">
+        <div class="leftTop">
+            <div class="closeIcon" *ngIf="isMobile">
+                <i class="material-icons" (click)="close()">
+                    close
+                </i>
+            </div>
+            <div class="logo-wrapper">
+                <img class="mlg-logo" [src]="playerDetails?.profile_image_url"
+                    onError="this.src='/assets/img/default.png'" />
+                <span class="player-status" [ngClass]="{'isActive': playerDetails?.is_active}"></span>
+            </div>
+            <div class="player-name-container">
+                <span class="title" #elements matTooltip="{{playerDetails?.first_name | uppercase}} {{playerDetails?.last_name | uppercase}}" [matTooltipShowDelay]="500"  [matTooltipDisabled]="elements.offsetWidth >= elements.scrollWidth">
+                    {{playerDetails?.first_name | uppercase}} {{playerDetails?.last_name | uppercase}}
+                </span>
+
+            </div>
+        </div>
+
+        <div class="player-details">
+            <div class="location">
+                <img src="../../../../assets/img/icon/location.png" alt="" class="mlg-won-icon">
+                <span class="mlg-subtitle" matTooltip="{{playerDetails?.primary_field}}">{{playerDetails?.primary_field ? playerDetails?.primary_field : '--'}}</span>
+            </div>
+            <div class="product">
+                <img src="../../../../assets/img/icon/clarity_building-solid.png" alt="" class="mlg-progress-icon">
+                <span class="mlg-subtitle" matTooltip="{{playerDetails?.secondary_field}}">{{playerDetails?.secondary_field ? playerDetails?.secondary_field : '--'
+                    }}</span>
+            </div>
+
+            <div class="phase1">
+                <img src="../../../../assets/img/icon/bxs_group.png" alt="" class="mlg-played-icon">
+                <span class="mlg-subtitle" matTooltip="{{playerDetails?.group}}">{{playerDetails?.group ? playerDetails?.group : '--' }}</span>
+            </div>
+
+        </div>
+
+        <div class="progress-wrapper">
+            <div class="canvasDiv">
+                <canvas id="circleChartPopup" #circleChartPopup></canvas>
+                <div class="progress-container">
+                    <span class="progress">{{mlgProgressDetails}}%</span>
+                </div>
+
+            </div>
+            <div class="progress-wrapper-text" [ngClass]="{'align-won': playerMlgDetails?.is_achieved, 'align-progress': !playerMlgDetails?.is_achieved}">
+                <mat-card-title class="subText-left">{{'status_uppercase' | translate }}</mat-card-title>
+                <mat-card-title class="text-left"> {{playerMlgDetails?.is_achieved ? ('won_upper' | translate) : ('inprogress_upper' | translate) }} </mat-card-title>
+            </div>
+        </div>
+
+        <div class="mlg-details-container">
+            <div class="mlg-score">
+                <div class="mlg-record">
+                    <div class="mlg-won">
+                        <img src="../../../../assets/img/icon/totalpoint.png" alt="" class="mlg-won-icon">
+                        <span class="mlg-count">{{ playerMlgDetails?.total_point < 0 ? '--' : (playerMlgDetails?.total_point | number) }}</span>
+                        <span class="mlg-subtitle">{{ 'total_points' | translate }}</span>
+                    </div>
+                    <div class="mlg-record-divider"></div>
+                    <div class="mlg-progress">
+                        <img src="../../../../assets/img/icon/currentlevel.png" alt="" class="mlg-progress-icon">
+                        <span class="mlg-count">{{ playerMlgDetails?.current_level < 0 ? '--' : playerMlgDetails?.current_level }}/{{playerMlgDetails?.total_levels}} </span>
+                        <span class="mlg-subtitle">{{ 'current_level' | translate }}</span>
+                    </div>
+                </div>
+                <div class="horizontal-divider"></div>
+
+                <div class="mlg-game-time">
+                    <div class="mlg-games-played">
+                        <img src="../../../../assets/img/mlg_gamesplayed.png" alt="" class="mlg-played-icon">
+                        <span class="mlg-count">{{ playerMlgDetails?.games_played < 0 ? '--' : (playerMlgDetails?.games_played | number) }}</span>
+                        <span class="mlg-subtitle">{{ 'games_played' | translate }}</span>
+                    </div>
+                    <div class="mlg-game-time-divider"></div>
+                    <div class="mlg-time-spent">
+                        <img src="../../../../assets/img/mlg_timespent.png" alt="" class="mlg-time-icon">
+                        <span class="mlg-count">{{ playerMlgDetails?.time_spent < 0 ? '--:--:--' : convertToHHMMSS(playerMlgDetails?.time_spent) }}</span>
+                        <span class="mlg-subtitle">{{ 'time_spent' | translate }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="right">
+        <div class="rightTop">
+            <div class="topleft">
+                <mat-card-title class="text"> {{'player_report' | translate}} </mat-card-title>
+                <div class="topLeftTitle">
+                    <span class="subText" *ngIf="showPlayerMlg" [ngClass]="{'customFont': showPlayerMlg}">{{('multilevel_game_summary' | translate)}}</span>
+                    <div class="separator" *ngIf="showPlayerMlg"></div>
+                    <span class="mlg-name" [ngClass]="{'customName': showPlayerMlg}"
+                    #elements matTooltip="{{mlg_name}}" [matTooltipShowDelay]="500" [matTooltipDisabled]="elements.offsetWidth >= elements.scrollWidth">
+                    {{mlg_name}}</span>
+                </div>
+            </div>
+
+            <div>
+                <div class="closeIcon" *ngIf="!isMobile">
+                    <i class="material-icons" (click)="close()">
+                        close
+                    </i>
+                </div>
+            </div>
+        </div>
+        <div class="content-wrapper-right">
+            <div class="mlg-leaderboard" *ngIf="mlgDetails && mlgDetails.length">
+                <table mat-table aria-describedby="" [dataSource]="mlgGameplayDetails" class="responsive-table" matSort
+                    matSortActive="" matSortDirection="asc" matSortDisableClear>
+                    <ng-container matColumnDef="level">
+                        <th id="" mat-header-cell *matHeaderCellDef>
+                            {{'level' | translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let player" class="player-rank-holder">
+                            <p class="large-content">
+                                {{player.level}}
+                            </p>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="game_logo">
+                        <th id="" mat-header-cell *matHeaderCellDef class="checkboxes"></th>
+                        <td mat-cell *matCellDef="let player" class="player-logo-holder">
+                            <div class="game-logo-content">
+                                <img class="player-logo" appSignedUrl [imgSelector]="'changeImageSrc'" [imgSrcValue]="player.game_image_url"
+                                onError="this.src='/assets/img/default.png'" src="/assets/img/default.png" alt=""/>
+                                <img src="../../../../assets/img/disabled_level.png" alt="" *ngIf="player.is_disabled" class="disabled-logo">
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="game">
+                        <th id="" mat-header-cell *matHeaderCellDef class="player-column">
+                            {{'game' | translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let player" class="player-name-holder">
+                            <div class="game-name-container">
+                                <p [ngClass]="{'disabled-game': player.is_disabled, 'wrapped': !player.is_disabled}"
+                                #elements matTooltip="{{player.game_name}}" [matTooltipShowDelay]="500" [matTooltipDisabled]="elements.offsetWidth >= elements.scrollWidth">
+                                {{player.game_name}}</p>
+                                <span class="disabled-game-text" *ngIf="player.is_disabled">(Disabled)</span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="high_score">
+                        <th id="" mat-header-cell *matHeaderCellDef class="points-column">
+                            {{'high_score' | translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let player" class="points-holder">
+                            <p class="points-earned" [ngClass]="{'disabled-game': player.is_disabled}">
+                                {{player?.high_score < 0 ? '--' : player?.high_score + '%'}}
+                            </p>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="completion">
+                        <th id="" mat-header-cell *matHeaderCellDef class="points-column">
+                            {{'completion' | translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let player" class="status-holder">
+                            <img src="../../../../assets/img/completed.png" alt="" class="mlg-won-icon"
+                                *ngIf="player.completion">
+                            <img src="../../../../assets/img/incompleted.png" alt="" class="mlg-won-icon"
+                                *ngIf="!player.completion">
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="game-row pointerDefault">
+                    </tr>
+                </table>
+            </div>
+            <div class="no_messages" *ngIf="mlgDetails && !mlgDetails.length">
+                <p>{{('no_gameplay' | translate)}}</p>
+            </div>
+        </div>
+    </div>
+</mat-card>
+<div class="spinner" *ngIf="is_loading">
+    <mat-spinner mode="indeterminate" diameter="40"></mat-spinner>
+</div>

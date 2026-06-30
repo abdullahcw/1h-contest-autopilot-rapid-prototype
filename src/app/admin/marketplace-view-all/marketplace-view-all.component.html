@@ -1,0 +1,94 @@
+<div class="main-container view-all-style">
+
+  <div class="wrapper" #scrollLength (scroll)="onScroll()">
+    <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+  
+    <mat-card class="container-card" [ngClass]="{'disabled-style': is_loading}" id="container"  >
+      <div class="scroll-content" [ngStyle]="{ 'height': contentHeight +'px' }" >
+      <mat-card-header>
+        <div class="banner-image">
+          <img [src]="marketplaceBannerImage" alt=""  style="text-indent: -10000px">
+          <div class="edit-image-section" (click)="imgInput && imgInput?.click()" *ngIf="shopPermission?.edit">
+            <mat-icon>
+              add_a_photo
+            </mat-icon>
+            {{'edit_banner' | translate}}
+            <input type="file" onclick="this.value=null" #imgInput id="upload_image" [hidden]="true" accept="image/*"
+              (change)="fileChangeEvent($event)" />
+          </div>
+        </div>
+      </mat-card-header>
+
+      <mat-card-header class="search-toolbar-row" sticky="yes" >
+        <mat-icon class="search-icon" *ngIf="!isSearchText">search</mat-icon>
+        <input #search_field type="search" [formControl]="filterGames" class="search-item" 
+          placeholder="{{'search_games' | translate}}" >
+
+          <div *ngIf="isSearchText && gamesObject.length" class="list-wrapper">
+                  <span class="text-game">Games</span>
+                  <mat-list role="list"  class="list-content" style="background-color: ;#fff">
+                  <mat-list-item role="listitem" class="list-item" *ngFor="let game of gamesObject;let i=index;" 
+                  (click)="navigateToShopPreview(game)" >
+                  <span class="game-name" >
+                    {{game.game_name}} 
+                  </span>  
+                  |
+                  <span class="category-name" >
+                    {{game.game_category_name}}
+                  </span> 
+                  </mat-list-item> 
+                    <mat-divider class="list-item-divider"></mat-divider>   
+                  </mat-list>
+            </div>
+
+          <div *ngIf="isSearchText && !gamesObject.length" class="list-wrapper"  id="scroll">
+            <div class="list-content">
+              <span class="lottie-animation">
+                <ng-lottie width='45px' height='46px' [options]="options">
+                </ng-lottie>
+              </span>
+                <div class="no-record-msg">
+                <span>
+                      {{'shop_search_msg1' | translate}}
+                </span>
+                  <span> 
+                    {{'shop_search_msg2' | translate}}
+                    </span>
+                    <span>
+                      {{'shop_search_msg3' | translate}} 
+                      <a (click)="openLink()">request a game</a>
+                        {{'shop_search_msg4' | translate}} 
+                    </span>
+                  </div>
+              </div> 
+         </div>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="game-container">
+          <div class="gameListGrid" >
+            <mat-grid-list  cols="{{breakpoint}}" rowHeight="288px" [gutterSize]="'15px'" >
+              <mat-grid-tile                
+              *ngFor="let gameData of games;"
+                  >
+                  <mat-card class="mat-card-item" style="width: 223px;height: 278px;box-shadow: none !important;background: transparent !important;">                
+                    <app-card-entity [cardData]="gameData" [totalGames]="games_category_count" (addItem)="addMarketplaceGame($event)"
+                    (editItem)="editShopGame($event)" (positionChange)="changeShopGamePosition($event)" (removeItem)="removeShopGame($event)"
+                    (cardClicked)="navigateToShopPreview(gameData)"></app-card-entity>
+                  </mat-card>
+              </mat-grid-tile>
+            </mat-grid-list>
+          </div>
+        </div>
+
+      </mat-card-content>
+    </div>
+    </mat-card>
+    
+  </div>
+
+  <mat-card-actions>
+    <mat-paginator #paginator [length]="totalGames" [pageSize]="noOfItemsPerPage"
+      [pageSizeOptions]="pageSizeOptions" (page)="getGamesOverPagination($event)">
+    </mat-paginator>
+  </mat-card-actions>
+</div>

@@ -1,0 +1,13 @@
+<div class="{{class}}">
+  <span class="overlay" *ngIf="showImageOverlay">
+  <img src="{{imageUrl}}" (load)="isImageLoaded()" (error)="onImageError($event)" class="{{class}}" [ngClass]="{'with-border': isLoadingComplete}">
+  <i class="fa fa-eye fa-2x" aria-hidden="true"></i>
+  </span>
+  <span class="overlayCart" *ngIf="context === 'cart' || context ==='orderHistory'">
+  <img src="{{imageUrl}}" (load)="isImageLoaded()" (error)="onImageError($event)" [width]="width" class="{{class}}" [ngClass]="{'with-border': isLoadingComplete}">
+  <div class="view-delete-container">
+  <span class="view" (click)="onPreviewItem()">Preview</span>
+</div>
+</span>
+<img *ngIf="!showImageOverlay && !context" src="{{imageUrl}}" [width]="width" (load)="isImageLoaded()" (error)="onImageError($event)" [ngClass]="{'with-border': isLoadingComplete}">
+</div>

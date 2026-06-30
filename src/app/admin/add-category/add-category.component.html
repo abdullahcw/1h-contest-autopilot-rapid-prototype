@@ -1,0 +1,33 @@
+<div class="main-container">
+  <mat-toolbar class="small-toolbar" color="primary">
+    {{titleToBeDisplayed}}
+  </mat-toolbar>
+  <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+  <section class="add-category-content" [ngClass]="{'disabled-style': is_loading}">
+    <form #addCategoryForm="ngForm">
+      <div class="container">
+        <div class="input-text">
+          <input type="text" class="holder form-inputs" placeholder="{{'enter_category_name' | translate}}"
+            name="category_name" (input)="categoryChanged()" [(ngModel)]="category.category_name" maxlength="20"
+            pattern="^\s?(\w.*)$" minlength="1" appValidateInput required>
+          <mat-error class="error-msg" *ngIf="categoryExist">
+            {{'this_category_already_exists.' | translate}}
+          </mat-error>
+        </div>
+        <div class="button-row">
+          <div class="btn-right">
+            <button type="button" mat-button class="cancel-button" tabindex="-1"
+              (click)="cancel()">{{'cancel_uppercase' | translate}}</button>
+          </div>
+          <div>
+            <button type="button" mat-button class="save-button" tabindex="-1" (click)="addCategory()" *ngIf="!editMode"
+              [disabled]="!addCategoryForm.valid || !addCategoryForm.dirty">{{'save_uppercase' | translate}}</button>
+            <button type="button" mat-button class="save-button" tabindex="-1"
+              [disabled]="!addCategoryForm.valid || !addCategoryForm.dirty" (click)="updateCategory(category)"
+              *ngIf="editMode">{{'save_uppercase' | translate}}</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </section>
+</div>

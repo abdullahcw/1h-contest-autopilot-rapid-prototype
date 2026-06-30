@@ -1,0 +1,107 @@
+<div>
+  <div class="action_icons">
+    <img src="assets/img/download.png" (click)="downloadImage()">
+    <mat-icon (click)="close()">close</mat-icon>
+  </div>
+
+</div>
+<div class="trophy-details-wrapper" id="capture" #capture>
+
+  <div class="trophy_title">
+    <span *ngIf="trophy.isGameTrophy">{{'trophy_achieved_uppercase' | translate}}</span>
+    <span *ngIf="trophy.isMLGTrophy">{{'you_win' | translate}}</span>
+  </div>
+
+  <div class="trophy_desc">
+    <span *ngIf="trophy.isGameTrophy" style=" overflow: hidden;max-height: 67px;line-height: 1.3; ">{{trophy.description}}</span>
+
+    <span *ngIf="trophy.isMLGTrophy" style=" overflow: hidden;max-height: 67px;line-height: 1.3; ">
+      {{ (trophy.mlg_rule == null) ? ('no_rules_text' | translate) : trophy.mlg_rule  }}      
+    </span>
+
+  </div>
+
+  <div class="trophy_name">
+    <span>{{trophy.trophies_name}}</span>
+  </div>
+  <div class="game_logo_wrapper" *ngIf="trophy.isMLGTrophy">
+
+    <img class="trophy-icon" [src]="trophy.logo_url" onError="this.src='/assets/img/default.png'" alt="" />
+
+  </div>
+  <div class="game_logo_wrapper" *ngIf="!trophy.isMLGTrophy">
+
+    <img class="trophy-icon" src="assets/img/ring.png" onError="this.src='/assets/img/default.png'" alt="" />
+    <div>
+      <canvas class="game_logo" style="
+   width: 101px;
+    height: 101px;
+    top: 37px;
+    left: 37px;"
+       #gmaelogoImg></canvas>
+    </div>
+  </div>
+
+  <div class="certificate_text">
+    <span>{{'certificate_of_completion' | translate}}</span>
+  </div>
+
+
+  <div class="player_name">
+    <span>{{player_info.first_name}}&nbsp;{{player_info.last_name}}</span>
+  </div>
+
+
+  <div class="trophy_requirements">
+    <div class="game_trophy_achived_details">
+      <div class="customRow div1" style="margin-top: 10px;" *ngIf="trophy.isGameTrophy">
+        <span class="styling_title">{{'trophy_requirements' | translate}}</span>
+        <span class="styling_title" style="padding-top: 2px;">{{'attempts' | translate}}:
+          <span class="styling_value">
+            {{trophy?.attempts
+            ? trophy?.attempts
+            : 'notApplicable' |
+            translate}}
+          </span>
+        </span>
+        <span class="styling_title" style="padding: 1px 0;">
+          {{'gameTotalPointsLower' | translate}}:
+          <span class="styling_value">
+            <app-numbers [value]="trophy?.points ?
+            trophy?.points : 'notApplicable' |
+            translate"></app-numbers>
+          </span>
+        </span>
+
+        <span class="styling_title">{{'gameHighScoreLower' |
+          translate}}:
+          <span class="styling_value">
+            {{trophy?.high_score ?
+            trophy?.high_score + '%' :
+            'notApplicable' | translate}}</span>
+
+        </span>
+      </div>
+
+      <div class="customRow div2" style="margin-top: 10px;" [ngClass]="{'mlgTrophy':trophy.isMLGTrophy}">
+        <div class="createdby_text" [ngClass]="{'mlg-alignement-change':trophy.isMLGTrophy}">
+          <span class="styling_title">{{'created_by' | translate}}</span>
+          <span class="styling_value">{{player_info?.company_name}}</span>
+        </div>
+        <div class="createdby_text">
+          <span class="styling_title alignement" [ngClass]="{'mlg-alignement':trophy.isMLGTrophy}">{{'trophy_achived' |
+            translate}}</span>
+          <span class="styling_value">{{trophy?.achived_date}}</span>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div id="download">
+  <img #canvas>
+  <a #downloadLink></a>
+</div>

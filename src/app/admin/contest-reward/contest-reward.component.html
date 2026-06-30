@@ -1,0 +1,57 @@
+<section class="master-wrapper">
+  <mat-toolbar class="small-toolbar" color="primary">
+    <div>{{'reward' | translate}}</div>
+    <mat-icon class="cancel-icon" (click)="cancel()" *ngIf="!contestService.isContestEditable">close</mat-icon>
+  </mat-toolbar>
+  <div class="wrapper">
+    <div class="main-container">
+      <div class="rewards-wrapper">
+        <div class="item-container suffix-spinner-wrapper">
+          <div class="label-container">
+            <label for="category">{{ 'category' | translate }}</label>
+            <label class="updating-message" *ngIf="is_updating">{{ 'saving_changes' | translate }}</label>
+          </div>
+          <app-search-select class="search-select" [ngClass]="{'view-mode': !contestService.isContestEditable }"
+            [items]="rewardCategoryList" [selectedId]="contestReward?.category_id"
+            placeholderText="{{'reward_category_placeholder' | translate }}" (change)="onCategoryChange($event)"
+            [disabled]="fetchCategory" [isRequired]=true>
+          </app-search-select>
+          <mat-spinner class="spinner" mode="indeterminate" *ngIf="fetchCategory" diameter="20">
+          </mat-spinner>
+        </div>
+        <div class="item-container suffix-spinner-wrapper">
+          <label for="reward"> {{ 'contest_reward' | translate }}</label>
+          <app-search-select class="search-select" [ngClass]="{'view-mode': !contestService.isContestEditable }"
+            [items]="rewardList" [selectedId]="rewardId"
+            placeholderText="{{'select_contest_reward_placeholder' | translate }}" (change)="onRewardChange($event)"
+            [disabled]="!contestReward?.category_id || fetchReward || fetchCategory" [isRequired]=true>
+          </app-search-select>
+          <mat-spinner class="spinner" mode="indeterminate" *ngIf="fetchReward" diameter="20">
+          </mat-spinner>
+        </div>
+
+        <div class="item-container description-wrapper">
+          <label for="description"> {{ 'description' | translate }}</label>
+          <textarea class="reward-description" name="reward-description"
+            placeholder="{{ 'reward_description_placeholder' | translate}}" [(ngModel)]="contestReward.reward_desc"
+            [disabled]="!contestReward.reward_id || fetchReward || fetchCategory"
+            [readonly]="!contestService.isContestEditable" maxlength="500">
+            </textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="button-row" *ngIf="contestService.isContestEditable">
+      <div class="btn-right">
+        <button type="button" mat-button class="cancel-button" tabindex="-1"
+          (click)="cancel()">{{'cancel_uppercase' | translate}}</button>
+      </div>
+      <div>
+        <button type="submit" mat-button (click)="updateContestReward()" tabindex="-1"
+          [disabled]="!contestReward.reward_id">
+          {{'done_uppercase' | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

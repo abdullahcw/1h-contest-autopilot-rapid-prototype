@@ -1,0 +1,44 @@
+@import "../../../styles.scss";
+
+.scheduling-filters-wrapper{
+ 
+    .scheduling_filters_title{
+        span{
+            font-size: 14px;
+            font-family: 'Roboto_Regular';
+        }
+    }
+    .radio_btn_group_wrapper{
+        display: flex;
+        flex-direction: column; 
+
+        .radio_btn_group{
+
+            .radioBtn_text{
+                display: flex;
+                flex-direction: column;
+                // padding-top: 20px;
+                span{
+                    font-size: 14px;
+                    font-family: 'Roboto_Regular';
+                }
+                .bgColor{
+                    color: #757575;
+                }
+            }
+        }
+
+        ::ng-deep .mat-radio-inner-circle,
+        ::ng-deep .mat-radio-outer-circle {
+          height: 16px;
+          left: 3px;
+          top: 2px;
+          width: 16px;
+        }
+
+        ::ng-deep .mat-radio-container{
+            margin-bottom: 20px;
+        }
+    }
+   
+}

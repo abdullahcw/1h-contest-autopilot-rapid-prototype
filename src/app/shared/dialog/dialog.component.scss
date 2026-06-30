@@ -1,0 +1,55 @@
+
+@import '../../../../src/assets/main.scss';
+
+.dialogWrapper{
+    min-width: 400px;
+    // height: 200px;
+
+    @include media-breakpoint-down(xs) {
+        min-width: 300px;
+      }
+    .header{
+        display: flex;
+        justify-content: space-between;
+        height: 50px;
+        font-family: Roboto_Medium;
+        font-size: 18px;
+        mat-icon{
+            cursor: pointer;
+        }
+    }
+
+    .title{
+
+    }
+    .content{
+        height: 100px;
+        width: 500px;
+        display: flex;
+        align-items: center;
+        padding: 20px;
+        font-family: Roboto_Regular;
+        font-size: 16px;
+
+        @include media-breakpoint-down(xs) {
+            height: 150px;
+            width: 348px;
+          }
+    }
+
+    .button-row {
+        display: flex;
+        justify-content: flex-end;
+        padding: 12px 10px;
+        .btn-right {
+            margin-left: auto;
+        }
+        .cancel-button{
+            border:0px;
+            // margin-right: 10px;
+            background: white;
+    
+            cursor: pointer;
+        }
+    }
+}

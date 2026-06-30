@@ -1,0 +1,59 @@
+<div class="pin-card" (click)="navigateToGameBuilder(pinGameData)">
+    <div class="pincard-upper-content">
+        <div class="pingame-details">
+            <div class="pingame-wrapper">
+                <app-custom-images-table class="img-wrapper" [className]="'img48by48'"  [ImageSrc]="pinGameData?.game_logo" > </app-custom-images-table>
+  
+            </div>
+            <div class="pingame-content">
+                <span class="pingame-name">{{pinGameData && pinGameData?.game_name}}</span>
+                <span class="pingame-category">{{pinGameData?.game_category}}</span>
+            </div>
+        </div>
+        <div class="pingame-winrate" [ngClass]="{'low-winrate': pinGameData?.win_rate > 0 && pinGameData?.win_rate <= 50, 
+            'medium-winrate': pinGameData?.win_rate >= 51 && pinGameData?.win_rate <= 75, 'high-winrate': pinGameData?.win_rate >= 76 && pinGameData?.win_rate <= 100}" *ngIf="pinGameData?.win_rate != 0">
+            <span class="winrate-count" [ngClass]="{'low-winrate-count': pinGameData?.win_rate > 0 && pinGameData?.win_rate <= 50,
+                'medium-winrate-count': pinGameData?.win_rate >= 51 && pinGameData?.win_rate <= 75, 'high-winrate-count': pinGameData?.win_rate >= 76 && pinGameData?.win_rate <= 100}">
+                {{pinGameData?.win_rate}}
+            </span>
+            <span class="winrate-text">{{'win_rate_upper' | translate}}</span>
+        </div>
+        <div *ngIf="pinGameData?.win_rate == 0" class="no-winrate">
+            <span>{{'no_uppercase' | translate}}</span>
+            <span>{{'gameplay_uppercase' | translate}}</span>
+        </div>
+    </div>
+    <div class="pincard-lower-content" [ngClass]="{ 'no-topplayers': !pinGameData?.top_players?.length }"> 
+        <div class="pingame-topplayers">
+            <span>{{pinGameData?.top_players?.length ? ('top_players' | translate) : ('no_gameplay' | translate)}}</span>
+            <div class="topplayers-img-wrapper" *ngIf="pinGameData?.top_players?.length">
+                <div *ngFor="let topPlayers of pinGameData?.top_players;let i=index;">
+                    <app-custom-images-table-static class="img-wrapper" [imageWithBorder]="false" [className]="'img35by35'" [ImageSrc]="topPlayers?.profile_image_url" > </app-custom-images-table-static>
+
+                </div>
+            </div>
+        </div>
+        <div class="pingame-actions">
+            <div class="pingame-actions-pin" matTooltip= "{{'remove_pin' | translate}}"  matTooltipPosition="below" (click)="removePinGame(pinGameData.game_id); $event.stopPropagation();">
+                <img src="/assets/img/pin_icon.png" alt="" (mouseenter)="showUnpin=true" *ngIf="!showUnpin"/>
+                <img src="/assets/img/unpin_icon.png" alt="" (mouseleave)="showUnpin=false" *ngIf="showUnpin" />
+            </div>
+            <div class="pingame-actions-stats" matTooltip= "{{'go_to_dashboard' | translate}}"  matTooltipPosition="below" (click)="navigateToDashboard(pinGameData.game_id); $event.stopPropagation();">
+                <svg class="icon assets-icon" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="m76 240c12.101562 0 23.054688-4.855469 31.148438-12.652344l44.402343 22.199219c-.222656 1.808594-.550781 3.585937-.550781 5.453125 0 24.8125 20.1875 45 45 45s45-20.1875 45-45c0-6.925781-1.703125-13.410156-4.511719-19.277344l60.234375-60.234375c5.867188 2.808594 12.351563 4.511719 19.277344 4.511719 24.8125 0 45-20.1875 45-45 0-4.671875-.917969-9.089844-2.246094-13.328125l52.335938-39.242187c7.140625 4.769531 15.699218 7.570312 24.910156 7.570312 24.8125 0 45-20.1875 45-45s-20.1875-45-45-45-45 20.1875-45 45c0 4.671875.917969 9.089844 2.246094 13.328125l-52.335938 39.242187c-7.140625-4.769531-15.699218-7.570312-24.910156-7.570312-24.8125 0-45 20.1875-45 45 0 6.925781 1.703125 13.410156 4.511719 19.277344l-60.234375 60.234375c-5.867188-2.808594-12.351563-4.511719-19.277344-4.511719-12.101562 0-23.054688 4.855469-31.148438 12.652344l-44.402343-22.199219c.222656-1.808594.550781-3.585937.550781-5.453125 0-24.8125-20.1875-45-45-45s-45 20.1875-45 45 20.1875 45 45 45zm0 0" />
+                    <path
+                        d="m497 482h-16v-317c0-8.289062-6.710938-15-15-15h-60c-8.289062 0-15 6.710938-15 15v317h-30v-227c0-8.289062-6.710938-15-15-15h-60c-8.289062 0-15 6.710938-15 15v227h-30v-107c0-8.289062-6.710938-15-15-15h-60c-8.289062 0-15 6.710938-15 15v107h-30v-167c0-8.289062-6.710938-15-15-15h-60c-8.289062 0-15 6.710938-15 15v167h-16c-8.289062 0-15 6.710938-15 15s6.710938 15 15 15h482c8.289062 0 15-6.710938 15-15s-6.710938-15-15-15zm0 0" />
+                </svg>
+            </div>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="game-state">
+        <span class="robotoRegular gameMode" 
+            [ngClass]="{'draft-color': pinGameData?.game_state == 'DRAFT' , 'ready-color': pinGameData?.game_state == 'READY','live-color': pinGameData?.game_state == 'LIVE'}">
+            {{pinGameData?.game_state}}
+        </span>
+    </div>
+
+</div>

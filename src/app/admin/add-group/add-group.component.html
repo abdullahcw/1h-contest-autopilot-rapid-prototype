@@ -1,0 +1,55 @@
+<div class="main-container">
+    <mat-toolbar class="small-toolbar" color="primary">
+        <div>
+            {{titleToBeDisplayed}}
+        </div>
+    </mat-toolbar>
+    <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>
+    <section class="add-group-content" [ngClass]="{'disabled-style': is_loading}">
+        <form #addGroupForm="ngForm">
+            <div class="container">
+                <div class="form-group" *ngIf="canEdit('addNewGroup') || canEdit('updateGroup')">
+                    <label for="group">{{'group' | translate}}</label>
+                    <input type="text" class="holder form-inputs" placeholder="{{'enter_name' | translate}}" name="group_name"
+                        [(ngModel)]="group.group_name" maxlength="40" minlength="1" appValidateInput required>
+                </div>
+                <div class="form-group" *ngIf="canEdit('changeGroup')">
+                    <label for="group_list">{{'group' | translate}}</label>
+                    <select class="state-drop-down form-inputs form-control" id="group_list"
+                        [(ngModel)]="group.group_name" name="group_name_list" (ngModelChange)="onGroupChange($event)"
+                        required>
+                        <option selected disabled value="">{{'select_group' | translate}}</option>
+                        <option *ngFor="let group of groups" [ngValue]="group.group_id">{{group.group_name}}</option>
+                    </select>
+                </div>
+                <div class="button-row">
+                    <div *ngIf="canEdit('updateGroup')">
+                        <button type="button" class="delete-button" (click)="deleteGroup()" mat-button>
+                            {{'delete_uppercase' | translate}}
+                        </button>
+                    </div>
+                    <div class="btn-right">
+                        <button type="button" mat-button class="cancel-button" tabindex="-1"
+                            (click)="cancel()">{{'cancel_uppercase' | translate}}</button>
+                    </div>
+                    <div>
+                        <button *ngIf="canEdit('addNewGroup') || canEdit('updateGroup')" type="submit" mat-button
+                            [disabled]="!addGroupForm.valid || !addGroupForm.dirty"
+                            (click)="group.group_id ? updateGroup(group) : addGroup()">
+                            <div *ngIf="!group.group_id; else other_content">
+                                {{'add_uppercase' | translate}}
+                            </div>
+                            <ng-template #other_content>{{'done_uppercase' | translate}}</ng-template>
+                        </button>
+                        <button *ngIf="canEdit('changeGroup')" type="submit" mat-button
+                            [disabled]="!addGroupForm.valid || !addGroupForm.dirty" (click)="linkPlayersToGroup()">
+                            <div>
+                                {{'add_uppercase' | translate}}
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+</div>

@@ -1,0 +1,404 @@
+@import "../../../../styles.scss";
+@import "../../../../assets/colors";
+
+.contest-header {
+  height: 80px !important;
+  display: flex;
+  padding: 0 40px;
+  align-items: unset;
+
+  @include media-breakpoint-down(xs) {
+    height: auto !important;
+    padding: 0 5px;
+  }
+
+  .contest-header-conatiner {
+    display: flex;
+    width: 100%;
+
+    @include media-breakpoint-down(xs) {
+      flex-direction: column;
+    }
+
+    .contest-title-container {
+      display: flex;
+      width: 100%;
+
+      .contest-icon-wrapper {
+        display: flex;
+        align-items: center;
+      }
+
+      @include media-breakpoint-down(xs) {
+        flex: 1;
+        margin-bottom: 2px;
+      }
+
+      .contest-icon-container {
+        position: relative;
+
+        .contest-icon {
+          height: 72px;
+          width: 128px;
+          border: 1px solid $midGrey;
+          object-fit: cover;
+
+          @include media-breakpoint-down(xs) {
+            height: 45px;
+            width: 45px;
+          }
+        }
+
+        .contest-icon-overlay {
+          align-items: center;
+          justify-content: center;
+          display: flex;
+          color: white;
+          position: absolute;
+          background: rgba(0, 0, 0, 0.5);
+          width: 100%;
+          height: 100%;
+          left: 0;
+          top: 0;
+          opacity: 0;
+        }
+
+        &:hover .contest-icon-overlay {
+          opacity: 1;
+          cursor: pointer;
+          pointer-events: none;
+        }
+      }
+
+      .contest-name-holder-wrapper {
+        width: 100%;
+
+        .contest-name-holder {
+          width: 100%;
+          margin-right: 18px;
+          margin-top: 10px;
+          position: relative;
+          display: flex;
+          align-items: center;
+
+          @include media-breakpoint-down(xs) {
+            margin-right: 0;
+          }
+
+          .contest-name {
+            width: 100%;
+            height: 32px;
+            font-size: 20px;
+            font-family: $Roboto_Medium_font;
+            margin: 0 6px;
+            padding: 5px;
+            padding-left: 10px;
+            border: 0;
+            outline: none;
+            background: none;
+            border-radius: 2px;
+            color: #262b33;
+
+            @include media-breakpoint-down(md) {
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+
+            @include media-breakpoint-down(xs) {
+              font-size: 15px;
+              flex: 1;
+            }
+
+            &:hover {
+              cursor: text;
+              background: #e6e6e6;
+              border: none;
+            }
+
+            &:focus-within {
+              border: 1px solid #aaa; 
+              padding: 5px 5px;
+              background: white;
+              height: 32px;
+            }
+          }
+
+          .edit-input-icon {
+            color: #767676;
+            font-size: 16px;
+            position: absolute;
+            top: 3px;
+            right: 8px;
+            justify-content: center;
+            align-items: center;
+            z-index: 9;
+
+            @include media-breakpoint-down(sm) {
+              display: none !important;
+            }
+          }
+
+          mat-icon {
+            display: none;
+          }
+
+          &:hover {
+            mat-icon {
+              display: flex;
+            }
+          }
+
+          &:focus-within {
+            mat-icon {
+              display: none;
+            }
+          }
+        }
+
+        .contest-date-holder {
+          width: 100%;
+          margin-right: 18px;
+          position: relative;
+          display: flex;
+          align-items: center;
+          padding: 0 12px 0 10px;
+          margin-top: 2px;
+
+          .date-picker-field {
+            border: none;
+            max-width: 85px;
+            outline: none;
+            font-size: 14px;
+            background: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            text-align: center;
+          }
+
+          .date-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+    
+            span {
+              font-size: 15px;
+              font-family: $Roboto_Regular_font;
+            }
+          }
+
+          .seperator {
+            padding: 0;
+          }
+          
+        }
+      }
+
+
+    }
+  }
+
+  .contest-options-container {
+    display: flex;
+    flex-direction: column;
+    align-self: flex-end;
+    width: 100%;
+    flex: 1;
+    padding-bottom: 8px;
+    min-width: 245px;
+
+    .button-height {
+      max-height: 35px;
+      font-size: 12px;
+      padding: 0 10px;
+      margin: 0 2px;
+      border-radius: 4px;
+      color: #5f6268;
+      border-color: rgba(0, 0, 0, 0.2);
+
+      @include media-breakpoint-down(xs) {
+        flex: 1;
+      }
+    }
+    .buttons-div {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 0 !important;
+      min-height: 16px;
+      max-height: 30px;
+
+      .property-icon-holder {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+        font-size: 12px;
+        color: #767676;
+        background-color: #bbbbbb;
+        cursor: pointer;
+        margin-right: 8px;
+        .custom-icon {
+          .assets-icon {
+            display: flex;
+            height: 18px;
+            width: 24px;
+          }
+
+          .reward-icon {
+            height: 18px;
+            width: 20px;
+            margin-left: -1px;
+          }
+
+          .trophy-icon {
+            height: 15px;
+            width: 22px;
+            margin-top: 2px;
+            margin-left: -2px;
+          }
+        }
+
+        mat-icon {
+          padding: 6px;
+          height: 18px;
+          width: 18px;
+          font-size: 18px;
+          color: white;        
+        }
+      }
+
+      .icon-container{
+        
+        mat-icon {
+          display: flex;
+          align-content: center;
+          justify-content: center;
+          height: 30px;
+          width: 30px;
+        }
+      }
+
+      .property-icon-filled {
+        background-color: $brand_color;
+      }
+
+      .selectedProperty {
+        color: $brand_color;
+      }
+
+      .open-video {
+        background: none;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        margin-right: 20px;
+        color: #555;
+        cursor: pointer;
+
+        mat-icon {
+          font-size: 35px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+    }
+
+    .custom-btn {
+      max-height: 35px;
+      font-size: 12px;
+      padding: 0 10px;
+      margin: 0 2px;
+      border-radius: 4px;
+      color: #5f6268;
+      border-color: rgba(0, 0, 0, 0.2);
+    }
+
+    .publish-wrapper {
+      display: flex;
+      justify-content: center;
+      width: 90px;
+
+      .publish-btn {
+        font-family: $Roboto_Medium_font;
+        font-size: 14px;
+        padding: 0;
+        color: #fff;
+        border-radius: 4px;
+        max-height: 30px;
+        background: $brand_color;
+        width: 90px;
+        border: none;
+
+        .schedule-btn-container {
+          width: 100%;
+
+          .schedule-btn-text {
+            @include media-breakpoint-down(xs) {
+              display: none;
+            }
+          }
+
+          .arrow-right-icon {
+            display: none;
+            width: 23px;
+            height: auto;
+
+            @include media-breakpoint-down(xs) {
+              display: flex;
+            }
+          }
+        }
+      }
+    }
+
+    @include media-breakpoint-down(xs) {
+      flex: 0;
+      display: flex;
+    }
+
+    .timeZone{
+      margin: 0;
+      padding-bottom: 8px;  
+      ::ng-deep .search-wrapper{
+        height: 30px !important;
+        font-size: 13px;
+      }
+    }
+  }
+}
+
+.disable-contest-change {
+  pointer-events: none;
+  .contest-options-container {
+  }
+}
+
+.disable-date-holder-validation {
+  .date-picker-field.ng-invalid {
+    border-left: none !important;
+    color: black;
+  }
+}
+
+.enable-date-holder-validation {
+  .date-picker-field.ng-invalid {
+    border-left: 3px solid $invalid-input !important;
+    color: $invalid-input;
+  }
+}
+
+.addEntity {
+  @include media-breakpoint-only(sm) {
+    bottom: 35px !important;
+    right: 0px !important;
+    left: unset !important;
+    top: unset !important;
+    z-index: 1 !important;
+  }
+}

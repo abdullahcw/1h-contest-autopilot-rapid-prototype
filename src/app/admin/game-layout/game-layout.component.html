@@ -1,0 +1,123 @@
+<div class="main_container">
+<div class="wrapper">
+      <mat-card class="mlg-container-card">
+        <mat-card-header>
+            <mat-toolbar class="toolbar">
+                <mat-toolbar-row>
+                  <span class="title"><span
+                      class="">{{ ('layout' | translate)}}</span></span>
+                  <span class="spacer"></span>
+                  <button class="add-game addEntity" matTooltip="{{'add_game_series' | translate}}"
+                    matTooltipPosition="below" (click)="createSeries()" mat-fab *ngIf="!globalService.isRoleLimited()">
+                    <mat-icon>add</mat-icon>
+                  </button>
+      
+                
+                </mat-toolbar-row>
+              <mat-toolbar-row>
+                <app-search class="filter-chip" style="width:100%" [filter_options]="filter_options"
+                  [shouldAllowAddMore]="dataSource?.data?.length" [dataSource]="menuList"
+                  (getDataSourceWithFilterDetails)="getDataSource($event)"
+                  (filtersUpdated)="refreshListOnFilterChange($event)"
+                  (getDataSourceWithSearchKey)="getDataSourceWithSearchKey($event)" [context]="context"
+                  (filterOptionUpdated)="filterOptionUpdated($event)" ></app-search>
+
+              </mat-toolbar-row>
+            </mat-toolbar>
+        </mat-card-header>
+        <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="is_loading"></mat-progress-bar>             
+
+        <mat-card-content>
+          <table #table mat-table [dataSource]="dataSource" class="responsive-table" 
+          [ngClass]="{'disabled-style': is_loading}"
+          cdkDropList 
+          (cdkDropListDropped)="drop($event)"
+          cdkDropListData="dataSource"
+          [cdkDropListDisabled]="dragDisabled">
+            <ng-container matColumnDef="icon">
+              <th mat-header-cell *matHeaderCellDef class="drag-icon">
+              
+              </th>
+              <td mat-cell *matCellDef="let position;" class="icon" [ngClass]="{'disabled-row-style': globalService.isRoleLimited()}">
+               <mat-icon class="icon" (mousedown)="dragDisabled = false;">density_small</mat-icon>
+              </td>
+            </ng-container>
+
+              <ng-container matColumnDef="position">
+                <th mat-header-cell *matHeaderCellDef class="game-level">
+                  {{'position_text' | translate}}
+                </th>
+                <td mat-cell *matCellDef="let gameSeries;" class="levelCount">
+                  {{gameSeries.position}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="series_name">
+                <th  mat-header-cell *matHeaderCellDef class="game-name" style="padding-left: 50px !important;">
+                  {{'Series' | translate}}
+                </th>
+                <td mat-cell *matCellDef="let gameSeries" class="game-name-holder" style="padding-left: 50px !important;">
+                  {{gameSeries.series_name}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="game_logo">
+                <th  mat-header-cell *matHeaderCellDef> {{'Total Games' | translate}}</th>
+                <td mat-cell *matCellDef="let gameSeries">
+                  <div class="game-count">
+                <span>{{gameSeries.games_count}}</span>
+              </div>  
+                </td>
+              </ng-container>
+          
+
+            <ng-container matColumnDef="game_owner">
+              <th mat-header-cell *matHeaderCellDef class="game-owner">
+                {{'owner' | translate}}
+              </th>
+              <td mat-cell *matCellDef="let gameSeries" class="game-owner-holder">
+                {{gameSeries.owner_name}}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef class="action-cell" >
+                {{'action' | translate}}
+              </th>
+              <td mat-cell *matCellDef="let gameSeries" class="action-cell">
+                <div class="delete-icon handCursor" [ngClass]="{'disabled-row-style': globalService.isRoleLimited()}">
+                  <button class="edit-button" mat-icon-button [matMenuTriggerFor]="mlgMenuBtn" matTooltipPosition="left">
+                    <mat-icon class="more-vert">more_vert</mat-icon>
+                  </button>
+                </div>
+                <mat-menu class="matMenuCustom" #mlgMenuBtn="matMenu" overlapTrigger="false" [xPosition]="'before'">
+                  <span>
+                    <button mat-menu-item class="options-menu-item" (click)="manageGames(gameSeries)">
+                      <span>{{'manage_games_series' | translate}}</span>
+                    </button>
+                  </span>
+                  <span>
+                    <button mat-menu-item class="options-menu-item" (click)="renameGameSeries(gameSeries)">
+                      <span>{{'rename_games_series' | translate}}</span>
+                    </button>
+                  </span>
+                  <span *ngIf="!gameSeries?.is_default">
+                    <button mat-menu-item class="options-menu-item" (click)="deleteGameSeries(gameSeries)">
+                      <span>{{'delete_games_series' | translate}}</span>
+                    </button>
+                  </span>
+                </mat-menu>
+              </td>
+            </ng-container>
+          
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header"></tr>
+            <tr mat-row *matRowDef="let gameSeries; columns: displayedColumns;" class="game-row"
+            cdkDrag [cdkDragData]="gameSeries"></tr>
+
+          </table>
+              
+          <span class="spacer"></span>
+        </mat-card-content>
+      </mat-card>
+  </div>
+  </div>
+  

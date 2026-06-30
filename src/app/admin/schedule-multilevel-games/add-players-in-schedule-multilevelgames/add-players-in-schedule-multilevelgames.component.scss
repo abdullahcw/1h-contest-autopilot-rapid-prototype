@@ -1,0 +1,97 @@
+@import "../../../../styles.scss";
+@import "../../../../assets/main.scss";
+.master-wrapper {
+  height: 100%;
+  background: white;
+  min-width: 280px;
+  width: 470px;
+  @include media-breakpoint-down(sm) {
+    min-width: 330px;
+  }
+  @include media-breakpoint-down(xs) {
+    width: 280px;
+  }
+  .small-toolbar {
+    height: 50px;
+    font-size: 18px;
+    display: inline-flex;
+    justify-content: space-between;
+    .cancel-icon {
+      display: block;
+      cursor: pointer;
+    }
+  }
+  .wrapper {
+    width: 100%;
+    left: 0px;
+    height: 100%;
+    border: 1px solid #d7d7d7;
+    text-align: left;
+    transition: all 0.3s;
+    .main-container {
+      height: 100%;
+      background: white;
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+
+      .search-container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        .chip-wrapper {
+          height: 150px;
+          width: 100%;
+          display: flex;
+          align-items: flex-start;
+          border: 1px solid #ccc;
+          padding: 0px 4px;
+          overflow-y: auto;
+
+        }
+        ::ng-deep .chip-wrapper app-search { 
+          .search-string .mat-form-field-infix {
+            flex: 0.85 !important;
+            width: 95%;
+          }
+          .search-string ::ng-deep .mat-chip-list-wrapper {
+            flex-wrap: wrap !important;
+          }   
+        }
+      }
+    }
+    .scheduling-filters {
+      height: 100%;
+      background: white;
+      padding: 0 16px 16px 16px;
+      display: flex;
+      // justify-content: center;
+    }
+    .button-row {
+      display: flex;
+      justify-content: flex-end;
+      padding: 10px;
+      border-top: 1px solid #ddd;
+      .btn-right {
+        // margin-left: auto;
+      }
+      .cancel-button {
+        border: 0px;
+        // margin-right: 10px;
+        background: white;
+        cursor: pointer;
+      }
+    }
+  }
+  .not-assigned{
+    min-height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .search-input-hide{
+    ::ng-deep input.search-input {
+      background-color: transparent !important;
+    }
+  }
+}

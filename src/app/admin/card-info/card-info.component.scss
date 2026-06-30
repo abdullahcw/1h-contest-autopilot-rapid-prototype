@@ -1,0 +1,94 @@
+@import "../../../styles.scss";
+
+.content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+
+  .left-side {
+    width: 40%;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    padding-top: 40px;
+  }
+
+  .right-side {
+    width: 60%;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    padding-right: 2px;
+
+    .top-right-content {
+      height: 80%;
+      .mat-card-title {
+        font-size: 18px;
+        line-height: 1;
+        margin-bottom: 6px;
+        font-family: Roboto_Bold;
+        margin-top: 4px;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        @include media-breakpoint-only(md) {
+          margin-top: 10px;
+        }
+      }
+
+      .mat-card-subtitle {
+        font-size: 12px;
+        margin-bottom: 0px;
+        line-height: 1.7;
+        color: #787878;
+
+        @include media-breakpoint-only(md) {
+          font-size: 12px;
+        }
+      }
+    }
+    .btn-wrapper {
+      text-align: right;
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 5px;
+      padding-right: 5px;
+      padding-top: 5px;
+    }
+
+    .btn-library {
+      width: 20px;
+      height: 20px;
+      background-color: #3856d1;
+      border-radius: 50%;
+      margin: 5px;
+      display: flex;
+      justify-content: center;
+
+      mat-icon {
+        font-size: 14px !important;
+        color: #fff;
+        padding: 3px 3px 0 0;
+      }
+    }
+
+    .added-to-library {
+      color: #fff;
+      background-color: #888;
+    }
+  }
+
+  img {
+    cursor: pointer;
+    display: block;
+    width: 70%;
+    height: auto;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 1px solid #e8e8e8;
+  }
+}

@@ -1,0 +1,72 @@
+@import "../../../styles.scss";
+
+.main-container {
+  min-width: 280px;
+  width: 450px;
+  @include media-breakpoint-down(xs) {
+    width: 280px;
+  }
+
+  .small-toolbar {
+    height: 50px;
+    font-size: 16px;
+    display: flex;
+    flex-direction: row;
+    .add-group {
+      border-radius: 30px;
+      margin-left: auto;
+      mat-icon {
+        color: white;
+      }
+    }
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    .date-picker {
+      position: relative;
+      mat-datepicker-toggle {
+        position: absolute;
+        top: 24px;
+        right: 0;
+      }
+    }
+
+    .label {
+      font-size: 12px;
+    }
+  }
+
+  .cancel-chip {
+    margin: 4px !important;
+  }
+
+  .container > * {
+    width: 100%;
+  }
+  .button-row {
+    width: auto;
+    display: flex;
+    margin: 0 20px 10px;
+    .btn-right {
+      margin-left: auto;
+    }
+    .cancel-button {
+      border: 0px;
+      // margin-right: 10px;
+      background: white;
+
+      cursor: pointer;
+    }
+  }
+}
+::ng-deep .mat-calendar-table {
+  tr {
+    border-bottom: none;
+  }
+  th {
+    background-color: $secondary_bg_color;
+  }
+}

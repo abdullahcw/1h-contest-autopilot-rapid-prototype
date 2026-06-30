@@ -1,0 +1,123 @@
+<div class="main-container" *ngIf="!resetView">
+    <div class="mlg-details-container">
+        <div class="mlg-card">
+            <mat-spinner class="spinner" mode="indeterminate" *ngIf="isLoading" diameter="20"></mat-spinner>
+            <div *ngIf="!isLoading" class="mlg-card-content">
+                <div class="left-side">
+                    <div class="logo-wrapper">
+                      <img class="mlg-logo"  appSignedUrl [imgSelector]="'changeImageSrc'" [imgSrcValue]="multilevelGame?.mlg_logo_1" onError="this.src='/assets/img/default.png'" src="/assets/img/default.png" alt=""/>
+                      <img class="game-icon"  appSignedUrl [imgSelector]="'changeImageSrc'" [imgSrcValue]="multilevelGame?.mlg_logo_2" onError="this.src='/assets/img/default.png'" src="/assets/img/default.png" alt=""/>
+                    </div>
+                </div>
+                <div class="right-side">
+                    <mat-card-title class="robotoBold title"  #elements matTooltip="{{multilevelGame?.mlg_name}}" [matTooltipShowDelay]="500">
+                        {{ multilevelGame?.mlg_name }}
+                    </mat-card-title>
+                    <mat-card-subtitle class="robotoRegular mlg-created">
+                        {{ 'created' | translate }}: {{ multilevelGame?.created_on | date:'MM/dd/yyyy' }}
+                    </mat-card-subtitle>
+                    <mat-card-subtitle class="mlg-created">
+                        <span>{{ 'status' | translate }}: </span>
+                        <span class="gameMode" [ngClass]="{
+                        'draft-color': multilevelGame?.mlg_status == 'DRAFT',
+                        'live-color': multilevelGame?.mlg_status == 'LIVE',
+                        'ready-color': multilevelGame?.mlg_status == 'READY',
+                        'delete-color': multilevelGame?.is_deleted,
+                        'offsetMargin': access_type === 'MM'}">
+                            {{ multilevelGame?.is_deleted ? ('deleted' | translate ) : multilevelGame?.mlg_status   }}
+                        </span>
+                    </mat-card-subtitle>
+                </div>
+            </div>
+        </div>
+        <div class="mlg-score">
+            <div class="mlg-record">
+                <div class="mlg-won">
+                    <mat-spinner class="spinner" mode="indeterminate" *ngIf="isLoading" diameter="20"></mat-spinner>
+                    <div *ngIf="!isLoading" class="mlg-content">
+                        <img src="../../../../assets/img/mlg_report.png" alt="" class="mlg-won-report-icon cursorPointer" *ngIf="multilevelGame?.mlg_won > 0" (click)="viewMlgReport(1)">
+                        <img src="../../../../assets/img/mlg_noreport.png" alt="" class="mlg-won-report-icon" *ngIf="multilevelGame?.mlg_won <= 0" >
+                        <img src="../../../../assets/img/mlg_won.png" alt="" class="mlg-won-icon">
+                        <span class="mlg-count">{{ multilevelGame?.mlg_won < 0 ? '--' : (multilevelGame?.mlg_won | number) }}</span>
+                        <span class="mlg-subtitle">{{ 'won' | translate }}</span>
+                    </div>
+                </div>
+                <div class="mlg-record-divider"></div>
+                <div class="mlg-progress">
+                    <mat-spinner class="spinner" mode="indeterminate" *ngIf="isLoading" diameter="20"></mat-spinner>
+                    <div *ngIf="!isLoading" class="mlg-content">
+                        <img src="../../../../assets/img/mlg_report.png" alt="" class="mlg-progress-report-icon cursorPointer" *ngIf="multilevelGame?.mlg_in_progress > 0" (click)="viewMlgReport(0)">
+                        <img src="../../../../assets/img/mlg_noreport.png" alt="" class="mlg-progress-report-icon" *ngIf="multilevelGame?.mlg_in_progress <= 0">
+                        <img src="../../../../assets/img/mlg_inprogress.png" alt="" class="mlg-progress-icon">
+                        <span class="mlg-count">{{ multilevelGame?.mlg_in_progress < 0 ? '--' : (multilevelGame?.mlg_in_progress | number) }}</span>
+                        <span class="mlg-subtitle">{{ 'in_progress' | translate }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="vertical-divider"></div>
+            <div class="mlg-game-time">
+                <div class="mlg-time-spent">
+                    <mat-spinner class="spinner" mode="indeterminate" *ngIf="isLoading" diameter="20"></mat-spinner>
+                    <div *ngIf="!isLoading" class="mlg-content">
+                        <img src="../../../../assets/img/mlg_timespent.png" alt="" class="mlg-time-icon">
+                        <span class="mlg-count">{{ multilevelGame?.time_spent < 0 ? '--:--:--' : convertToHHMMSS(multilevelGame?.time_spent) }}</span>
+                        <span class="mlg-subtitle">{{ 'time_spent' | translate }}</span>
+                    </div>
+                </div>
+                <div class="mlg-game-time-divider"></div>
+                <div class="mlg-games-played">
+                    <mat-spinner class="spinner" mode="indeterminate" *ngIf="isLoading" diameter="20"></mat-spinner>
+                    <div *ngIf="!isLoading" class="mlg-content">
+                        <img src="../../../../assets/img/mlg_gamesplayed.png" alt="" class="mlg-played-icon">
+                        <span class="mlg-count">{{ multilevelGame?.games_played < 0 ? '--' : (multilevelGame?.games_played | number) }}</span>
+                        <span class="mlg-subtitle">{{ 'games_played' | translate }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="leaderboard-container">
+        <div class="leaderboard">
+            <div class="header">
+               <span>{{ 'leaderboard_uppercase' | translate }}</span>
+            </div>
+            <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
+            <app-mlg-dashbaord-leaderboard (switchTab)="switchTab($event)" [selectedDashboardType]="selectedDashboardType" 
+                [multilevelGame]="multilevelGame" [tabIndex]="tabIndex" [appliedFilters]="appliedFilters">
+            </app-mlg-dashbaord-leaderboard>
+        </div>
+        <div class="performance">
+            <div class="header">{{ 'performance_by_level' | translate }}</div>
+            <mat-progress-bar class="progress-bar" mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
+            <app-mlg-dashbaord-performance-level [selectedDashboardType]="selectedDashboardType"
+                [appliedFilters]="appliedFilters" [tabIndex]="tabIndex">
+            </app-mlg-dashbaord-performance-level>
+        </div>
+    </div>
+    <div class="graphical-container">
+        <div class="all-time-graph">
+            <div class="header">{{ 'all_time_participation' | translate }}</div>
+
+            <div class="canvasBarChart">
+                <app-mlg-circle-chart *ngIf="!circleChartLoading" class="bar-chart" [circleChartData]="multilevelGameCircleChartData" ></app-mlg-circle-chart>                
+                <mat-spinner class="spinner" mode="indeterminate" *ngIf="circleChartLoading" diameter="20"></mat-spinner>
+               </div>
+
+        </div>
+        <div class="total-games-graph">
+            <div class="header">{{ 'total_games_played' | translate }}</div>
+
+            <div class="canvasBarChart">
+                <app-mlg-bar-chart *ngIf="!chartLoading" class="bar-chart" [chartData]="multilevelGameChartData" ></app-mlg-bar-chart>                
+                <mat-spinner class="spinner" mode="indeterminate" *ngIf="chartLoading" diameter="20"></mat-spinner>
+               </div>
+        </div>
+    </div>
+</div>
+<div class="reset_view" *ngIf="resetView && !fetchingAllLocations">
+    <p>{{'pls_add_filter' | translate}}</p>
+</div>
+<div class="no_messages" *ngIf="fetchingAllLocations">
+    <mat-spinner [diameter]="40"></mat-spinner>
+    <p>{{'please_wait' | translate}}</p>
+</div>

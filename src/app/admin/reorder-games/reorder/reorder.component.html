@@ -1,0 +1,70 @@
+<div class="games-wrapper">
+  <div>
+    <mat-card class="mlg-container-card">
+      <mat-card-content>
+        <table mat-table [dataSource]="dataSource" class="responsive-table" *ngIf="dataSource?.data?.length" >
+          <ng-container matColumnDef="position">
+            <th mat-header-cell *matHeaderCellDef class="game-level">
+              {{'position_text' | translate}}
+            </th>
+            <td mat-cell *matCellDef="let position;let i=index" class="levelCount">
+              {{i + 1}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="game_logo">
+            <th  mat-header-cell *matHeaderCellDef class="checkboxes imgColumn"></th>
+            <td mat-cell *matCellDef="let game">
+              <div class="logo-wrapper" *ngIf="game.game_type === 3">
+                <img class="mlg-logo"  
+                appSignedUrl [imgSelector]="'changeImageSrc'" [imgSrcValue]="game?.level1_logo" onError="this.src='/assets/img/default.png'" src="/assets/img/default.png" alt=""/>
+                <img class="game-icon" 
+                appSignedUrl [imgSelector]="'changeImageSrc'" [imgSrcValue]="game.level2_logo" onError="this.src='/assets/img/default.png'" src="/assets/img/default.png" alt=""/>
+              </div>
+            <app-custom-images-table class="img-wrapper" *ngIf="game.game_type !== 3"[className]="'img40by40'"  [ImageSrc]="game?.game_logo" > </app-custom-images-table>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="game_name">
+            <th  mat-header-cell *matHeaderCellDef class="game-name">
+              {{'game' | translate}}
+            </th>
+            <td mat-cell *matCellDef="let game" class="game-name-holder">
+              {{game.game_name}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="game_owner">
+            <th mat-header-cell *matHeaderCellDef class="game-owner">
+              {{'owner' | translate}}
+            </th>
+            <td mat-cell *matCellDef="let game" class="game-owner-holder">
+              {{game.owner_name}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef class="action-cell">
+              {{'action' | translate}}
+            </th>
+            <td mat-cell *matCellDef="let game" class="action-cell">
+              <div class="delete-icon handCursor" *ngIf="!globalService.isRoleLimited()">
+                <button class="edit-button" mat-icon-button [matMenuTriggerFor]="mlgMenuBtn" matTooltipPosition="left">
+                  <mat-icon style="margin-left: -35px;">more_vert</mat-icon>
+                </button>
+              </div>
+              <mat-menu class="matMenuCustom" #mlgMenuBtn="matMenu" overlapTrigger="false" [xPosition]="'before'">
+                <span>
+                  <button mat-menu-item class="options-menu-item" (click)="changePosition(game)">
+                    <img class="img" alt="" src="assets/img/position_icon.png">
+                    <span>{{'Move Game' | translate}}</span>
+                  </button>
+                </span>
+              </mat-menu>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="header"></tr>
+          <tr mat-row *matRowDef="let game; columns: displayedColumns;" class="game-row"></tr>
+        </table>
+            
+        <span class="spacer"></span>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

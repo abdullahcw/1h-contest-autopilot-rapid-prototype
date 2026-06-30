@@ -1,0 +1,80 @@
+@import '../../../styles.scss';
+.container {
+    padding: 0;
+    min-width: 280px;
+    width: 450px;
+    @include media-breakpoint-down(xs){
+        width: 280px;
+    }
+    .example-chip-list {
+        width: 100%;
+    }
+    .content {
+        padding: 20px;
+    }
+    .chipParent {
+        border: 1px solid #e8e8e8;
+        border-radius: 2px;
+        padding: 0 0 0 5px;
+        
+    }
+    .input-wrapper {      
+        height: 40px;
+        min-height: 40px;
+        display: flex;
+        width: 100%;
+        padding-top: 5px;
+    }
+    .add-filter-indicator {
+        border: 1px solid #b6b6b6;
+        border-style: dashed;
+        padding: 2px 12px 2px 5px;
+        border-radius: 40px;
+        height: 30px;
+        margin-bottom: 20px;
+        mat-icon {
+            color: $add-filter-icon-color;
+        }
+        font: {
+            family: Roboto_Regular;
+            size: $text_size_small;
+        }
+        mat-icon {
+            font-size: 20px;
+            margin-top: -1px;
+            @extend .center-align;
+        }
+        display: flex;
+        align-items: center;
+        color: $midGrey;
+        span {
+            font-family: Roboto_Regular;
+            margin-top: 2px;
+            color: $add-filter-color;
+        }
+    }
+    .mat-chip.mat-standard-chip:active {
+        box-shadow: none;
+        background-color: #e0e0e0 !important;
+        color: rgba(0, 0, 0, .87);
+    }
+    .mat-chip.mat-standard-chip:focus {
+        background-color: #e0e0e0 !important;
+        color: rgba(0, 0, 0, .87);
+    }
+    .mat-chip.mat-standard-chip {
+        background-color: #e0e0e0;
+        word-break: break-word;
+        height: auto;
+    }
+}
+
+.footer {
+    display: flex;
+    width: 100%;
+    padding-right: 20px;
+    padding-bottom: 20px;
+    button {
+        margin-left: auto;
+    }
+}

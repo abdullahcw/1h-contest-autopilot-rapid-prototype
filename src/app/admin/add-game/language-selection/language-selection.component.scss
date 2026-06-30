@@ -1,0 +1,128 @@
+@import '../../../../styles.scss';
+
+.search-wrapper {
+  height: 31px;
+  display: flex;
+  border: 1px solid #3956d1;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  min-width: 100px;
+  max-width: 240px;
+  font-family: Roboto_Regular;
+  font-size: 14px;
+  cursor: pointer;
+
+  @include media-breakpoint-down(xs) {
+    min-width: 33px;
+  }
+
+  img {
+    width: 20px;
+    margin-left: 5px;
+    margin-right: 2px;
+  }
+
+  font: {
+    family: Roboto_Regular;
+    size: 14px;
+  }
+
+  .selected-item-input-lang {
+    border: none;
+    z-index: 3;
+    padding: 0 4px 0 5px;
+    width: 100%;
+
+    &:disabled {
+      background: #e9ecef;
+    }
+
+  }
+
+  .hide-mobile {
+    @include media-breakpoint-down(xs) {
+      display: none;
+    }
+  }
+
+  .arrow-disabled {
+    pointer-events: none;
+  }
+
+  .cancel {
+    position: absolute;
+    right: 0;
+    z-index: 5;
+  }
+}
+
+::ng-deep  .drop-down-lang {
+  display: flex;
+  min-width: 100%;
+
+  .search-input {
+    height: 40px;
+    background: #efefef;
+    padding: 10px;
+    outline: none;
+    border: none;
+  }
+
+ .options-wrapper {
+    overflow: auto;
+    .option-container {
+      display: flex;
+      flex-direction: row !important;
+      align-items: center;
+    }
+
+    .arrow-right-icon {
+      width: 20px;
+      margin-right: 6px;
+    }
+
+    .mat-option {
+      height: 40px !important;
+      font-family: Roboto_Regular;
+      font-size: 14px;
+      padding: 0 8px;
+      min-width: 180px;
+
+    }
+
+    .seleted-option {
+      background: #3856d1 !important;
+      color: white;
+      pointer-events: none;
+
+      .subtitle {
+        color: white;
+      }
+    }
+  }
+
+  .default-title {
+    font-style: italic;
+    opacity: 0.6;
+  }
+
+  .disabled-style {
+    pointer-events: none;
+    opacity: 0.6;
+  }
+}
+
+.dropdown .options-wrapper .seleted-option {
+  min-width: 125px;
+}
+
+.drop-down-lang {
+  ::ng-deep .options-wrapper {
+    .seleted-option {
+      background : #3856d1 !important;
+      color: white;
+      pointer-events: none;
+    }
+  }
+}

@@ -1,0 +1,90 @@
+@use '@angular/material' as mat;
+@include mat.core();
+
+
+$custom-text-dark: rgba(black, 0.87);
+$custom-text-light: white;
+$mat-custom-default: (
+  50: #3856d1,
+  100: #3856d1,
+  200: #3856d1,
+  300: #3856d1,
+  400: #3856d1,
+  500: #3856d1,
+  600: #3856d1,
+  700: #3856d1,
+  800: #3856d1,
+  900: #3856d1,
+  A100: #3856d1,
+  A200: #3856d1,
+  A400:#3856d1,
+  A700: #3856d1,
+  contrast: (
+    50: $custom-text-dark,
+    100: $custom-text-dark,
+    200: $custom-text-dark,
+    300: $custom-text-dark,
+    400: $custom-text-dark,
+    500: $custom-text-light,
+    600: $custom-text-light,
+    700: $custom-text-light,
+    800: $custom-text-light,
+    900: $custom-text-light,
+    A100: $custom-text-dark,
+    A200: $custom-text-dark,
+    A400: $custom-text-dark,
+    A700: $custom-text-dark,
+  )
+);
+
+$mat-custom-greyed: (
+  50: #757575,
+  100: #757575,
+  200: #757575,
+  300: #757575,
+  400: #757575,
+  500: #757575,
+  600: #757575,
+  700: #757575,
+  800: #757575,
+  900: #757575,
+  A100: #757575,
+  A200: #757575,
+  A400:#757575,
+  A700: #757575,
+  contrast: (
+    50: $custom-text-dark,
+    100: $custom-text-dark,
+    200: $custom-text-dark,
+    300: $custom-text-dark,
+    400: $custom-text-dark,
+    500: $custom-text-light,
+    600: $custom-text-light,
+    700: $custom-text-light,
+    800: $custom-text-light,
+    900: $custom-text-light,
+    A100: $custom-text-dark,
+    A200: $custom-text-dark,
+    A400: $custom-text-dark,
+    A700: $custom-text-dark,
+  )
+);
+
+
+$my-app-primary: mat.define-palette($mat-custom-default, 900);
+$my-app-accent:  mat.define-palette($mat-custom-default,900);
+$my-app-warn:    mat.define-palette(mat.$red-palette,600);
+
+$my-app-theme: mat.define-light-theme($my-app-primary, $my-app-accent, $my-app-warn);
+
+@include mat.all-component-themes($my-app-theme);
+
+
+.greyed-theme{
+  $my-app-primary: mat.define-palette($mat-custom-greyed, 900);
+  $my-app-accent:  mat.define-palette($mat-custom-greyed,900);
+  $my-app-warn:    mat.define-palette(mat.$red-palette,600);
+
+  $my-app-theme1: mat.define-light-theme($my-app-primary, $my-app-accent, $my-app-warn);
+  @include mat.all-component-themes($my-app-theme1);
+}

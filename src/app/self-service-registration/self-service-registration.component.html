@@ -1,0 +1,154 @@
+<section>
+  <div class="content-holder">
+  </div>
+  <div class="container" *ngIf="is_company_setup">
+    <div class="company-setting-msg robotoMedium">
+      <img style="width: 50px;margin-bottom: 17px;" src="assets/img/OHloader.gif">
+      <span>{{'company_setting_msg' | translate}}</span>
+      <span>{{'setting_waiting_msg' | translate}}</span>      
+      <span class="new_message" style="margin-top: 30px;">{{'company_setting_msg1' | translate}}</span>
+      <span class="new_message">{{'company_setting_msg2' | translate}}</span>
+      <span class="new_message">{{'company_setting_msg3' | translate}}</span>      
+    </div>    
+  </div>
+  <div class="container" *ngIf="!is_company_setup">
+    <div class="content sign-up" *ngIf="access_types.signup">
+      <div class="title">
+        <label class="center-align signup-text robotoMedium">{{'get_started' | translate}}</label>
+        <label class="center-align join-company-text ">
+          <span class="robotoBold"> {{'join' | translate}}{{''}}</span>
+          <span class="robotoRegular"> {{'companies_on_1Huddle' | translate}} </span>
+        </label>
+      </div>
+      <div class="form-wrapper">
+        <form class="signupForm" #signupForm="ngForm">
+          <div class="custom-field-without-default-validation">
+            <input type="text" name="firstname" class="holder form-inputs" autocomplete="off"
+              [(ngModel)]="userDetails.first_name" placeholder="First Name" maxlength="35" minlength="1"
+              appValidateInput required>
+          </div>
+          <div class="custom-field-without-default-validation">
+            <input type="text" name="lastname" class="holder form-inputs" autocomplete="off"
+              [(ngModel)]="userDetails.last_name" placeholder="Last Name" maxlength="35" minlength="1" appValidateInput
+              required>
+          </div>
+          <div class="custom-field-without-default-validation">
+            <input type="password" class="holder form-inputs" autocomplete="off" minlength="4" maxlength="32"
+              autocapitalize="off" spellcheck="false" id="createPassword" name="password" #password="ngModel"
+              [(ngModel)]="userDetails.password" (blur)="checkPassword($event)" placeholder="Create Password" required>
+          </div>
+          <div class="custom-field-without-default-validation">
+            <input type="password" class="holder form-inputs" autocomplete="off" minlength="4" maxlength="32"
+              autocapitalize="off" spellcheck="false" id="confirmNewPassword" name="userpassword"
+              #confirmPassword="ngModel" [(ngModel)]="userDetails.confirmNewPassword"
+              (blur)="checkConfirmPassword($event)" placeholder="Confirm Password" (input)="confirmPasswordChanged()"
+              required [ngClass]="{'password-invalid': isErrorMisMatch}">
+          </div>
+          <p class="errorMsg" *ngIf="isError">{{passwordErrorMsg}}</p>
+          <div class="captcha-container" [ngClass]="{'onPasswordMatchError': isError}">
+            <label class="center-align robotoRegular captcha-text">{{'captcha_check_msg' | translate}}</label>
+            <re-captcha class="captcha" (resolved)="resolved($event)"
+              siteKey="6LdkDm0aAAAAAJ3MBs8dEDL1H7BrSDF014e0i2ID">
+            </re-captcha>
+          </div>
+          <div class="btn-wrapper">
+            <button mat-button class="next-button" (click)="signup()"
+             [disabled]="!signupForm?.valid || isPasswordNotMatch || !isCaptchaValid">{{'next' | translate}}</button> 
+          </div>
+        </form>
+      </div>
+      <div class="progress-wrapper">
+        <span class="step inprogress"></span>
+        <span class="line inprogress"></span>
+        <span class="step"></span>
+        <span class="line"></span>
+        <span class="step"></span>
+      </div>
+    </div>
+    <div class="content company-setup" *ngIf="access_types.setup">
+      <div class="company-title">
+        <label class="center-align signup-text robotoMedium">{{'setup_company_title' | translate}}</label>
+      </div>
+      <div class="form-wrapper">
+        <form class="signupForm" #setupForm="ngForm">
+          <div class="custom-field-without-default-validation">
+            <input type="text" name="companyName" class="holder form-inputs company-name" maxlength="38" minlength="1"
+              pattern="^(?!\s*$)[A-Za-z0-9\- ]*" [(ngModel)]="userDetails.company_name"
+              placeholder="Enter your company name" appValidateInput required>
+          </div>
+          <label class="center-align robotoRegular company-size-text">{{'company_size' | translate}}</label>
+          <div class="flex-container">
+            <div class="flex-box">
+              <button mat-button class="company-size-btn" (click)="onCompanySizeSelect('1 to 10')"
+                [ngClass]="{'selectedSize': userDetails.company_size == '1 to 10'}">
+                {{'1_to_10' | translate}}</button>
+              <button mat-button class="company-size-btn" (click)="onCompanySizeSelect('11 to 50')"
+                [ngClass]="{'selectedSize': userDetails.company_size == '11 to 50'}">
+                {{'11_to_50' | translate}}</button>
+              <button mat-button class="company-size-btn" (click)="onCompanySizeSelect('51 to 200')"
+                [ngClass]="{'selectedSize': userDetails.company_size == '51 to 200'}">
+                {{'51_to_200' | translate}}</button>
+            </div>
+            <div class="flex-box">
+              <button mat-button class="company-size-btn" (click)="onCompanySizeSelect('201 to 500')"
+                [ngClass]="{'selectedSize': userDetails.company_size == '201 to 500'}">
+                {{'201_to_500' | translate}}</button>
+              <button mat-button class="company-size-btn" (click)="onCompanySizeSelect('501 to 1K')"
+                [ngClass]="{'selectedSize': userDetails.company_size == '501 to 1K'}">
+                {{'501_to_1K' | translate}}</button>
+              <button mat-button class="company-size-btn" (click)="onCompanySizeSelect('1K+')"
+                [ngClass]="{'selectedSize': userDetails.company_size == '1K+'}">
+                {{'1K+' | translate}}</button>
+            </div>
+          </div>
+          <div class="setup-btn-wrapper">
+            <button mat-button class="next-button" (click)="setupCompany()"
+              [disabled]="!setupForm?.valid || !userDetails.company_size || !userDetails.company_name">
+              {{'next' | translate}}</button>
+          </div>
+        </form>
+      </div>
+      <div class="progress-wrapper">
+        <span class="step active"></span>
+        <span class="line active"></span>
+        <span class="step inprogress"></span>
+        <span class="line"></span>
+        <span class="step"></span>
+      </div>
+    </div>
+    <div class="content cat-selection" *ngIf="access_types.selectCat">
+      <div class="cat-title">
+        <label class="center-align signup-text robotoMedium">{{'ssr_cat_title'| translate}}</label>
+      </div>
+      <div class="form-wrapper">
+        <form class="categories_section" #selectCatForm="ngForm">
+          <div class="chooeseInstructionWrapper">
+            <span class="chooeseInstruction" *ngIf="!maxCatSelection" [ngClass]="{'slideDown': isError}">
+              {{'ssr_desc_message' | translate}}
+            </span>
+            <span class="chooeseInstruction negative" *ngIf="maxCatSelection">
+              {{'ssr_error_desc_message' | translate}}
+            </span>
+          </div>
+          <div class="cat-wrapper">
+            <div *ngFor="let item of cat_list;let i = index">
+              <button mat-raised-button (click)="selectCat(item,i)" class="btn-category"
+                [ngClass]="{'selectedCat': selected_categories.includes(item),'notselectedCat': notSelected_id == item.game_category_id && !selected_categories.includes(item)}">{{item.name}}</button>
+            </div>
+          </div>
+          <div class="cat_btn_wrapper">
+            <button mat-button class="next-button" [disabled]="selected_categories.length < 1"
+              (click)="submitCategoryDetails()">{{'done' | translate}}</button>
+          </div>
+        </form>
+      </div>
+      <div class="progress-wrapper">
+        <span class="step active"></span>
+        <span class="line active"></span>
+        <span class="step active"></span>
+        <span class="line active"></span>
+        <span class="step inprogress"></span>
+      </div>
+    </div>
+  </div>
+</section>

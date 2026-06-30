@@ -1,0 +1,7 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item" *ngFor="let crumb of breadcrumb; let i = index" (click)="routeToUrl(crumb, i)">{{crumb?.key}}
+      <span class="arrow-space" *ngIf="i < breadcrumb.length-1"> &rang;</span>
+    </li>
+  </ol>
+</nav>

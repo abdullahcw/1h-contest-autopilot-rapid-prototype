@@ -1,0 +1,302 @@
+@import '../../../assets/main.scss';
+.sidenav {
+    cursor: pointer;
+    // height: calc(100vh - 64px);
+    width: 70px; 
+    position: absolute;
+    border: 1px solid #d7d7d7;
+    background: #fff;
+    z-index: 999;
+    text-align: left;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    transition: all 0.3s;
+    // overflow-y: auto;
+    // scrollbar-width: thin;0
+    // overflow-x: hidden;
+    // padding-bottom: 40px;
+    .content-wrapper{
+        height: calc(100vh - 106px);
+        overflow-y: auto;
+        scrollbar-width: thin;
+    .ham-menu {
+        position: absolute;
+        left: 15px;
+    }
+    .ham-menu-clear {
+        position: absolute;
+        left: 15px;
+        mat-icon {
+            font-size: 18px;
+        }
+    }
+    .matList {
+        p {
+            font: {
+                family: Roboto_Regular;
+                size: $default_font_size;
+            } // color: $textColor;
+        }
+        mat-icon {
+            font-size: 22px;
+            color: #767676;
+        }
+        .matListItem {
+            height: 48px;
+            color: #767676; // border-radius: 0px 50px 50px 0px;
+            &:hover {
+                background: $selected_bg_color;
+            }
+            .mat-list-item-content {
+                padding: 0 25px;
+            }
+            a {
+                font: {
+                    family: Roboto_Regular;
+                    size: inherit;
+                }
+                color: #767676;
+                text-decoration: none !important;
+            }
+        }
+        .selectedMenu {
+            background: #e8e8e8 !important;
+            color: $brand_color !important;
+            mat-icon {
+                color: $brand_color;
+            }
+        }
+    }
+    .header {
+        display: block;
+        padding: 23px 0px 12px 38px;
+        .header_logo {
+            display: block;
+            width: 80%;
+            min-width: 189px;
+        }
+        .header_logo_short {
+            width: 100%;
+            height: auto;
+            max-width: 32px;
+            margin: 20px 0 15px -20px; // opacity: 0;
+        }
+    }
+    .mat-expansion-panel-header-title {
+        align-items: center;
+        p {
+            font-family: Roboto_Regular;
+            color: #767676;
+            white-space: nowrap;
+            font-size: $default_font_size;
+            margin: 0;
+        }
+    }
+    .space {
+        width: 15px;
+    }
+    .mat-expansion-panel {
+        padding: 0;
+        margin: 0; // border-radius: 0px 50px 50px 0px;
+        mat-icon {
+            font-size: 20px;
+            color: #767676;
+        }
+        .mat-expansion-panel-header {
+            padding: 0 22px;
+        }
+    }
+    .matList-child {
+        .childStyle {
+            // .mat-line{
+            color: #767676;
+            font-family: Roboto_Regular;
+            // background: $selected_bg_color;
+            // padding-left: 50px;
+            padding-left: 25px;
+
+            .newpatch {
+                padding: 0px 8px;
+                font-size: 8px;
+                height: 15px;
+                background-color: #3A55D0 !important;
+                color: white !important;
+                position: relative;
+                display: flex;
+                align-items: center;
+                margin-right: 10px;
+
+            }
+
+            .mat-list-item {
+                margin-left: 12px;
+                margin-right: 36px;
+                padding: 0 15px;
+            }
+            &:hover {
+                background: $selected_bg_color;
+            }
+            .position-icon{
+                height: 17px;
+                margin-bottom: 18px;
+                margin-left: 3px;
+            }
+            .assets-icon{
+                margin-bottom: 16px;
+                fill: #767676;
+            }
+
+            .highlight-icon {
+                background-image: url('../../../assets/img/highlight-icon.png') !important;
+                background-repeat: no-repeat !important;
+                background-size: contain !important;
+                padding: 8px;
+                height: 21px;
+                width: 20px;
+                color: $brand_color;
+            }
+        }
+
+        .childStyle .tooltiptext {
+            visibility:hidden;
+            width: 213px;
+            height: 85px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background-color: #3A55D0;
+            color: #fff;
+            border-radius: 6px;
+            padding: 21px 0px 24px 20px;
+            position: absolute;
+            z-index: 1;
+            top: 150%;
+            left: 10%;
+            margin-left: -185px;
+            margin-top: 5px;
+            font-size: 14px;
+            font-family: $Roboto_Bold_font;
+            .tooltext {
+                font-size: 12px !important;
+                font-family: $Roboto_Regular_font;
+                padding-top: 5px;
+                .icon_moreVert {
+                    padding: 0px 5px 0px 3px;
+                }
+            }
+        }
+        .childStyle .tooltiptext::after {
+            content: "";
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            margin-left: 82px;
+            border-width: 8px;
+            border-style: solid;
+            border-color: transparent transparent #3A55D0 transparent;
+        }
+        .childStyle:hover .tooltiptext{
+            visibility: visible;
+        }
+
+        .childStyle .tooltiptextShopReport {
+            visibility:hidden;
+            width: 258px;
+            height: 85px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background-color: #3A55D0;
+            color: #fff;
+            border-radius: 6px;
+            padding: 21px 0px 24px 20px;
+            position: absolute;
+            z-index: 1;
+            top: 150%;
+            left: 10%;
+            margin-left: -206px;
+            margin-top: 5px;
+            font-size: 14px;
+            font-family: $Roboto_Bold_font;
+            .tooltext {
+                font-size: 12px !important;
+                font-family: $Roboto_Regular_font;
+                padding-top: 5px;
+                .icon_moreVert {
+                    padding: 0px 5px 0px 3px;
+                }
+            }
+        }
+
+        .childStyle .tooltiptextShopReport::after {
+            content: "";
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            margin-left: 82px;
+            border-width: 8px;
+            border-style: solid;
+            border-color: transparent transparent #3A55D0 transparent;
+        }
+
+        .childStyle:hover .tooltiptextShopReport{
+            visibility: visible;
+        }
+
+        .hidePatch {
+            display: none !important;
+        }
+        
+        .selectedMenu {
+            background: #e8e8e8 !important;
+            color: $brand_color !important;
+            mat-icon {
+                color: $brand_color;
+                .assets-icon{
+                    fill: $brand_color;
+                }
+            }
+        }
+
+        .highlighted-icon-list {
+            ::ng-deep .mat-list-item-content {
+                padding: 0 16px 0px 14px;
+            }
+        }
+    }
+    a {
+        font: {
+            family: Roboto_Regular;
+            size: inherit;
+        }
+        color: #767676;
+        text-decoration: none !important;
+    }
+}
+
+    .message {
+        position: absolute;
+        bottom: 0px;
+        font-family: Roboto_Medium;
+        width: 275px;
+        background: #535353;
+        color: white;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-transition: all 0.3s;
+        -moz-transition: all 0.3s;
+        -o-transition: all 0.3s;
+        -ms-transition: all 0.3s;
+        transition: all 0.3s;
+    
+    }
+    .message-device{
+        bottom: 40px;
+    }
+}
