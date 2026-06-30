@@ -2,5 +2,4 @@
   "installCommand": "npm install --legacy-peer-deps",
   "buildCommand": "npm run build",
   "outputDirectory": "dist/OHAdminClient",
-  "engines": { "node": "18.x" }
 }

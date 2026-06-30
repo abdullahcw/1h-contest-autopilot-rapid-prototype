@@ -1,6 +1,7 @@
 {
   "name": "ohadmin-client",
   "version": "3.3.1",
+  "engines": { "node": "18.x" },
   "scripts": {
     "ng-high-memory": "node --max_old_space_size=8000 ./node_modules/@angular/cli/bin/ng",
     "start": "node --max_old_space_size=8000 ./node_modules/@angular/cli/bin/ng serve",
