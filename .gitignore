@@ -3,10 +3,9 @@
 # compiled output
 # Fetch config file : never add this file to github
 /src/fetchConfig.js
-# /dist
+/dist
 /tmp
 /out-tsc
-# /dist/OHAdminClient
 
 # dependencies
 /node_modules
