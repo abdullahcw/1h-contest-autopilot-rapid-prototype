@@ -64,7 +64,7 @@ export class PermissionsService {
     public snackBar: MatSnackBar) {
     this.permissions = {
       company: { list: true, create: true, update: true, delete: true, list_all: true, show_company: true, show_brandings: true },
-      game: { list: true, create: true, update: true, delete: true, add: true, show_games: true, show_schedules: true },
+      game: { list: true, create: true, update: true, delete: true, add: true, show_games: true, show_schedules: true, clone: true },
       contest: { list: true, create: true, update: true, delete: true, add: true, show_contest: true },
       player: { list: true, create: true, update: true, delete: true, show_players: true },
       manager: { list: true, create: true, update: true, delete: true, show_managers: true },

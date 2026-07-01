@@ -399,7 +399,8 @@ test.describe('4 — Contest Editor', () => {
     const requests: string[] = [];
     page.on('request', req => requests.push(req.url()));
 
-    await openEditor(page, 0);
+    // Use READY contest (index 1) — LIVE (index 0) has is_editable:false so dialog is read-only
+    await openEditor(page, 1);
 
     const iconCount = await page.locator('div.property-icon-holder').count();
     if (iconCount < 3) { console.log('⚠️ Not enough property icons'); return; }
@@ -418,7 +419,7 @@ test.describe('4 — Contest Editor', () => {
     const addBtn = dialog.locator('label.chips-input-wrapper');
     await addBtn.waitFor({ state: 'visible', timeout: 5000 });
     await addBtn.click({ force: true });
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(1200);
 
     // Filter menu should show Location, Department, Custom Audience
     const filterMenu = page.locator('mat-option.options, .mat-option');
@@ -489,6 +490,105 @@ test.describe('4 — Contest Editor', () => {
       await settle(page, 600);
       console.log('Publish flow completed ✓');
     }
+  });
+
+});
+
+// ── Section 5: Chandru QA Verification (contest) ──────────────────────────
+
+test.describe('5 — Chandru QA: Contest state rules', () => {
+
+  test('LIVE context menu: Clone + Stop only — no Edit, no Delete', async ({ page }) => {
+    await goContests(page);
+    await openContestMenu(page, 0);
+    // mat-menu items include icon text, e.g. "file_copyClone" — use contains, not anchored
+    const items = (await page.locator('button[mat-menu-item]').allTextContents()).map(s => s.trim());
+    console.log('LIVE items:', items);
+    expect(items.some(t => /clone/i.test(t))).toBe(true);
+    expect(items.some(t => /stop.*contest|force.*close/i.test(t))).toBe(true);
+    expect(items.some(t => /\bedit\b/i.test(t))).toBe(false);
+    expect(items.some(t => /\bdelete\b/i.test(t))).toBe(false);
+    await page.keyboard.press('Escape');
+  });
+
+  test('CLOSED context menu: Clone only — no Edit, no Delete', async ({ page }) => {
+    await goContests(page);
+    await openContestMenu(page, 2); // index 2 = CLOSED
+    const items = (await page.locator('button[mat-menu-item]').allTextContents()).map(s => s.trim());
+    console.log('CLOSED items:', items);
+    expect(items.some(t => /clone/i.test(t))).toBe(true);
+    expect(items.some(t => /\bedit\b/i.test(t))).toBe(false);
+    expect(items.some(t => /\bdelete\b/i.test(t))).toBe(false);
+    await page.keyboard.press('Escape');
+  });
+
+  test('READY context menu: has Edit and Delete', async ({ page }) => {
+    await goContests(page);
+    await openContestMenu(page, 1); // index 1 = READY
+    const items = (await page.locator('button[mat-menu-item]').allTextContents()).map(s => s.trim());
+    console.log('READY items:', items);
+    // icon text prepended e.g. "editEdit", "deleteDelete" — use /edit/i without anchors
+    expect(items.some(t => /edit/i.test(t))).toBe(true);
+    expect(items.some(t => /delete/i.test(t))).toBe(true);
+    await page.keyboard.press('Escape');
+  });
+
+  test('LIVE editor: property icons are filled (pre-populated rules, rewards, trophy)', async ({ page }) => {
+    // openEditor is scoped to section 4 — navigate manually here
+    await goContests(page);
+    await page.locator('.contest-wrapper').nth(0).click(); // LIVE contest
+    await settle(page, 1500);
+    await expect(page).toHaveURL(/create-contest/, { timeout: 8000 });
+
+    const rulesIcon = page.locator('div.property-icon-holder').nth(0);
+    const cls = await rulesIcon.getAttribute('class');
+    console.log('Rules icon class:', cls);
+    expect(cls).toMatch(/property-icon-filled/);
+    const bodyText = await page.locator('body').innerText();
+    expect(bodyText).not.toContain('Invalid Date');
+  });
+
+  test('Force stop dialog shows "Declare winner" checkbox and confirms to ENDED state', async ({ page }) => {
+    await goContests(page);
+    await openContestMenu(page, 0);
+    await clickMenuItem(page, /Stop Contest/);
+
+    const dialog = page.locator('mat-dialog-container');
+    await dialog.waitFor({ state: 'visible', timeout: 5000 });
+    const dialogText = await dialog.textContent();
+    console.log('Force stop dialog text:', dialogText?.substring(0, 200));
+    expect(dialogText?.toLowerCase()).toMatch(/declare.*winner|winner/i);
+
+    // Click "END NOW" to confirm
+    const endBtn = dialog.locator('button').filter({ hasText: /end now|yes|confirm/i }).first();
+    if (await endBtn.count() > 0) {
+      await endBtn.click();
+      await settle(page, 1000);
+      // LIVE tile should now be ENDED (badge no longer reads LIVE)
+      const firstTile = page.locator('mat-grid-tile.contest-container').first();
+      const badge = await firstTile.locator('.contest-mode').textContent().catch(() => '');
+      console.log('Badge after force stop:', badge?.trim());
+      expect(badge?.toLowerCase()).not.toBe('live');
+    } else {
+      await page.keyboard.press('Escape');
+    }
+  });
+
+  test('Clone → new tile appears with DRAFT state and today\'s dates', async ({ page }) => {
+    await goContests(page);
+    const before = await page.locator('mat-grid-tile.contest-container').count();
+    await openContestMenu(page, 0);
+    await clickMenuItem(page, /Clone/);
+    await settle(page, 2000);
+
+    const after = await page.locator('mat-grid-tile.contest-container').count();
+    expect(after).toBeGreaterThan(before);
+
+    // First tile should be the clone (with "(Copy)" in name and DRAFT state)
+    const firstTile = page.locator('mat-grid-tile.contest-container').first();
+    const text = await firstTile.textContent();
+    console.log('Cloned contest tile:', text?.substring(0, 200));
+    expect(text?.toLowerCase()).toMatch(/draft|copy/i);
   });
 
 });

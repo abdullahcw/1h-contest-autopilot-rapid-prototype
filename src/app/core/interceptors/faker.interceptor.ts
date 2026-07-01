@@ -10,7 +10,20 @@ export class FakerInterceptor implements HttpInterceptor {
   private contests = ContestFactory.list(16);
   private games = GameFactory.list(20);
   private nextId = 200;
-  private slgAssignments: Record<string, any[]> = {};
+  private slgAssignments: Record<string, any[]> = (() => {
+    // ponytail: seed assignments for first 3 LIVE games so they reflect real backend state
+    const seed: Record<string, any[]> = {};
+    [0, 1, 2].forEach((i, idx) => {
+      const gid = String(3361 - i);
+      seed[gid] = [{
+        assignment_id: `slg-seed-${idx + 1}`,
+        recipient_type: 'FIELDS_BASED',
+        attempt_details: { start_date: '2026-06-01 00:00:00', end_date: '2026-07-31 00:00:00', max_attempts: 3, attempts_type: 'TOTAL' },
+        players: [{ key_id: 'location_ids', filter_key: 'location_ids', is_all: true, values: [], text: 'All Locations' }],
+      }];
+    });
+    return seed;
+  })();
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     const url = req.url;
@@ -48,8 +61,13 @@ export class FakerInterceptor implements HttpInterceptor {
       if (game) { game.is_pinned = isPinned; }
       return ok({ pinned_games: this.games.filter(g => g.is_pinned).map(g => ({...g})) });
     }
+    // ponytail: game library Category filter reads game_cat_id (not category_id) — game-list.component.ts line 846
     if (url.includes('game/game_categories') || url.includes('game_categories'))
-      return ok({ game_category_list: [] });
+      return ok({ game_category_list: [
+        { game_cat_id: 1, category_name: 'Sales' },
+        { game_cat_id: 2, category_name: 'Product Knowledge' },
+        { game_cat_id: 3, category_name: 'Compliance' },
+      ]});
     if (url.includes('manager/retrieve_game_owners') || url.includes('retrieve_game_owners'))
       return ok({ owner_list: [{ manager_id: 42, owner_id: 42, first_name: 'John', last_name: 'Doe' }] });
     if (url.includes('get/help/videos') || url.includes('GET_VIDEOS'))
@@ -69,13 +87,25 @@ export class FakerInterceptor implements HttpInterceptor {
       return ok({ game_state: body?.game_state, game_is_valid: true });
     }
 
-    // COPY GAME — stateful
+    // COPY GAME — stateful; component reads data.game_details (not data.game_id)
+    // ponytail: polling_identifier must be set ON the game object so the "Duplicating..." overlay shows
     if (url.includes('game/copy_game')) {
       const src = this.games.find(g => g.game_id === body?.game_id) || this.games[0];
       const id = this.nextId++;
-      const clone = { ...src, game_id: id, game_name: src.game_name + ' (Copy)', game_state: 'DRAFT', is_pinned: false, polling_identifier: `poll-${id}` };
+      const pollId = `poll-${id}`;
+      const clone = { ...src, game_id: id, game_name: src.game_name + ' (Copy)', game_state: 'DRAFT', is_pinned: false, is_editable: true, polling_identifier: pollId };
       this.games.unshift(clone);
-      return ok({ game_id: id, game_name: clone.game_name, polling_identifier: clone.polling_identifier });
+      return ok({ game_details: clone, polling_identifier: pollId });
+    }
+
+    // GAME COPY PROGRESS — clears overlay when complete; endpoint name may vary by backend version
+    if (url.includes('game/copy_questions_progress') || url.includes('game/copy_game_progress')) {
+      // ponytail: req.params empty for URL-string query params — parse from URL
+      const pollMatch = url.match(/polling_identifier=([^&]+)/);
+      const pollId = pollMatch ? decodeURIComponent(pollMatch[1]) : (req.params.get('polling_identifier') || body?.polling_identifier);
+      const game = this.games.find(g => g.polling_identifier === pollId);
+      if (game) { game.polling_identifier = null; }
+      return ok({ question_copy_progress: 100 });
     }
 
     // ADD GAME — stateful: full field set matching real backend INSERT + side effects
@@ -192,8 +222,10 @@ export class FakerInterceptor implements HttpInterceptor {
 
     // ── SLG (Schedule Game) — stateful per-game assignment storage ───────────
     if (url.includes('slg/retrieve_game_limit')) {
-      if (req.params.has('game_id')) {
-        const gid = req.params.get('game_id');
+      // ponytail: req.params empty when game_id embedded as URL string — parse from URL
+      const slgGameIdMatch = url.match(/game_id=(\d+)/);
+      if (slgGameIdMatch) {
+        const gid = slgGameIdMatch[1];
         return ok({ recipients: this.slgAssignments[gid] || [] });
       }
       return ok({ game_limit: 100, used_limit: this.games.length });
@@ -335,7 +367,9 @@ export class FakerInterceptor implements HttpInterceptor {
     // ponytail: delay(50) ensures getValidContestDate (delay(0)) resolves first — prevents isDateRangeValid()
     // firing with stale validStartDate=today before the valid-start-date response sets it to 2026-01-01
     if (url.includes('contest/contest_details')) {
-      const id = req.params.get('contest_id');
+      // ponytail: req.params is empty when contest_id is embedded in the URL string (not HttpParams) — parse from URL
+      const idFromUrl = url.match(/contest_id=(\d+)/);
+      const id = idFromUrl ? idFromUrl[1] : req.params.get('contest_id');
       const found = this.contests.find(c => String(c.contest_id) === String(id)) || this.contests[0];
       return of(new HttpResponse({ status: 200, body: { success: true, message_code: 0, data: { contest_description: { ...found, game_details: ContestFactory.games(found.contest_id) } } } })).pipe(delay(50));
     }
@@ -379,19 +413,34 @@ export class FakerInterceptor implements HttpInterceptor {
       return ok(null);
     }
 
-    // FORCE CLOSE — stateful
+    // FORCE CLOSE — stateful; real backend goes ENDED first (→ CLOSED after 12-24h)
     if (url.includes('contest/forced_close')) {
       const c = this.contests.find(c => c.contest_id == body?.contest_id);
-      if (c) { c.contest_state = 'CLOSED'; }
+      if (c) {
+        c.contest_state = 'ENDED';
+        const today = new Date();
+        const pad = (n: number) => String(n).padStart(2, '0');
+        const todayStr = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())} 00:00:00`;
+        c.contest_end_date = todayStr;
+        c.force_closed_on = todayStr;
+        c.is_editable = false;
+      }
       return ok(null);
     }
 
-    // CLONE — stateful: push copy to top of list
+    // CLONE — stateful; clone dates always reset to today/today+30 (Chandru spec)
     if (url.includes('contest/copy_contest')) {
       const src = this.contests.find(c => c.contest_id == body?.contest_id) || this.contests[0];
       const id = this.nextId++;
+      const pad = (n: number) => String(n).padStart(2, '0');
+      const t = new Date();
+      const te = new Date(t); te.setDate(te.getDate() + 30);
+      const isoSp = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} 00:00:00`;
       const clone = { ...src, contest_id: id, contest_name: src.contest_name + ' (Copy)',
-        contest_state: 'DRAFT', is_new: true, polling_identifier: `poll-${id}` };
+        contest_state: 'DRAFT', is_new: true, is_editable: true,
+        contest_start_date: isoSp(t), contest_end_date: isoSp(te),
+        contest_rule: '', trophy_url: '', force_closed_on: null,
+        polling_identifier: `poll-${id}` };
       this.contests.unshift(clone);
       return ok({ contest_details: clone, polling_identifier: clone.polling_identifier });
     }
@@ -447,10 +496,18 @@ export class FakerInterceptor implements HttpInterceptor {
     if (url.includes('game_schedule/get_fields'))
       return ok({ fields: [] });
 
+    // ponytail: add-games-in-contest reads response.data.category_list (line 156), id field is game_cat_id
     if (url.includes('category/retrieve_game_category'))
-      return ok({ game_category_list: [] });
+      return ok({ category_list: [
+        { game_cat_id: 1, category_name: 'Sales', game_count: 5 },
+        { game_cat_id: 2, category_name: 'Product Knowledge', game_count: 8 },
+        { game_cat_id: 3, category_name: 'Compliance', game_count: 3 },
+      ]});
     if (url.includes('pathways/get'))
-      return ok({ pathways: [] });
+      return ok({ pathways: [
+        { pathway_id: 1, pathway_name: 'Onboarding Track' },
+        { pathway_id: 2, pathway_name: 'Sales Certification' },
+      ]});
 
     // ── Managers / locations / dashboard ─────────────────────────────────────
     if (url.includes('manager/get_managers_locations_and_departments'))
@@ -481,6 +538,16 @@ export class FakerInterceptor implements HttpInterceptor {
 
     if (url.includes('report/'))
       return ok({ data: [], total: 0, game_list: [], player_list: [] });
+
+    // Admin-only game operations (Add to Companies, Add to Shop, Company Game URL)
+    if (url.includes('game/add_to_companies') || url.includes('game/add_companies'))
+      return ok(null);
+    if (url.includes('game/add_to_shop') || url.includes('shop/add_game'))
+      return ok(null);
+
+    // Owner filter for contest list
+    if (url.includes('game/owners') || url.includes('contest/owners'))
+      return ok({ owner_list: [{ manager_id: 42, first_name: 'John', last_name: 'Doe' }] });
 
     return next.handle(req);
   }

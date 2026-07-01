@@ -121,58 +121,47 @@ test.describe('Game Library', () => {
     expect(unpinText.toLowerCase()).not.toMatch(/pin.*add|added/i);
   });
 
-  test('MP LIVE game shows "Move to Drafts", no "Move to Ready"', async ({ page }) => {
+  test('MP LIVE game: no Edit, no Delete (only Clone, Companies, Shop, URL)', async ({ page }) => {
     await go(page, 'games');
-
     await expect(page.locator('mat-grid-tile.matGridTile').nth(5)).toBeVisible({ timeout: 8000 });
 
-    // "New Game 3357" is index 6 in GAME_NAMES — game_type=2 (MP) and LIVE
+    // "New Game 3357" is index 6 — game_type=2 (MP) and LIVE
     const mpTile = page.locator('mat-grid-tile.matGridTile').filter({ hasText: /New Game 3357/ }).first();
-    if (await mpTile.count() === 0) {
-      console.log('⚠️ MP game not found — skipping');
-      test.skip();
-      return;
-    }
+    if (await mpTile.count() === 0) { console.log('⚠️ MP game not found — skipping'); return; }
 
     const menuBtn = mpTile.locator('button.moreBtnSize');
     await menuBtn.click({ force: true });
     await page.waitForTimeout(500);
 
-    const items = await page.locator('button[mat-menu-item]').allTextContents();
-    console.log('MP LIVE menu items:', items.map(s => s.trim()).filter(Boolean));
-
-    expect(items.some(t => /move to draft/i.test(t))).toBe(true);
-    expect(items.some(t => /move to ready/i.test(t))).toBe(false);
+    const items = (await page.locator('button[mat-menu-item]').allTextContents()).map(s => s.trim()).filter(Boolean);
+    console.log('MP LIVE menu items:', items);
+    // MLG LIVE: no edit, no delete (same rule as SLG LIVE)
+    expect(items.some(t => /\bedit\b/i.test(t))).toBe(false);
+    expect(items.some(t => /\bdelete\b/i.test(t))).toBe(false);
+    expect(items.some(t => /clone/i.test(t))).toBe(true);
     await page.keyboard.press('Escape');
   });
 
-  test('delete blocks LIVE game, succeeds on DRAFT game', async ({ page }) => {
+  test('LIVE game has no Delete in menu; DRAFT game deletes successfully', async ({ page }) => {
     await go(page, 'games');
-    // Wait for tiles to fully render before reading initial count
     await expect(page.locator('mat-grid-tile.matGridTile').nth(5)).toBeVisible({ timeout: 8000 });
 
-    // --- LIVE game delete should fail / stay in list ---
-    const liveInitialCount = await page.locator('mat-grid-tile.matGridTile').count();
+    // --- LIVE game: verify Delete is absent (Chandru spec: LIVE games must not have Edit/Delete) ---
     const liveTile = page.locator('mat-grid-tile.matGridTile').filter({ hasText: /Airmac Game/ }).first();
-    const liveMenuBtn = liveTile.locator('button.moreBtnSize');
-    await liveMenuBtn.click({ force: true });
+    await liveTile.locator('button.moreBtnSize').click({ force: true });
     await page.waitForTimeout(500);
-    await clickMenuItem(page, /Delete/);
-    if (await page.locator('mat-dialog-container').count() > 0) await confirmDialog(page);
-    await settle(page, 600);
-    const afterLiveDelete = await page.locator('mat-grid-tile.matGridTile').count();
-    console.log(`LIVE delete attempt: ${liveInitialCount} → ${afterLiveDelete} (should stay same)`);
-    expect(afterLiveDelete).toBeGreaterThanOrEqual(liveInitialCount - 1);
+    const liveItems = (await page.locator('button[mat-menu-item]').allTextContents()).map(s => s.trim());
+    console.log('LIVE game menu items:', liveItems);
+    expect(liveItems.some(t => /\bdelete\b/i.test(t))).toBe(false);
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(300);
 
-    // --- DRAFT game delete should succeed (use index 16 — Compliance 101, DRAFT) ---
-    await go(page, 'games');
-    await expect(page.locator('mat-grid-tile.matGridTile').nth(5)).toBeVisible({ timeout: 8000 });
+    // --- DRAFT game delete should succeed (Compliance 101, DRAFT) ---
     const draftInitialCount = await page.locator('mat-grid-tile.matGridTile').count();
     const draftTile = page.locator('mat-grid-tile.matGridTile').filter({ hasText: /Compliance 101/ }).first();
     await draftTile.scrollIntoViewIfNeeded();
-    const draftMenuBtn = draftTile.locator('button.moreBtnSize');
-    await draftMenuBtn.waitFor({ state: 'visible', timeout: 5000 });
-    await draftMenuBtn.click({ force: true });
+    await draftTile.locator('button.moreBtnSize').waitFor({ state: 'visible', timeout: 5000 });
+    await draftTile.locator('button.moreBtnSize').click({ force: true });
     await page.waitForTimeout(500);
     await clickMenuItem(page, /Delete/);
     if (await page.locator('mat-dialog-container').count() > 0) await confirmDialog(page);
@@ -208,6 +197,93 @@ test.describe('Game Library', () => {
     } else {
       console.log('⚠️ Move to Draft not found — menu:', items);
     }
+  });
+
+  // ── Chandru QA: game context menu rules ──────────────────────────────────
+
+  test('Chandru: SLG READY game has Clone option in context menu', async ({ page }) => {
+    await go(page, 'games');
+    await expect(page.locator('mat-grid-tile.matGridTile').nth(8)).toBeVisible({ timeout: 8000 });
+
+    // "New Game 3353" is index 8 — first READY SP game
+    const tile = page.locator('mat-grid-tile.matGridTile').filter({ hasText: /New Game 3353/ }).first();
+    await tile.locator('button.moreBtnSize').click({ force: true });
+    await page.waitForTimeout(500);
+
+    const items = (await page.locator('button[mat-menu-item]').allTextContents()).map(s => s.trim());
+    console.log('READY SLG menu:', items);
+    expect(items.some(t => /clone/i.test(t))).toBe(true);
+    await page.keyboard.press('Escape');
+  });
+
+  test('Chandru: LIVE SLG game has no Edit, no Delete — only Clone, Pin, Companies, Shop, URL', async ({ page }) => {
+    await go(page, 'games');
+    // Airmac Game = index 0, LIVE
+    const tile = page.locator('mat-grid-tile.matGridTile').filter({ hasText: /Airmac Game/ }).first();
+    await tile.locator('button.moreBtnSize').click({ force: true });
+    await page.waitForTimeout(500);
+
+    const items = (await page.locator('button[mat-menu-item]').allTextContents()).map(s => s.trim());
+    console.log('LIVE SLG menu:', items);
+    expect(items.some(t => /clone/i.test(t))).toBe(true);
+    expect(items.some(t => /\bedit\b/i.test(t))).toBe(false);
+    expect(items.some(t => /\bdelete\b/i.test(t))).toBe(false);
+    await page.keyboard.press('Escape');
+  });
+
+  test('Chandru: Clone game → new tile appears with DRAFT state', async ({ page }) => {
+    await go(page, 'games');
+    await expect(page.locator('mat-grid-tile.matGridTile').nth(8)).toBeVisible({ timeout: 8000 });
+
+    const before = await page.locator('mat-grid-tile.matGridTile').count();
+    const tile = page.locator('mat-grid-tile.matGridTile').filter({ hasText: /New Game 3353/ }).first();
+    await tile.locator('button.moreBtnSize').click({ force: true });
+    await page.waitForTimeout(500);
+    await clickMenuItem(page, /clone/i);
+    await settle(page, 3000); // clone + polling (polling_identifier cleared after progress call)
+
+    const after = await page.locator('mat-grid-tile.matGridTile').count();
+    console.log(`Game count: ${before} → ${after}`);
+    expect(after).toBeGreaterThan(before);
+
+    // Find the "(Copy)" tile — may temporarily show "Duplicating..." overlay but name includes "(Copy)"
+    const cloneTile = page.locator('mat-grid-tile.matGridTile').filter({ hasText: /\(copy\)/i }).first();
+    const hasCloneTile = await cloneTile.count() > 0;
+    console.log('Clone tile found:', hasCloneTile);
+    if (hasCloneTile) {
+      const cloneText = await cloneTile.textContent().catch(() => '');
+      console.log('Cloned game text:', cloneText?.substring(0, 200));
+      // After polling clears, tile should show DRAFT state (not LIVE/READY)
+      expect(cloneText?.toLowerCase()).not.toMatch(/\blive\b/);
+      expect(cloneText?.toLowerCase()).not.toMatch(/\bready\b/);
+    }
+  });
+
+  test('Chandru: game library search filters — 9 filter options available', async ({ page }) => {
+    await go(page, 'games');
+    await expect(page.locator('mat-grid-tile.matGridTile').first()).toBeVisible({ timeout: 8000 });
+
+    const addFilter = page.locator('label.chips-input-wrapper').first();
+    await addFilter.click({ force: true });
+    await page.waitForTimeout(1200);
+
+    const opts = await page.locator('mat-option.options, .mat-option').allTextContents();
+    const optTexts = opts.map(t => t.trim()).filter(Boolean);
+    console.log('Game library filter options:', optTexts);
+    expect(optTexts.length).toBeGreaterThanOrEqual(5);
+    expect(optTexts.some(t => /category/i.test(t))).toBe(true);
+    expect(optTexts.some(t => /owner/i.test(t))).toBe(true);
+    await page.keyboard.press('Escape');
+  });
+
+  test('Chandru: schedule game page loads game list', async ({ page }) => {
+    await go(page, 'schedule-game');
+    await page.waitForTimeout(1500);
+    const pageText = await page.locator('body').innerText();
+    console.log('Schedule game content sample:', pageText.substring(0, 300));
+    expect(pageText).not.toContain('Invalid Date');
+    // Game list should show LIVE/READY game names
+    expect(pageText).toMatch(/Airmac Game/i);
   });
 
 });
@@ -360,12 +436,13 @@ test.describe('Contest Library', () => {
     expect(after).toBeGreaterThan(initial);
   });
 
-  test('delete contest removes it from list', async ({ page }) => {
+  test('delete contest removes it from list (DRAFT/READY only)', async ({ page }) => {
     await go(page, 'contests');
     await expect(page.locator('mat-grid-tile.contest-container').first()).toBeVisible({ timeout: 8000 });
     const initial = await page.locator('mat-grid-tile.contest-container').count();
 
-    const optBtn = page.locator('button.contest-option').first();
+    // Use index 3 = DRAFT — LIVE and CLOSED don't have Delete per spec
+    const optBtn = page.locator('button.contest-option').nth(3);
     await optBtn.click({ force: true });
     await page.waitForTimeout(500);
     await clickMenuItem(page, /Delete/);

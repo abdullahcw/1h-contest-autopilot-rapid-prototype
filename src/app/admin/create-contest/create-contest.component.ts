@@ -215,7 +215,6 @@ export class CreateContestComponent implements OnInit {
   }
 
   addAssignment() {
-    console.log('this.appliedFilters',this.appliedFilters);
     let payload;
     this.is_loading = true;
     payload = this.getRecipients(this.appliedFilters);
@@ -235,6 +234,8 @@ export class CreateContestComponent implements OnInit {
     payload['contest_id'] = this.contest.contest_id;
       let recipients = [];
       recipients = this.preparePayloadForCustomFields(uniqueFilters, limit, recipients);
+      // ponytail: guard empty recipients — crashes if user creates contest without selecting audience
+      if (recipients.length === 0) { payload['recipients'] = []; return payload; }
       payload['recipients'] = [{
         'created_by': this.storageService.getLoginUserID(),
         'recipient_type': recipients[0].key_id === 'custom_audience' ? 'AUDIENCE_BASED' : 'FIELDS_BASED',
@@ -632,7 +633,6 @@ export class CreateContestComponent implements OnInit {
     this.customAudienceService.checkAudienceInCompany(this.companyId).subscribe(res => {
       const response:any = res;
       if (response.success) {
-        console.log(response.data.audience_exists);
         if (!response.data.audience_exists) {
           this.filterPlayers(Constants.NO_AUDIENCE);
         }

@@ -60,7 +60,7 @@ export class GameFactory {
       created_on: new Date(2026, 5, 1 - index).toISOString(),
       is_pinned: index < 2,
       is_archived: false,
-      is_editable: true,
+      is_editable: state !== 'LIVE',
       is_shop_game: false,
       is_multilang: false,
       langs: '',

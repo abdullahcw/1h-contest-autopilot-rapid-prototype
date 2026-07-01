@@ -132,7 +132,6 @@ export class AddContestHeaderComponent implements OnInit {
       const response: any = res;
       if (response.success) {
         this.contest = res.data.contest_description;
-        console.log(this.contest)
         setTimeout(() => {
           this.imageUrlUpdated(this.contest.contest_image_url); 
         });
@@ -172,15 +171,9 @@ export class AddContestHeaderComponent implements OnInit {
     this.contestDetails.emit(this.contest);
   }
   isDateRangeValid() {
-    console.log('isDateRangeValid');
-    console.log('this.contestService.validateContestDateRange()',this.contestService.validateContestDateRange());
     if (!this.contestService.validateContestDateRange()) {
       const startDate = JSON.parse(JSON.stringify(this.contest.contest_start_date));
       const contestMaxDate = new Date(new Date(startDate).setDate(this.contest.contest_start_date.getDate() + 89));
-
-      console.log('this.contest.contest_start_date',this.contest.contest_start_date.getTime());
-      console.log('this.contestService.validStartDate',this.contestService.validStartDate.getTime());
-
       const message = this.contest.contest_start_date.getTime() < this.contestService.validStartDate.getTime() ?
         this.translate.instant('correct_contest_start_date') :
         this.contest.contest_end_date.getTime() > contestMaxDate.getTime() ? this.translate.instant('correct_date_range') :
@@ -188,7 +181,6 @@ export class AddContestHeaderComponent implements OnInit {
       const dialogRef = this.dialog.open(ConfirmActionComponent, {
         data: event
       });
-      console.log('message',message);
 
       dialogRef.componentInstance.title = this.translate.instant('invalid_date_range');
       dialogRef.componentInstance.message = message;
@@ -460,11 +452,9 @@ export class AddContestHeaderComponent implements OnInit {
   imageUrlUpdated(imageUrl){
     const that = this;
     const relativePath = this.getImageURLService.trimmedURLValue(imageUrl)
-    console.log(relativePath)
     this.getImageURLService.getURL(relativePath, function (err, data) {
-      console.log(data)        
       that.contest_img   = data;
-    });  
+    });
   }
   getTimeZone() {
     this.fetchingTimezones = true;
@@ -476,7 +466,6 @@ export class AddContestHeaderComponent implements OnInit {
         timezones.forEach(timezone => {
           this.timeZoneList.push({ id: timezone.tz_id, title: timezone.tz_name, subtitle: timezone.tz_unit });
         });
-        console.log('timezonelist', this.timeZoneList);
       }
       this.fetchingTimezones = false;
     });

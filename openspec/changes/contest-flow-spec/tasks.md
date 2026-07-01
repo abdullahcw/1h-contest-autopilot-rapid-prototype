@@ -1,20 +1,30 @@
 # Contest Flow — Implementation Tasks
 
-Tracks faker mock fidelity for the Contest screens. Reference: `specs/contest-flow.md`.
+Tracks faker mock fidelity for the Contest screens. Reference: `specs/contest-flow.md`, `specs/contest-state-fidelity.md`.
 
 ---
 
 ## Status
 
-| # | Task | Priority | Status |
-|---|---|---|---|
-| 1 | Fix `contest_end_date` format in ContestFactory | 🔴 High | ⬜ |
-| 2 | Fix `contest/retrieve_contest_games` response key | 🔴 High | ⬜ |
-| 3 | Add Playwright tests for Contest Library | 🔴 High | ⬜ |
-| 4 | Fix contest clone progress URL (`copy_contest_progress`) | 🟡 Low | ⬜ |
-| 5 | Stub `contest/get_assignment` with real recipient data | 🟡 Low | ⬜ |
-| 6 | Narrow `contest/get_games_for_filter` to READY/LIVE SP games only | 🟡 Low | ⬜ |
-| 7 | Stub timezone endpoint for Create Contest dialog | 🟡 Low | ⬜ |
+| # | Task | Priority | Status | Source |
+|---|------|----------|--------|--------|
+| 1 | Fix `contest_end_date` format in ContestFactory | 🔴 High | ✅ Done | Original spec |
+| 2 | Fix `contest/retrieve_contest_games` response key | 🔴 High | ✅ Done | Original spec |
+| 3 | Add Playwright tests for Contest Library | 🔴 High | ✅ Done (16/16) | Original spec |
+| 4 | Fix contest clone progress URL (`copy_contest_progress`) | 🟡 Low | ✅ N/A (works via mlg path) | Original spec |
+| 5 | Stub `contest/get_assignment` with real recipient data | 🟡 Low | ✅ Done (empty list) | Original spec |
+| 6 | Narrow `contest/get_games_for_filter` to READY/LIVE SP games only | 🟡 Low | ✅ Done | Original spec |
+| 7 | Stub timezone endpoint for Create Contest dialog | 🟡 Low | ✅ Done (`get_timezone` stubbed) | Original spec |
+| **C-1** | **Set `is_editable: false` for LIVE + CLOSED in `contest.factory.ts`** | 🔴 High | ✅ Done | Chandru QA |
+| **C-2** | **`forced_close` stub: state→ENDED, update `contest_end_date` to today** | 🔴 High | ✅ Done | Chandru QA |
+| **C-3** | `copy_contest` stub: reset clone start/end dates to today / today+30 | 🟡 Med | ✅ Done | Chandru QA |
+| **C-4** | Pre-populate `contest_rule` + `trophy_url` for LIVE contests in factory | 🟡 Med | ✅ Done | Chandru QA |
+| **C-5** | **Guard `recipients[0]` in `create-contest.component.ts` `getRecipients()`** | 🔴 High | ✅ Done | Backend audit |
+| **C-6** | Fix `category/retrieve_game_category`: id field → `game_cat_id` (Category Mgmt screen) | 🟡 Med | ✅ Done | Backend audit |
+| **C-7** | Fix `game/game_categories` stub: add real data with `game_cat_id` (game library filter) | 🟡 Med | ✅ Done | Backend audit |
+| **C-8** | **Add `trophy` object field to `contest.factory.ts` for LIVE contests (Trophy dialog crashes without it)** | 🔴 High | ✅ Done | Backend audit (deep read) |
+| **C-9** | Add `rewards` object field to `contest.factory.ts` for LIVE contests | 🟡 Med | ✅ Done | Backend audit (deep read) |
+| **C-10** | Remove debug console.log calls from `add-contest-header.component.ts` (~9 logs) and `create-contest.component.ts` (2 logs) | 🟢 Low | ✅ Done | Backend audit (deep read) |
 
 ---
 
