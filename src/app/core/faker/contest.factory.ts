@@ -13,6 +13,13 @@ function contestDate(offsetWeeks: number): string {
   return `Contest ${mm}.${dd}.${yy}`;
 }
 
+// convertDateForRangeSlider splits on /-|\s|:/ — T-separator gives date[2]='30T00'
+// → Number('30T00')=NaN → Invalid Date. Must use space format.
+function isoSpace(d: Date): string {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} 00:00:00`;
+}
+
 export class ContestFactory {
   static one(index = 0): any {
     const owner = OWNERS[index % OWNERS.length];
@@ -24,8 +31,8 @@ export class ContestFactory {
       company_id: 1,
       created_by: 1,
       contest_name: contestDate(index),
-      contest_start_date: start.toISOString().slice(0, 19),
-      contest_end_date: end.toISOString().slice(0, 19),
+      contest_start_date: isoSpace(start),
+      contest_end_date: isoSpace(end),
       created_on: start.toISOString(),
       contest_image_url: '',
       contest_state: states[index] || 'CLOSED',
@@ -51,9 +58,9 @@ export class ContestFactory {
 
   static games(contestId = 100): any[] {
     return [
-      { game_contest_relation_id: 1, contest_id: contestId, game_id: 3361, game_name: 'Sales Fundamentals', game_logo: '', game_start_date: '2026-06-30T00:00:00', game_end_date: '2026-07-22T00:00:00', attempt_count: 2, attempt_type: 'TOTAL', game_state: 'LIVE', contest_timezone: 'America/New_York' },
-      { game_contest_relation_id: 2, contest_id: contestId, game_id: 3360, game_name: 'Product Knowledge Q2', game_logo: '', game_start_date: '2026-06-30T00:00:00', game_end_date: '2026-07-22T00:00:00', attempt_count: 2, attempt_type: 'TOTAL', game_state: 'LIVE', contest_timezone: 'America/New_York' },
-      { game_contest_relation_id: 3, contest_id: contestId, game_id: 3359, game_name: 'Objection Handling', game_logo: '', game_start_date: '2026-06-30T00:00:00', game_end_date: '2026-07-22T00:00:00', attempt_count: 2, attempt_type: 'TOTAL', game_state: 'LIVE', contest_timezone: 'America/New_York' },
+      { game_contest_relation_id: 1, contest_id: contestId, game_id: 3361, game_name: 'Sales Fundamentals', game_logo: '', game_start_date: '2026-06-30 00:00:00', game_end_date: '2026-07-22 23:59:59', attempt_count: 2, attempt_type: 'TOTAL', game_state: 'LIVE', contest_timezone: 'America/New_York' },
+      { game_contest_relation_id: 2, contest_id: contestId, game_id: 3360, game_name: 'Product Knowledge Q2', game_logo: '', game_start_date: '2026-06-30 00:00:00', game_end_date: '2026-07-22 23:59:59', attempt_count: 2, attempt_type: 'TOTAL', game_state: 'LIVE', contest_timezone: 'America/New_York' },
+      { game_contest_relation_id: 3, contest_id: contestId, game_id: 3359, game_name: 'Objection Handling', game_logo: '', game_start_date: '2026-06-30 00:00:00', game_end_date: '2026-07-22 23:59:59', attempt_count: 2, attempt_type: 'TOTAL', game_state: 'LIVE', contest_timezone: 'America/New_York' },
     ];
   }
 }

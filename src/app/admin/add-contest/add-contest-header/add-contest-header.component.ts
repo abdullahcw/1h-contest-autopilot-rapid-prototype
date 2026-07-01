@@ -153,8 +153,9 @@ export class AddContestHeaderComponent implements OnInit {
   changeGameDateFormat(contestGames) {
     if (contestGames.length) {
       contestGames.forEach(game => {
-        game.game_start_date = this.globalService.convertDateForRangeSlider(game.game_start_date);
-        game.game_end_date = this.globalService.convertDateForRangeSlider(game.game_end_date);
+        // ponytail: slider stepsArray uses timestamps; convert Date → number
+        game.game_start_date = this.globalService.convertDateForRangeSlider(game.game_start_date).getTime();
+        game.game_end_date = this.globalService.convertDateForRangeSlider(game.game_end_date).getTime();
       });
     }
     this.updateContest(this.contest);
