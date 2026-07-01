@@ -39,15 +39,15 @@ export class ScheduleContestComponent implements OnInit {
   disjunction_filter_value;
   isCustomAudianceFilterApplied = false;
   search_filters = [
-    // {
-    //   'filter': Constants.LOCATION_IDS, value: this.translate.instant('location'), 'is_text_search': true, 'is_list_search': true,
-    //   'placeholder': PlaceholderText.LOCATION_NAME, 'is_multi_selection': true, 'is_generic_menu': true,
-    // },
-    // {
-    //   'filter': Constants.DEPARTMENT_IDS, value: this.translate.instant('department'), 'is_text_search': true, 'is_list_search': true,
-    //   'dependent_on': Constants.LOCATION_IDS,
-    //   'placeholder': PlaceholderText.DEPARTMENT_NAME, 'is_multi_selection': true, 'is_generic_menu': true,
-    // },
+    {
+      'filter': Constants.LOCATION_IDS, value: this.translate.instant('location'), 'is_text_search': true, 'is_list_search': true,
+      'placeholder': PlaceholderText.LOCATION_NAME, 'is_multi_selection': true, 'is_generic_menu': true,
+    },
+    {
+      'filter': Constants.DEPARTMENT_IDS, value: this.translate.instant('department'), 'is_text_search': true, 'is_list_search': true,
+      'dependent_on': Constants.LOCATION_IDS,
+      'placeholder': PlaceholderText.DEPARTMENT_NAME, 'is_multi_selection': true, 'is_generic_menu': true,
+    },
     {
       'filter': Constants.CUSTOM_AUDIENCE, value: this.translate.instant('custom_audience'), 'is_text_search': true, 'is_list_search': true,
       'placeholder': PlaceholderText.AUDIENCE_NAME, 'is_multi_selection': true, 'is_generic_menu': true

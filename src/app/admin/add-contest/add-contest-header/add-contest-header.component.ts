@@ -58,6 +58,7 @@ export class AddContestHeaderComponent implements OnInit {
   tempContestEndDate;
   contestMaxDate;
   validStartDate;
+  private _initialized = false;
 
   @Output() contestProperty: EventEmitter<any> = new EventEmitter();
   @Output() contestDetails: EventEmitter<any> = new EventEmitter();
@@ -68,7 +69,11 @@ export class AddContestHeaderComponent implements OnInit {
 
   @Input()
   set newContest(value) {
-    if (value === true) {
+    // ponytail: guard against calling ngOnInit before Angular's natural ngOnInit fires —
+    // parent sets newContest=true in its constructor (from router queryParams), which fires
+    // this setter during ngOnChanges before ngOnInit, causing double-init and mat-datepicker
+    // end-date rendering issues.
+    if (value === true && this._initialized) {
       this.ngOnInit();
     }
   }
@@ -88,6 +93,7 @@ export class AddContestHeaderComponent implements OnInit {
   }
 
   ngOnInit() {
+    this._initialized = true;
     const contest = JSON.parse(this.storageService.getContest());
     if (!contest) {
       // New contest — emit defaults so parent clears its spinner
@@ -133,7 +139,7 @@ export class AddContestHeaderComponent implements OnInit {
       if (response.success) {
         this.contest = res.data.contest_description;
         setTimeout(() => {
-          this.imageUrlUpdated(this.contest.contest_image_url); 
+          this.imageUrlUpdated(this.contest.contest_image_url);
         });
        this.contestService.isContestEditable = res.data.contest_description.is_editable && res.data.contest_description.is_authorized;
         this.contest.contest_start_date = this.globalService.convertDateForRangeSlider(res.data.contest_description.contest_start_date);

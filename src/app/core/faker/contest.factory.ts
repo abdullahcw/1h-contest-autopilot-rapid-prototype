@@ -53,7 +53,7 @@ export class ContestFactory {
       } : null,
       owner_firstname: owner.first,
       owner_lastname: owner.last,
-      is_editable: ['DRAFT', 'READY'].includes(states[index] || 'CLOSED'),
+      is_editable: (states[index] || 'CLOSED') === 'DRAFT',
       is_authorized: true,
       can_clone: true,
       force_closed_on: null,

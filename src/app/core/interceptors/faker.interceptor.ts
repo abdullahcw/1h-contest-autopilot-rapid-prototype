@@ -347,6 +347,7 @@ export class FakerInterceptor implements HttpInterceptor {
         { reward_id: 1, reward_name: '$25 Amazon Gift Card', reward_desc: '', category_id: 1 },
         { reward_id: 2, reward_name: '$50 Amazon Gift Card', reward_desc: '', category_id: 1 },
         { reward_id: 3, reward_name: 'Team Lunch', reward_desc: '', category_id: 2 },
+        { reward_id: 99, reward_name: 'Custom', reward_desc: '', category_id: 1 },
       ]});
     if (url.includes('contest/retrieve_contest_games'))
       return ok({ contest_games_list: ContestFactory.games() });
@@ -359,9 +360,10 @@ export class FakerInterceptor implements HttpInterceptor {
     if (url.includes('custom_audience/audience_exists'))
       return ok({ audience_exists: true });
 
-    // list — returns current mutable state
+    // list — shallow-clone each contest so the list component's in-place date mutations
+    // (item.contest_end_date = datePipe.transform(...)) don't corrupt this.contests
     if (url.includes('contest/retrieve_contests'))
-      return ok({ contest_list: this.contests, total_contest: this.contests.length });
+      return ok({ contest_list: this.contests.map(c => ({...c})), total_contest: this.contests.length });
 
     // details — game_details dates must stay as ISO strings; header's changeGameDateFormat converts them
     // ponytail: delay(50) ensures getValidContestDate (delay(0)) resolves first — prevents isDateRangeValid()
@@ -490,8 +492,23 @@ export class FakerInterceptor implements HttpInterceptor {
         multi_level_game: { has_manager_set_limits: false },
         shop_games: { has_manager_shopped: false },
       }, role: [] } });
-    if (url.includes('company/get_company_custom_field_values'))
+    if (url.includes('company/get_company_custom_field_values')) {
+      const keyMatch = url.match(/key_id=([^&]+)/);
+      const key = keyMatch ? keyMatch[1] : '';
+      if (key === 'location_ids')
+        return ok({ values: [
+          { id: 1, text: 'New York Office' },
+          { id: 2, text: 'Los Angeles Office' },
+          { id: 3, text: 'Chicago Office' },
+        ]});
+      if (key === 'department_ids')
+        return ok({ values: [
+          { id: 1, text: 'Sales' },
+          { id: 2, text: 'Marketing' },
+          { id: 3, text: 'Operations' },
+        ]});
       return ok({ values: [] });
+    }
 
     if (url.includes('game_schedule/get_fields'))
       return ok({ fields: [] });

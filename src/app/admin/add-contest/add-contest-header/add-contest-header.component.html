@@ -34,10 +34,11 @@
               placeholder="{{'date_format_mmddyyyy' | translate}}" readonly>
             <strong class="seperator"> - </strong>
             <input class="date-picker-field" (dateChange)="contestEndtDateValidation('contest_end_date',contest);"
-              (click)="endDatePicker.open()" (open)="isDatePickerOpen" [max]="contestMaxDate"
+              (click)="endDatePicker.open()" (open)="isDatePickerOpen"
               (keydown)="$event.preventDefault(); isDatePickerOpen = true;"
               [min]="contest.contest_start_date >= tomorrow ? contest.contest_start_date : tomorrow"
               [(ngModel)]="contest.contest_end_date" [matDatepicker]="endDatePicker"
+              [max]="contestMaxDate"
               placeholder="{{'date_format_mmddyyyy' | translate}}" readonly>
             <mat-datepicker #startDatePicker></mat-datepicker>
             <mat-datepicker #endDatePicker></mat-datepicker>
