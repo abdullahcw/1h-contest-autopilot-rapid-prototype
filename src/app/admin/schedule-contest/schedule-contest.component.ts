@@ -97,6 +97,10 @@ export class ScheduleContestComponent implements OnInit {
     // this.filter_options = this.globalService.addeditCustomFilters(this.search_filters, fields, 2);
     const fields = this.companyService.getCustomFields();
     this.filter_options = this.globalService.addeditCompanyCustomFilters(this.search_filters, fields, 0,this.isFossilCustomField);
+    // ponytail: if custom fields weren't cached yet, reload — constructor subscription updates filter_options on emit
+    if (!fields) {
+      this.companyService.loadCustomFields(this.companyId);
+    }
     this.filter_options.forEach(filterOption => {
       if (filterOption.custom_filter_key === Constants.DEPARTMENT_IDS) {
         filterOption['dependent_on'] = Constants.LOCATION_IDS;

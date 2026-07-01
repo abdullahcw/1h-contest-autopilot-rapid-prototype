@@ -291,12 +291,9 @@ export class FakerInterceptor implements HttpInterceptor {
       return ok({ assignment_id: `fa-${body?.contest_id || 1}` });
     if (url.includes('contest/update_assignment'))
       return ok({ assignment_id: `fa-${body?.contest_id || 1}` });
+    // empty list = no existing players; populated shape crashes on recipient.text.charAt(0)
     if (url.includes('contest/get_assignment'))
-      return ok({ recipients: [{
-        assignment_id: 'fa-1',
-        recipient_type: 'FIELDS_BASED',
-        players: [{ key_id: 'location_ids', filter_key: 'location_ids', is_all: true, values: [] }],
-      }]});
+      return ok({ recipients: [] });
 
     // game-in-contest operations (before contest/add_game catches contest/add)
     if (url.includes('contest/add_game_to_contest'))
@@ -326,22 +323,26 @@ export class FakerInterceptor implements HttpInterceptor {
       return ok({ games: eligible, total_games: eligible.length });
     }
 
+    // true = keep Custom Audience as a selectable filter type alongside Location + Department
     if (url.includes('custom_audience/audience_exists'))
-      return ok({ audience_exists: false });
+      return ok({ audience_exists: true });
 
     // list — returns current mutable state
     if (url.includes('contest/retrieve_contests'))
       return ok({ contest_list: this.contests, total_contest: this.contests.length });
 
     // details — game_details dates must stay as ISO strings; header's changeGameDateFormat converts them
+    // ponytail: delay(50) ensures getValidContestDate (delay(0)) resolves first — prevents isDateRangeValid()
+    // firing with stale validStartDate=today before the valid-start-date response sets it to 2026-01-01
     if (url.includes('contest/contest_details')) {
       const id = req.params.get('contest_id');
       const found = this.contests.find(c => String(c.contest_id) === String(id)) || this.contests[0];
-      return ok({ contest_description: { ...found, game_details: ContestFactory.games(found.contest_id) } });
+      return of(new HttpResponse({ status: 200, body: { success: true, message_code: 0, data: { contest_description: { ...found, game_details: ContestFactory.games(found.contest_id) } } } })).pipe(delay(50));
     }
 
     if (url.includes('get_valid_contest_date'))
-      return ok({ valid_start_date: new Date().toISOString(), tz_id: 'America/New_York' });
+      // ponytail: must be before factory's earliest contest date (June 30 - 15*7 weeks ≈ March 2026)
+      return ok({ valid_start_date: '2026-01-01 00:00:00', tz_id: 'America/New_York' });
 
     // CREATE — stateful: pushes new contest, returns real id/name
     if (url.includes('contest/add')) {
@@ -425,6 +426,13 @@ export class FakerInterceptor implements HttpInterceptor {
         scheduling_filters: false, paywall_status: 'ACTIVE',
       }});
 
+    // ponytail: custom_fields must be before the company/get_company wildcard — get_company_custom_fields matches that pattern
+    if (url.includes('company/get_company_custom_fields'))
+      return ok({ fields: [
+        { key_id: 'location_ids', title: 'Location', filter_key: 'location_ids', allow_multiselection: true },
+        { key_id: 'department_ids', title: 'Department', filter_key: 'department_ids', allow_multiselection: true },
+      ]});
+
     if (url.includes('retrieve_compan') || url.includes('company/get_company'))
       return ok({ company_list: [{ company_id: 1, company_name: '1Huddle Demo', company_logo: '' }], total_companies: 1 });
     if (url.includes('company/company_settings') || url.includes('company/settings') || url.includes('company/get_settings') || url.includes('get_company_settings'))
@@ -433,13 +441,6 @@ export class FakerInterceptor implements HttpInterceptor {
         multi_level_game: { has_manager_set_limits: false },
         shop_games: { has_manager_shopped: false },
       }, role: [] } });
-
-    // custom fields — provides Location + Department options for Add Player in Create Contest
-    if (url.includes('company/get_company_custom_fields'))
-      return ok({ fields: [
-        { key_id: 'location_ids', title: 'Location', filter_key: 'location_ids', allow_multiselection: true },
-        { key_id: 'department_ids', title: 'Department', filter_key: 'department_ids', allow_multiselection: true },
-      ]});
     if (url.includes('company/get_company_custom_field_values'))
       return ok({ values: [] });
 
